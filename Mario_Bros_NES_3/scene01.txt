@@ -5,6 +5,7 @@ brick.txt
 coin.txt
 goomba.txt
 cloud.txt
+mushroom.txt
 #
 [OBJECTS]
 # type	x	y	extra_settings per object type
@@ -52,11 +53,15 @@ cloud.txt
 4	160	120
 4	180	120
 
+#MUSHROOM
+6	100	10
+
 #Goomba
 2	300	10
 
+#id	x	y	width	height	length	begin	middle	end
 #Platform
 5	90	136	16	15	16	51000	52000	53000
 5	120	90	16	16	8	20001	20001	20001
 #Portal 
-50	300	110	316	140	2
+50	300	110	316	140	5
