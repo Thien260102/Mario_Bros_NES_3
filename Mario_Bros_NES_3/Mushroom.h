@@ -34,5 +34,6 @@ protected:
 	virtual void OnCollisionWith(LPCOLLISIONEVENT e);
 public:
 	CMushroom(float x, float y, int type);
+	int getType() { return type; }
 };
 

@@ -7,6 +7,7 @@
 #include "Goomba.h"
 #include "Coin.h"
 #include "Portal.h"
+#include "Mushroom.h"
 
 #include "Collision.h"
 
@@ -54,6 +55,8 @@ void CMario::OnCollisionWith(LPCOLLISIONEVENT e)
 		OnCollisionWithCoin(e);
 	else if (dynamic_cast<CPortal*>(e->obj))
 		OnCollisionWithPortal(e);
+	else if (dynamic_cast<CMushroom*>(e->obj))
+		OnCollisionWithMushroom(e);
 }
 
 void CMario::OnCollisionWithGoomba(LPCOLLISIONEVENT e)
@@ -100,6 +103,33 @@ void CMario::OnCollisionWithPortal(LPCOLLISIONEVENT e)
 {
 	CPortal* p = (CPortal*)e->obj;
 	CGame::GetInstance()->InitiateSwitchScene(p->GetSceneId());
+}
+
+void CMario::OnCollisionWithMushroom(LPCOLLISIONEVENT e)
+{
+	CMushroom* mushroom = (CMushroom*)e->obj;
+
+	if (mushroom->getType() == MUSHROOM_1UP)
+	{
+		// + 1 up
+	}
+	else
+	{
+		switch (level)
+		{
+			case MARIO_LEVEL_SMALL:
+				y -= (MARIO_BIG_BBOX_HEIGHT - MARIO_SMALL_BBOX_HEIGHT + 1);
+				level = MARIO_LEVEL_BIG;
+				break;
+			case MARIO_LEVEL_BIG:
+				// Raccoon Mario form
+				break;
+		}
+
+	}
+	
+
+	e->obj->Delete();
 }
 
 //
