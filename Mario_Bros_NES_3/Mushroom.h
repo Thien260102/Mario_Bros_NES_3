@@ -14,7 +14,9 @@
 
 #define MUSHROOM_SUPER 1
 #define MUSHROOM_1UP 2
+#define SUPER_LEAF 3
 
+#define TIME_LEAF_DIVERT 500
 
 class CMushroom: public CGameObject
 {
@@ -22,6 +24,7 @@ protected:
 	float ax;
 	float ay;
 	int type;
+	ULONGLONG start;
 
 	virtual void GetBoundingBox(float& left, float& top, float& right, float& bottom);
 	virtual void Update(DWORD dt, vector<LPGAMEOBJECT>* coObjects);
@@ -32,6 +35,8 @@ protected:
 	virtual void OnNoCollision(DWORD dt);
 
 	virtual void OnCollisionWith(LPCOLLISIONEVENT e);
+
+	void IsDiversion();
 public:
 	CMushroom(float x, float y, int type);
 	int getType() { return type; }

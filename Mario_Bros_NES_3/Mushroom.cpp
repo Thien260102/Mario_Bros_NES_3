@@ -2,10 +2,18 @@
 
 CMushroom::CMushroom(float x, float y, int type) : CGameObject(x, y)
 {
+	this->type = type;
+	if (type == SUPER_LEAF)
+	{
+		this->ax = MUSHROOM_WALKING_SPEED / 1000;
+		this->ay = MUSHROOM_GRAVITY / 6;
+		start = GetTickCount64();
+	}
+
 	this->ax = 0;
 	this->ay = MUSHROOM_GRAVITY;
-	this->type = type;
 	vx = -MUSHROOM_WALKING_SPEED;
+
 }
 
 void CMushroom::GetBoundingBox(float& left, float& top, float& right, float& bottom)
@@ -21,6 +29,13 @@ void CMushroom::Update(DWORD dt, vector<LPGAMEOBJECT>* coObjects)
 	vx += ax * dt;
 	vy += ay * dt;
 
+	if (type == SUPER_LEAF)
+	{
+		OnNoCollision(dt);
+		IsDiversion();
+		vy = ay * dt;
+		return;
+	}
 
 	CGameObject::Update(dt, coObjects);
 	CCollision::GetInstance()->Process(this, dt, coObjects);
@@ -31,8 +46,10 @@ void CMushroom::Render()
 	int spriteId;
 	if (type == MUSHROOM_SUPER)
 		spriteId = ID_SPRITE_SUPERMUSHROOM;
-	else
+	else if (type == MUSHROOM_1UP)
 		spriteId = ID_SPRITE_1UPMUSHROOM;
+	else
+		spriteId = ID_SPRITE_SUPERLEAF;
 	CSprites::GetInstance()->Get(spriteId)->Draw(x, y);
 	//RenderBoundingBox();
 }
@@ -59,4 +76,13 @@ void CMushroom::OnCollisionWith(LPCOLLISIONEVENT e)
 	}
 
 
+}
+
+void CMushroom::IsDiversion()
+{
+	if (GetTickCount64() - start >= TIME_LEAF_DIVERT)
+	{
+		vx = -vx;
+		start = GetTickCount64();
+	}
 }
