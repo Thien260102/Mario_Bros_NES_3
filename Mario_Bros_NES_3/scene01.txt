@@ -55,7 +55,7 @@ mushroom.txt
 
 #MUSHROOM
 6	100	10
-
+7	60	10
 #Goomba
 2	300	10
 

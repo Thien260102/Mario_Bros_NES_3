@@ -1,11 +1,11 @@
 #include "Mushroom.h"
 
-CMushroom::CMushroom(float x, float y) : CGameObject(x, y)
+CMushroom::CMushroom(float x, float y, int type) : CGameObject(x, y)
 {
 	this->ax = 0;
 	this->ay = MUSHROOM_GRAVITY;
-
-	vx = MUSHROOM_WALKING_SPEED;
+	this->type = type;
+	vx = -MUSHROOM_WALKING_SPEED;
 }
 
 void CMushroom::GetBoundingBox(float& left, float& top, float& right, float& bottom)
@@ -28,8 +28,13 @@ void CMushroom::Update(DWORD dt, vector<LPGAMEOBJECT>* coObjects)
 
 void CMushroom::Render()
 {
-	CSprites::GetInstance()->Get(ID_SPRITE_MUSHROOM)->Draw(x, y);
-	RenderBoundingBox();
+	int spriteId;
+	if (type == MUSHROOM_SUPER)
+		spriteId = ID_SPRITE_SUPERMUSHROOM;
+	else
+		spriteId = ID_SPRITE_1UPMUSHROOM;
+	CSprites::GetInstance()->Get(spriteId)->Draw(x, y);
+	//RenderBoundingBox();
 }
 
 void CMushroom::OnNoCollision(DWORD dt)
@@ -41,17 +46,17 @@ void CMushroom::OnNoCollision(DWORD dt)
 void CMushroom::OnCollisionWith(LPCOLLISIONEVENT e)
 {
 	if (!e->obj->IsBlocking()) return;
+	if (dynamic_cast<CGoomba*>(e->obj)) return;
+	if (dynamic_cast<CMushroom*>(e->obj)) return;
 
-	if (dynamic_cast<CBrick*>(e->obj))
+	if (e->ny != 0)
 	{
-		if (e->ny != 0)
-		{
-			vy = 0;
-		}
-		else if (e->nx != 0)
-		{
-			vx = -vx;
-		}
+		vy = 0;
 	}
-	
+	else if (e->nx != 0)
+	{
+		vx = -vx;
+	}
+
+
 }
