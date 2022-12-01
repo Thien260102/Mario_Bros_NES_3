@@ -339,7 +339,7 @@ void CMario::Render()
 
 	//RenderBoundingBox();
 	
-	DebugOutTitle(L"Coins: %d", coin);
+	DebugOutTitle(L"Coins: %d \t level: %d", coin, level);
 }
 
 void CMario::SetState(int state)
