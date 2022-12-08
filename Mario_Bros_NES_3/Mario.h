@@ -33,6 +33,8 @@
 #define MARIO_STATE_SIT				600
 #define MARIO_STATE_SIT_RELEASE		601
 
+#define MARIO_STATE_ATTACK		700
+
 
 #pragma region ANIMATION_ID
 
@@ -100,6 +102,10 @@
 #define ID_ANI_MARIO_RACCOON_BRACE_RIGHT 2300
 #define ID_ANI_MARIO_RACCOON_BRACE_LEFT 2301
 
+#define ID_ANI_MARIO_RACCOON_GETINTO_SEWER 2302
+
+#define ID_ANI_MARIO_RACCOON_ATTACK_RIGHT 2400
+#define ID_ANI_MARIO_RACCOON_ATTACK_LEFT 2401
 #pragma endregion
 
 #define GROUND_Y 160.0f
@@ -121,13 +127,14 @@
 #define MARIO_SMALL_BBOX_WIDTH  13
 #define MARIO_SMALL_BBOX_HEIGHT 12
 
-#define MARIO_RACCOON_BBOX_WIDTH (MARIO_BIG_BBOX_WIDTH + 6)
+#define MARIO_RACCOON_BBOX_WIDTH MARIO_BIG_BBOX_WIDTH
 #define MARIO_RACCOON_BBOX_HEIGHT 24
-#define MARIO_RACCOON_SITTING_BBOX_WIDTH (MARIO_BIG_SITTING_BBOX_WIDTH + 6)
+#define MARIO_RACCOON_SITTING_BBOX_WIDTH MARIO_BIG_SITTING_BBOX_WIDTH
 #define MARIO_RACCOON_SITTING_BBOX_HEIGHT 16
 
 
 #define MARIO_UNTOUCHABLE_TIME 2500
+#define MARIO_ATTACK_TIME 300
 
 class CMario : public CGameObject
 {
@@ -141,6 +148,9 @@ class CMario : public CGameObject
 	ULONGLONG untouchable_start;
 	BOOLEAN isOnPlatform;
 	int coin; 
+
+	int flag;
+	ULONGLONG time_start; // to manage render time of some animations;
 
 	void OnCollisionWithGoomba(LPCOLLISIONEVENT e);
 	void OnCollisionWithCoin(LPCOLLISIONEVENT e);
@@ -164,6 +174,8 @@ public:
 		untouchable_start = -1;
 		isOnPlatform = false;
 		coin = 0;
+		flag = 0;
+		time_start = 0;
 	}
 	void Update(DWORD dt, vector<LPGAMEOBJECT>* coObjects);
 	void Render();
