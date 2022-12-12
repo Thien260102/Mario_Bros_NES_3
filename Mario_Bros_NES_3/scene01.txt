@@ -4,6 +4,7 @@ mario.txt
 brick.txt
 coin.txt
 goomba.txt
+koopas.txt
 cloud.txt
 mushroom.txt
 #
@@ -53,11 +54,16 @@ mushroom.txt
 4	180	120
 
 #Goomba
-2	300	10
+#2	300	10
+2	100	10
+
+#Koopas
+3	200	10
+3	300	10
 
 #id	x	y	width	height	length	begin	middle	end
 #Platform
-5	90	136	16	15	16	51000	52000	53000
+5	90	136	16	16	16	51000	52000	53000
 5	120	90	16	16	8	20001	20001	20001
 
 #Portal 

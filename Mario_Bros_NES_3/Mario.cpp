@@ -8,6 +8,7 @@
 #include "Coin.h"
 #include "Portal.h"
 #include "Mushroom.h"
+#include "Koopas.h"
 
 #include "Collision.h"
 
@@ -63,26 +64,35 @@ void CMario::OnCollisionWith(LPCOLLISIONEVENT e)
 		OnCollisionWithPortal(e);
 	else if (dynamic_cast<CMushroom*>(e->obj))
 		OnCollisionWithMushroom(e);
+	else if (dynamic_cast<CKoopas*>(e->obj))
+		OnCollisionWithKoopas(e);
 }
 
-void CMario::OnCollisionWithGoomba(LPCOLLISIONEVENT e)
+void CMario::OnCollisionWithKoopas(LPCOLLISIONEVENT e)
 {
-	CGoomba* goomba = dynamic_cast<CGoomba*>(e->obj);
+	CKoopas* koopas = dynamic_cast<CKoopas*>(e->obj);
 
-	// jump on top >> kill Goomba and deflect a bit 
-	if (e->ny < 0)
+	//MARIO kick KOOPAS shell
+	if (koopas->GetState() == KOOPAS_STATE_SHELL)
 	{
-		if (goomba->GetState() != GOOMBA_STATE_DIE)
+		//Mario animation kick
+		koopas->SetNx(-this->nx);
+		koopas->SetState(KOOPAS_STATE_ATTACKING);
+	}
+	// jump on top >> kill Koopas and deflect a bit 
+	else if (e->ny < 0)
+	{
+		if (koopas->GetState() >= KOOPAS_STATE_WALKING && koopas->GetState() < KOOPAS_STATE_SHELL)
 		{
-			goomba->SetState(GOOMBA_STATE_DIE);
+			koopas->SetState(KOOPAS_STATE_SHELL);
 			vy = -MARIO_JUMP_DEFLECT_SPEED;
 		}
 	}
-	else // hit by Goomba
+	else // hit by Koopas
 	{
 		if (untouchable == 0)
 		{
-			if (goomba->GetState() != GOOMBA_STATE_DIE)
+			if (koopas->GetState() < KOOPAS_STATE_SHELL)
 			{
 				if (level == MARIO_LEVEL_RACCOON)
 				{
@@ -140,6 +150,45 @@ void CMario::OnCollisionWithMushroom(LPCOLLISIONEVENT e)
 	
 
 	e->obj->Delete();
+}
+
+void CMario::OnCollisionWithGoomba(LPCOLLISIONEVENT e)
+{
+	CGoomba* goomba = dynamic_cast<CGoomba*>(e->obj);
+
+	// jump on top >> kill Goomba and deflect a bit 
+	if (e->ny < 0)
+	{
+		if (goomba->GetState() != GOOMBA_STATE_DIE_1)
+		{
+			goomba->SetState(GOOMBA_STATE_DIE_1);
+			vy = -MARIO_JUMP_DEFLECT_SPEED;
+		}
+	}
+	else // hit by Goomba
+	{
+		if (untouchable == 0)
+		{
+			if (goomba->GetState() != GOOMBA_STATE_DIE_1)
+			{
+				if (level == MARIO_LEVEL_RACCOON)
+				{
+					level = MARIO_LEVEL_BIG;
+					StartUntouchable();
+				}
+				else if (level == MARIO_LEVEL_BIG)
+				{
+					level = MARIO_LEVEL_SMALL;
+					StartUntouchable();
+				}
+				else
+				{
+					DebugOut(L">>> Mario DIE >>> \n");
+					SetState(MARIO_STATE_DIE);
+				}
+			}
+		}
+	}
 }
 
 //
@@ -346,9 +395,9 @@ void CMario::Render()
 
 	animations->Get(aniId)->Render(x, y);
 
-	//RenderBoundingBox();
+	RenderBoundingBox();
 	
-	DebugOutTitle(L"Coins: %d \t level: %d", coin, level);
+	//DebugOutTitle(L"Coins: %d \t level: %d", coin, level);
 }
 
 void CMario::SetState(int state)
@@ -488,6 +537,10 @@ void CMario::SetLevel(int l)
 	if (this->level == MARIO_LEVEL_SMALL)
 	{
 		y -= (MARIO_BIG_BBOX_HEIGHT - MARIO_SMALL_BBOX_HEIGHT) / 2;
+	}
+	else if (this->level == MARIO_LEVEL_BIG)
+	{
+		y -= 1;
 	}
 	level = l;
 }
