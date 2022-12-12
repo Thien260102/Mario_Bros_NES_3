@@ -11,7 +11,7 @@
 #define KOOPAS_BBOX_HEIGHT 24
 #define KOOPAS_BBOX_HEIGHT_DIE 15	//height die, shell, attack
 
-#define KOOPAS_PHASE_CHECK_SIZE 10
+#define KOOPAS_PHASE_CHECK_SIZE 24
 
 #define KOOPAS_SHELL_TIMEOUT 5000
 #define KOOPAS_DIE_TIMEOUT 500
@@ -29,10 +29,64 @@
 #define ID_ANI_KOOPAS_REFORM 6002
 #define ID_ANI_KOOPAS_ATTACKING 6003
 
+class CPhaseCheck : public CGameObject
+{
+protected:
+	float ax;
+	float ay;
+
+	virtual int IsCollidable() { return 1; }
+	virtual int IsBlocking() { return 0; }
+
+	virtual void OnNoCollision(DWORD dt)
+	{
+		x += vx * dt;
+		y += vy * dt;
+	}
+	virtual void OnCollisionWith(LPCOLLISIONEVENT e)
+	{
+		if (e->ny != 0)
+		{
+			vy = 0;
+		}
+	}
+
+	virtual void GetBoundingBox(float& left, float& top, float& right, float& bottom)
+	{
+		left = x - KOOPAS_PHASE_CHECK_SIZE / 2;
+		top = y - KOOPAS_PHASE_CHECK_SIZE / 2;
+		right = left + KOOPAS_PHASE_CHECK_SIZE;
+		bottom = top + KOOPAS_PHASE_CHECK_SIZE;
+	}
+
+	virtual void Update(DWORD dt, vector<LPGAMEOBJECT>* coObjects)
+	{
+		vy += ay * dt;
+		vx += ax * dt;
+
+		CGameObject::Update(dt, coObjects);
+		CCollision::GetInstance()->Process(this, dt, coObjects);
+	}
+	virtual void Render()
+	{
+		RenderBoundingBox();
+	}
+public:
+	//CPhaseCheck() : CGameObject() {}
+	CPhaseCheck(float x, float y) : CGameObject(x, y)
+	{
+		this->ax = 0;
+		this->ay = KOOPAS_GRAVITY;
+		vx = -KOOPAS_WALKING_SPEED;
+		vy = 0;
+	}
+};
+
 
 class CKoopas :public CGameObject
 {
 protected:
+	CGameObject* phaseCheck;
 
 	float ax;
 	float ay;
@@ -58,6 +112,8 @@ public:
 		die_start = -1;
 		SetState(KOOPAS_STATE_WALKING);
 		level = KOOPAS_LEVEL_NORMAL;
+
+		phaseCheck = new CPhaseCheck(x - KOOPAS_BBOX_WIDTH - KOOPAS_PHASE_CHECK_SIZE / 2, y);
 	}
 	void SetState(int state);
 
