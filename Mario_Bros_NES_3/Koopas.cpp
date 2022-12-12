@@ -35,26 +35,36 @@ void CKoopas::OnCollisionWith(LPCOLLISIONEVENT e)
 	{
 		vy = 0;
 	}
-	// only change direction when Koopas attack form blocked by brick
+	// only change direction when Koopas blocked by brick
 	if (e->obj->IsBlocking() && e->nx != 0)
 	{
 		vx = -vx;
+
+		float p_vx, p_vy;
+		phaseCheck->GetSpeed(p_vx, p_vy);
+
+		if (p_vx >= this->vx)
+			phaseCheck->SetPosition(x - KOOPAS_BBOX_WIDTH, y);
+		else
+			phaseCheck->SetPosition(x + KOOPAS_BBOX_WIDTH, y);
 	}
+
 
 	// phaseCheck is falling ?
 	float px, py;
 	phaseCheck->GetPosition(px, py);
-	if (state != KOOPAS_STATE_ATTACKING
-		&& py - this->y > 1)
+	if (state == KOOPAS_STATE_WALKING && py - this->y > 10)
 	{
 		vx = -vx;
+
 		if (px <= this->x)
 			phaseCheck->SetPosition(x + KOOPAS_BBOX_WIDTH, y);
 		else
 			phaseCheck->SetPosition(x - KOOPAS_BBOX_WIDTH, y);
+
 	}
 
-	phaseCheck->SetSpeed(vx, vy);
+	phaseCheck->SetSpeed(vx, 1);
 
 
 	if (state != KOOPAS_STATE_ATTACKING)
@@ -96,7 +106,7 @@ void CKoopas::OnCollisionWithKoopas(LPCOLLISIONEVENT e)
 
 void CKoopas::Update(DWORD dt, vector<LPGAMEOBJECT>* coObjects)
 {
-	if(state != KOOPAS_STATE_ATTACKING)
+	if(state == KOOPAS_STATE_WALKING)
 		phaseCheck->Update(dt, coObjects);
 
 	vy += ay * dt;
@@ -123,7 +133,7 @@ void CKoopas::Update(DWORD dt, vector<LPGAMEOBJECT>* coObjects)
 
 void CKoopas::Render()
 {
-	if(state != KOOPAS_STATE_ATTACKING)
+	if(state == KOOPAS_STATE_WALKING)
 		phaseCheck->RenderBoundingBox();
 
 	int aniId = GetAniId();

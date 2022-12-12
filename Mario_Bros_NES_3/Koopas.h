@@ -11,7 +11,8 @@
 #define KOOPAS_BBOX_HEIGHT 24
 #define KOOPAS_BBOX_HEIGHT_DIE 15	//height die, shell, attack
 
-#define KOOPAS_PHASE_CHECK_SIZE 24
+#define KOOPAS_PHASE_CHECK_HEIGHT 24
+#define KOOPAS_PHASE_CHECK_WIDTH 14
 
 #define KOOPAS_SHELL_TIMEOUT 5000
 #define KOOPAS_DIE_TIMEOUT 500
@@ -53,10 +54,10 @@ protected:
 
 	virtual void GetBoundingBox(float& left, float& top, float& right, float& bottom)
 	{
-		left = x - KOOPAS_PHASE_CHECK_SIZE / 2;
-		top = y - KOOPAS_PHASE_CHECK_SIZE / 2;
-		right = left + KOOPAS_PHASE_CHECK_SIZE;
-		bottom = top + KOOPAS_PHASE_CHECK_SIZE;
+		left = x - KOOPAS_PHASE_CHECK_WIDTH / 2;
+		top = y - KOOPAS_PHASE_CHECK_HEIGHT / 2;
+		right = left + KOOPAS_PHASE_CHECK_WIDTH;
+		bottom = top + KOOPAS_PHASE_CHECK_HEIGHT;
 	}
 
 	virtual void Update(DWORD dt, vector<LPGAMEOBJECT>* coObjects)
@@ -113,7 +114,7 @@ public:
 		SetState(KOOPAS_STATE_WALKING);
 		level = KOOPAS_LEVEL_NORMAL;
 
-		phaseCheck = new CPhaseCheck(x - KOOPAS_BBOX_WIDTH - KOOPAS_PHASE_CHECK_SIZE / 2, y);
+		phaseCheck = new CPhaseCheck(x - KOOPAS_BBOX_WIDTH - KOOPAS_PHASE_CHECK_WIDTH / 2, y);
 	}
 	void SetState(int state);
 
