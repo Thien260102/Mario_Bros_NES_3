@@ -5,7 +5,7 @@ brick.txt
 coin.txt
 goomba.txt
 koopas.txt
-cloud.txt
+misc.txt
 mushroom.txt
 #
 [OBJECTS]
@@ -70,6 +70,7 @@ mushroom.txt
 #id	x	y	width	height	length	begin	middle	end
 #Platform
 5	284	90	16	16	2	51000	52000	53000
+5	284	106	16	16	5	53100	53200	53300
 5	252	90	16	16	1	20001	20001	20001
 
 #Portal 
