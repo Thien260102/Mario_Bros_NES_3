@@ -61,6 +61,12 @@ mushroom.txt
 3	200	10
 3	300	10
 
+#question brick
+7	50	90
+7	65	90
+7	80	90
+7	95	110
+
 #id	x	y	width	height	length	begin	middle	end
 #Platform
 5	284	90	16	16	2	51000	52000	53000
