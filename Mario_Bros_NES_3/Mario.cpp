@@ -158,7 +158,6 @@ void CMario::OnCollisionWithMushroom(LPCOLLISIONEVENT e)
 void CMario::OnCollisionWithGoomba(LPCOLLISIONEVENT e)
 {
 	CGoomba* goomba = dynamic_cast<CGoomba*>(e->obj);
-
 	// jump on top >> kill Goomba and deflect a bit 
 	if (e->ny < 0)
 	{
@@ -198,12 +197,19 @@ void CMario::OnCollisionWithBrick(LPCOLLISIONEVENT e)
 {
 	CBrick* brick = dynamic_cast<CBrick*>(e->obj);
 
-	// jump up brick
+	// Mario jumping into brick from below
 	if (e->ny > 0)
 	{
 		if (brick->GetType() == BRICK_TYPE_QUESTION)
 		{
 			brick->SetType(BRICK_TYPE_EMPTY);
+		}
+		else if (brick->GetType() == BRICK_TYPE_GOLD)
+		{
+			if (level == MARIO_LEVEL_SMALL)
+				brick->SetState(BRICK_STATE_DEFLECT);
+			else
+				brick->SetType(BRICK_TYPE_BREAK);
 		}
 	}
 }
