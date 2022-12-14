@@ -94,11 +94,11 @@ protected:
 
 	int level;
 
-	ULONGLONG shellForm_start;
-	ULONGLONG die_start;
+	ULONGLONG time_start;
 	
 	virtual int IsCollidable() { return state != KOOPAS_STATE_DIE; }
 	virtual int IsBlocking() { return 0; }
+	virtual void Deflected(int Direction);
 
 	void OnCollisionWithGoomba(LPCOLLISIONEVENT e);
 	void OnCollisionWithKoopas(LPCOLLISIONEVENT e);
@@ -109,8 +109,7 @@ public:
 	{
 		this->ax = 0;
 		this->ay = KOOPAS_GRAVITY;
-		shellForm_start = -1;
-		die_start = -1;
+		time_start = -1;
 		SetState(KOOPAS_STATE_WALKING);
 		level = KOOPAS_LEVEL_NORMAL;
 
