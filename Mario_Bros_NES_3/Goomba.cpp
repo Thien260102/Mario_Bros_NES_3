@@ -1,11 +1,12 @@
 #include "Goomba.h"
 #include "debug.h"
+#include "Brick.h"
 
 CGoomba::CGoomba(float x, float y):CGameObject(x, y)
 {
 	this->ax = 0;
 	this->ay = GOOMBA_GRAVITY;
-	die_start = -1;
+	time_start = -1;
 	SetState(GOOMBA_STATE_WALKING);
 }
 
@@ -35,12 +36,25 @@ void CGoomba::OnNoCollision(DWORD dt)
 
 void CGoomba::OnCollisionWith(LPCOLLISIONEVENT e)
 {
-	if (!e->obj->IsBlocking()) return; 
-	if (dynamic_cast<CGoomba*>(e->obj)) return; 
+	if (!e->obj->IsBlocking()) return;
+	if (dynamic_cast<CGoomba*>(e->obj)) return;
 
-	if (e->ny != 0 )
+	if (e->ny != 0)
 	{
 		vy = 0;
+
+		if (e->ny < 0 && dynamic_cast<CBrick*>(e->obj)->IsAttacking())
+		{
+			this->SetState(GOOMBA_STATE_DIE_2);
+
+			float bx, by;
+			(e->obj)->GetPosition(bx, by);
+
+			if (bx < x)
+				this->Deflected(DEFLECT_DIRECTION_RIGHT);
+			else
+				this->Deflected(DEFLECT_DIRECTION_LEFT);
+		}
 	}
 	else if (e->nx != 0)
 	{
@@ -53,7 +67,7 @@ void CGoomba::Update(DWORD dt, vector<LPGAMEOBJECT> *coObjects)
 	vy += ay * dt;
 	vx += ax * dt;
 
-	if ((state == GOOMBA_STATE_DIE_1 || state == GOOMBA_STATE_DIE_2) && (GetTickCount64() - die_start > GOOMBA_DIE_TIMEOUT))
+	if ((state == GOOMBA_STATE_DIE_1 || state == GOOMBA_STATE_DIE_2) && (GetTickCount64() - time_start > GOOMBA_DIE_TIMEOUT))
 	{
 		isDeleted = true;
 		return;
@@ -79,17 +93,14 @@ void CGoomba::SetState(int state)
 	switch (state)
 	{
 		case GOOMBA_STATE_DIE_1:
-			die_start = GetTickCount64();
+			time_start = GetTickCount64();
 			y += (GOOMBA_BBOX_HEIGHT - GOOMBA_BBOX_HEIGHT_DIE)/2;
 			vx = 0;
 			vy = 0;
 			ay = 0; 
 			break;
 		case GOOMBA_STATE_DIE_2:
-			die_start = GetTickCount64();
-			vy = -GOOMBA_DIE_DEFLECT;
-			vx = GOOMBA_WALKING_SPEED;
-			ax = 0;
+			time_start = GetTickCount64();
 			break;
 		case GOOMBA_STATE_WALKING: 
 			vx = -GOOMBA_WALKING_SPEED;
@@ -106,4 +117,13 @@ int CGoomba::GetAniId()
 
 
 	return aniId;
+}
+
+void CGoomba::Deflected(int Direction)
+{
+	vy = -GOOMBA_DIE_DEFLECT;
+	ay = GOOMBA_GRAVITY;
+
+	vx = Direction * GOOMBA_WALKING_SPEED;
+	ax = 0;
 }
