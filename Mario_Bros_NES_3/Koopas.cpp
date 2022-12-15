@@ -38,21 +38,8 @@ void CKoopas::OnCollisionWith(LPCOLLISIONEVENT e)
 		if (time_start != -1)
 			vx = 0;
 
-		if (e->ny < 0 && dynamic_cast<CBrick*>(e->obj)->IsAttacking())
-		{
-			this->SetState(KOOPAS_STATE_SHELL);
-			
-			float bx, by;
-			(e->obj)->GetPosition(bx, by);
-			if (bx < x)
-				this->Deflected(DEFLECT_DIRECTION_RIGHT);
-			else
-				this->Deflected(DEFLECT_DIRECTION_LEFT);
-		}
-
-
 	}
-	// only change direction when Koopas blocked by brick
+	//change direction when Koopas blocked by brick
 	if (e->obj->IsBlocking() && e->nx != 0)
 	{
 		vx = -vx;
@@ -85,13 +72,37 @@ void CKoopas::OnCollisionWith(LPCOLLISIONEVENT e)
 	phaseCheck->SetSpeed(vx, 1);
 
 
-	if (state != KOOPAS_STATE_ATTACKING)
-		return;
-
-	if (dynamic_cast<CGoomba*>(e->obj))
+	if (dynamic_cast<CBrick*>(e->obj))
+		OnCollisionWithBrick(e);
+	else if (dynamic_cast<CGoomba*>(e->obj))
 		OnCollisionWithGoomba(e);
 	else if (dynamic_cast<CKoopas*>(e->obj))
 		OnCollisionWithKoopas(e);
+}
+
+void CKoopas::OnCollisionWithBrick(LPCOLLISIONEVENT e)
+{
+	CBrick* brick = dynamic_cast<CBrick*>(e->obj);
+
+	if (brick->IsAttacking() && e->ny != 0)
+	{
+		this->SetState(KOOPAS_STATE_SHELL);
+
+		float bx, by;
+		brick->GetPosition(bx, by);
+
+		if (bx < x)
+			this->Deflected(DEFLECT_DIRECTION_RIGHT);
+		else
+			this->Deflected(DEFLECT_DIRECTION_LEFT);
+	}
+	if (state == KOOPAS_STATE_ATTACKING && e->nx != 0)
+	{
+		if (brick->GetType() == BRICK_TYPE_GOLD)
+			brick->SetType(BRICK_TYPE_BREAK);
+		else if (brick->GetType() == BRICK_TYPE_QUESTION)
+			brick->SetType(BRICK_TYPE_EMPTY);
+	}
 }
 
 void CKoopas::OnCollisionWithGoomba(LPCOLLISIONEVENT e)

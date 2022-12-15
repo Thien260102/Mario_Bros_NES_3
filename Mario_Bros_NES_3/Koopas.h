@@ -91,7 +91,6 @@ protected:
 
 	float ax;
 	float ay;
-
 	int level;
 
 	ULONGLONG time_start;
@@ -102,6 +101,7 @@ protected:
 
 	void OnCollisionWithGoomba(LPCOLLISIONEVENT e);
 	void OnCollisionWithKoopas(LPCOLLISIONEVENT e);
+	void OnCollisionWithBrick(LPCOLLISIONEVENT e);
 
 	int GetAniId();
 public:
