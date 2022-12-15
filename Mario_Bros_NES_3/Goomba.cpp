@@ -36,29 +36,39 @@ void CGoomba::OnNoCollision(DWORD dt)
 
 void CGoomba::OnCollisionWith(LPCOLLISIONEVENT e)
 {
-	if (!e->obj->IsBlocking()) return;
+	//if (!e->obj->IsBlocking()) return;
 	if (dynamic_cast<CGoomba*>(e->obj)) return;
 
 	if (e->ny != 0)
 	{
 		vy = 0;
 
-		if (e->ny < 0 && dynamic_cast<CBrick*>(e->obj)->IsAttacking())
-		{
-			this->SetState(GOOMBA_STATE_DIE_2);
-
-			float bx, by;
-			(e->obj)->GetPosition(bx, by);
-
-			if (bx < x)
-				this->Deflected(DEFLECT_DIRECTION_RIGHT);
-			else
-				this->Deflected(DEFLECT_DIRECTION_LEFT);
-		}
+		
 	}
 	else if (e->nx != 0)
 	{
 		vx = -vx;
+	}
+
+	if (dynamic_cast<CBrick*>(e->obj))
+		OnCollisionWithBrick(e);
+}
+
+void CGoomba::OnCollisionWithBrick(LPCOLLISIONEVENT e)
+{
+	CBrick* brick = dynamic_cast<CBrick*>(e->obj);
+
+	if (brick->IsAttacking() && e->ny != 0)
+	{
+		this->SetState(GOOMBA_STATE_DIE_2);
+
+		float bx, by;
+		(e->obj)->GetPosition(bx, by);
+
+		if (bx < x)
+			this->Deflected(DEFLECT_DIRECTION_RIGHT);
+		else
+			this->Deflected(DEFLECT_DIRECTION_LEFT);
 	}
 }
 
