@@ -162,7 +162,7 @@ void CBrick::SetState(int State)
 
 bool CBrick::IsAttacking()
 {
-	return time_start != -1;
+	return this != NULL && time_start != -1;
 }
 
 void CBrick::Deflected(int Direction)
