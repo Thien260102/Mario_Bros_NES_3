@@ -62,8 +62,8 @@ void CGoomba::OnCollisionWithBrick(LPCOLLISIONEVENT e)
 	{
 		this->SetState(GOOMBA_STATE_DIE_2);
 
-		float bx, by;
-		brick->GetPosition(bx, by);
+			float bx, by;
+			brick->GetPosition(bx, by);
 
 		if (bx < x)
 			this->Deflected(DEFLECT_DIRECTION_RIGHT);
