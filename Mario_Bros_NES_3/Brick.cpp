@@ -10,35 +10,30 @@ void CBrick::Update(DWORD dt, vector<LPGAMEOBJECT>* coObjects)
 
 	this->Update(dt);
 
-	CGameObject::Update(dt, coObjects);
-	CCollision::GetInstance()->Process(this, dt, coObjects);
+	//CGameObject::Update(dt, coObjects);
+	//CCollision::GetInstance()->Process(this, dt, coObjects);
 }
 
 void CBrick::Update(DWORD dt)
 {
+	vy += ay * dt;
+
+	x += vx * dt;
+	y += vy * dt;
 
 	if (type == BRICK_TYPE_EMPTY || state == BRICK_STATE_DEFLECT)
 	{
-		vy += ay * dt;
-		y += vy * dt;
-
-
 		if (y > old_y)
 		{
 			y = old_y;
+			state = -1;
 			time_start = -1;
 			vy = 0;
 			ay = 0;
-			state = -1;
 		}
 	}
 	else if (type == BRICK_TYPE_BREAK)
 	{
-		vx += ax * dt;
-		vy += ay * dt;
-
-		x += vx * dt;
-		y += vy * dt;
 
 		if (GetTickCount64() - time_start > BRICK_BREAK_TIMEOUT)
 		{
@@ -111,7 +106,6 @@ void CBrick::SetType(int Type)
 	case BRICK_TYPE_GOLD:
 
 		break;
-
 	case BRICK_TYPE_QUESTION:
 
 		break;
@@ -155,29 +149,25 @@ void CBrick::SetType(int Type)
 
 void CBrick::SetState(int State)
 {
-	CGameObject::SetState(State);
-	switch (state)
+	switch (State)
 	{
 	case BRICK_STATE_DEFLECT:
 		time_start = GetTickCount64();
 		old_y = y;
-		ay = BRICK_GRAVITY;
-		vy = -BRICK_TRANSFORM_DEFLECT;
+		Deflected(0);
 		break;
 	}
+	this->state = State;
 }
 
 bool CBrick::IsAttacking()
 {
-	if (this == NULL || time_start == -1)
-		return false;
-
-	return type == BRICK_TYPE_BREAK || type == BRICK_TYPE_EMPTY
-		|| state == BRICK_STATE_DEFLECT;
+	return time_start != -1;
 }
 
 void CBrick::Deflected(int Direction)
 {
 	ay = BRICK_GRAVITY;
 	vy = -BRICK_TRANSFORM_DEFLECT;
+	vx = 0;
 }

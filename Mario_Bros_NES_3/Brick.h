@@ -28,13 +28,12 @@
 #define BRICK_TYPE_EMPTY 3
 #define BRICK_TYPE_BREAK 4
 
-#define BRICK_STATE_DEFLECT 1
+#define BRICK_STATE_DEFLECT 10
 
 class CBrick : public CGameObject {
 protected:
 	float old_y;
 
-	float ax;
 	float ay;
 	int type;
 
@@ -55,12 +54,11 @@ public:
 	CBrick(float x, float y, int Type) : CGameObject(x, y) 
 	{
 		type = -1;
+		state = -1;
 		SetType(Type);
 		time_start = -1;
-		state = -1;
 		old_y = 0;
 
-		ax = 0;
 		ay = 0;
 		vx = 0;
 		vy = 0;
