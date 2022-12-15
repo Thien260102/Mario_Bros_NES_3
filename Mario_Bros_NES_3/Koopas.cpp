@@ -45,31 +45,31 @@ void CKoopas::OnCollisionWith(LPCOLLISIONEVENT e)
 		vx = -vx;
 
 		float p_vx, p_vy;
-		phaseCheck->GetSpeed(p_vx, p_vy);
+		phaseChecker->GetSpeed(p_vx, p_vy);
 
 		if (p_vx >= this->vx)
-			phaseCheck->SetPosition(x - KOOPAS_BBOX_WIDTH, y);
+			phaseChecker->SetPosition(x - KOOPAS_BBOX_WIDTH, y);
 		else
-			phaseCheck->SetPosition(x + KOOPAS_BBOX_WIDTH, y);
+			phaseChecker->SetPosition(x + KOOPAS_BBOX_WIDTH, y);
 		
 	}
 
 
 	// phaseCheck is falling ?
 	float px, py;
-	phaseCheck->GetPosition(px, py);
+	phaseChecker->GetPosition(px, py);
 	if (state == KOOPAS_STATE_WALKING && py - this->y > 10)
 	{
 		vx = -vx;
 
 		if (px <= this->x)
-			phaseCheck->SetPosition(x + KOOPAS_BBOX_WIDTH, y);
+			phaseChecker->SetPosition(x + KOOPAS_BBOX_WIDTH, y);
 		else
-			phaseCheck->SetPosition(x - KOOPAS_BBOX_WIDTH, y);
+			phaseChecker->SetPosition(x - KOOPAS_BBOX_WIDTH, y);
 
 	}
 
-	phaseCheck->SetSpeed(vx, 1);
+	phaseChecker->SetSpeed(vx, 1);
 
 
 	if (dynamic_cast<CBrick*>(e->obj))
@@ -147,7 +147,7 @@ void CKoopas::OnCollisionWithKoopas(LPCOLLISIONEVENT e)
 void CKoopas::Update(DWORD dt, vector<LPGAMEOBJECT>* coObjects)
 {
 	if(state == KOOPAS_STATE_WALKING)
-		phaseCheck->Update(dt, coObjects);
+		phaseChecker->Update(dt, coObjects);
 
 	vy += ay * dt;
 	vx += ax * dt;
@@ -162,7 +162,7 @@ void CKoopas::Update(DWORD dt, vector<LPGAMEOBJECT>* coObjects)
 	if ((state == KOOPAS_STATE_DIE) && (GetTickCount64() - time_start > KOOPAS_DIE_TIMEOUT))
 	{
 		isDeleted = true;
-		phaseCheck->Delete();
+		phaseChecker->Delete();
 		return;
 	}
 
@@ -174,7 +174,7 @@ void CKoopas::Update(DWORD dt, vector<LPGAMEOBJECT>* coObjects)
 void CKoopas::Render()
 {
 	if(state == KOOPAS_STATE_WALKING)
-		phaseCheck->RenderBoundingBox();
+		phaseChecker->RenderBoundingBox();
 
 	int aniId = GetAniId();
 	
@@ -183,7 +183,7 @@ void CKoopas::Render()
 	RenderBoundingBox();
 
 	float px, py;
-	phaseCheck->GetPosition(px, py);
+	phaseChecker->GetPosition(px, py);
 }
 
 void CKoopas::SetState(int state)
