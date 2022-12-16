@@ -200,6 +200,7 @@ void CKoopas::SetState(int state)
 		break;
 	case KOOPAS_STATE_WALKING:
 		vx = -KOOPAS_WALKING_SPEED;
+		phaseChecker->SetPosition(x - KOOPAS_BBOX_WIDTH - KOOPAS_PHASE_CHECK_WIDTH / 2, y);
 		break;
 	case KOOPAS_STATE_ATTACKING:
 		time_start = -1;

@@ -57,15 +57,16 @@ protected:
 public:
 	CKoopas(float x, float y) :CGameObject(x, y)
 	{
+		phaseChecker = new CPhaseChecker(x - KOOPAS_BBOX_WIDTH - KOOPAS_PHASE_CHECK_WIDTH / 2, y,
+			KOOPAS_PHASE_CHECK_WIDTH, KOOPAS_PHASE_CHECK_HEIGHT);
+		phaseChecker->SetSpeed(0, KOOPAS_WALKING_SPEED);
+
 		this->ax = 0;
 		this->ay = KOOPAS_GRAVITY;
 		time_start = -1;
 		SetState(KOOPAS_STATE_WALKING);
 		level = KOOPAS_LEVEL_NORMAL;
 
-		phaseChecker = new CPhaseChecker(x - KOOPAS_BBOX_WIDTH - KOOPAS_PHASE_CHECK_WIDTH / 2, y,
-			KOOPAS_PHASE_CHECK_WIDTH, KOOPAS_PHASE_CHECK_HEIGHT);
-		phaseChecker->SetSpeed(0, KOOPAS_WALKING_SPEED);
 	}
 	void SetState(int state);
 
