@@ -8,6 +8,7 @@
 
 #define MARIO_WALKING_SPEED		0.1f
 #define MARIO_RUNNING_SPEED		0.2f
+#define MARIO_ATTACK_SPEED		1.0f
 
 #define MARIO_ACCEL_WALK_X	0.0005f
 #define MARIO_ACCEL_RUN_X	0.0007f
@@ -35,6 +36,7 @@
 
 #define MARIO_STATE_ATTACK		700
 
+#define MARIO_STATE_KICK		710
 
 #pragma region ANIMATION_ID
 
@@ -59,6 +61,9 @@
 #define ID_ANI_MARIO_BRACE_RIGHT 1000
 #define ID_ANI_MARIO_BRACE_LEFT 1001
 
+#define ID_ANI_MARIO_KICK_RIGHT 1002
+#define ID_ANI_MARIO_KICK_LEFT 1003
+
 #define ID_ANI_MARIO_DIE 999
 
 // SMALL MARIO
@@ -79,6 +84,9 @@
 
 #define ID_ANI_MARIO_SMALL_JUMP_RUN_RIGHT 1600
 #define ID_ANI_MARIO_SMALL_JUMP_RUN_LEFT 1601
+
+#define ID_ANI_MARIO_SMALL_KICK_RIGHT 1610
+#define ID_ANI_MARIO_SMALL_KICK_LEFT 1611
 
 //	RACCOON MARIO	//
 #define ID_ANI_MARIO_RACCOON_IDLE_RIGHT 1700
@@ -106,6 +114,9 @@
 
 #define ID_ANI_MARIO_RACCOON_ATTACK_RIGHT 2400
 #define ID_ANI_MARIO_RACCOON_ATTACK_LEFT 2401
+
+#define ID_ANI_MARIO_RACCOON_KICK_RIGHT 2500
+#define ID_ANI_MARIO_RACCOON_KICK_LEFT 2501
 #pragma endregion
 
 #define GROUND_Y 160.0f
@@ -132,10 +143,11 @@
 #define MARIO_RACCOON_SITTING_BBOX_WIDTH (MARIO_BIG_SITTING_BBOX_WIDTH + 0)
 #define MARIO_RACCOON_SITTING_BBOX_HEIGHT 16
 
-#define MARIO_RACCOON_ATTACK_WIDTH 6
+#define MARIO_RACCOON_ATTACK_WIDTH 10 // when Mario Raccoon attack, width increase
 
 #define MARIO_UNTOUCHABLE_TIME 2500
 #define MARIO_ATTACK_TIME 300
+#define MARIO_KICK_TIME 200
 
 class CMario : public CGameObject
 {
@@ -196,6 +208,7 @@ public:
 
 	void SetLevel(int l);
 	void StartUntouchable() { untouchable = 1; untouchable_start = GetTickCount64(); }
+	int GetLevel() { return level; }
 
 	void GetBoundingBox(float& left, float& top, float& right, float& bottom);
 };
