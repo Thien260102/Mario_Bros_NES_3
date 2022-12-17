@@ -196,6 +196,7 @@ void CKoopas::Render()
 void CKoopas::SetState(int state)
 {
 	CGameObject::SetState(state);
+	isHeld = 0;
 	switch (state)
 	{
 	case KOOPAS_STATE_SHELL:

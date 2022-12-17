@@ -42,6 +42,7 @@ protected:
 	float ax;
 	float ay;
 	int level;
+	int isHeld;
 
 	ULONGLONG time_start;
 	
@@ -66,7 +67,7 @@ public:
 		time_start = -1;
 		SetState(KOOPAS_STATE_WALKING);
 		level = KOOPAS_LEVEL_NORMAL;
-
+		isHeld = 0;
 	}
 	void SetState(int state);
 
@@ -80,5 +81,8 @@ public:
 	void SetLevel(int level);
 
 	void SetNx(int nx) { this->nx = nx; }
+
+	bool IsHeld() { return isHeld; }
+	void isHold() { isHeld = 1; }
 };
 
