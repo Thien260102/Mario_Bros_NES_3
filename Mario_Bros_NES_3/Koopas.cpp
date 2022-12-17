@@ -111,9 +111,16 @@ void CKoopas::OnCollisionWithGoomba(LPCOLLISIONEVENT e)
 	
 	if (state == KOOPAS_STATE_ATTACKING)
 	{
-		if (goomba->GetState() != GOOMBA_STATE_DIE_1)
+		if (goomba->GetState() != GOOMBA_STATE_DIE_1 && goomba->GetState() != GOOMBA_STATE_DIE_2)
 		{
 			goomba->SetState(GOOMBA_STATE_DIE_2);
+
+			float gx, gy;
+			goomba->GetPosition(gx, gy);
+			if (gx >= x)
+				goomba->Deflected(DEFLECT_DIRECTION_RIGHT);
+			else
+				goomba->Deflected(DEFLECT_DIRECTION_LEFT);
 		}
 	}
 }
