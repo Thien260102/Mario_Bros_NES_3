@@ -5,6 +5,7 @@
 #include "Animations.h"
 
 #include "debug.h"
+#include "Koopas.h"
 
 #define MARIO_WALKING_SPEED		0.1f
 #define MARIO_RUNNING_SPEED		0.2f
@@ -38,6 +39,10 @@
 
 #define MARIO_STATE_KICK		710
 
+#define MARIO_STATE_READY_HOLD		800
+#define MARIO_STATE_HOLD_RELEASE	810
+
+
 #pragma region ANIMATION_ID
 
 #define ID_ANI_MARIO_IDLE_RIGHT 400
@@ -70,6 +75,9 @@
 #define ID_ANI_MARIO_HOLD_STAND_RIGHT 1006
 #define ID_ANI_MARIO_HOLD_STAND_LEFT 1007
 
+#define ID_ANI_MARIO_HOLD_JUMP_RIGHT 1008
+#define ID_ANI_MARIO_HOLD_JUMP_LEFT 1009
+
 #define ID_ANI_MARIO_DIE 999
 
 // SMALL MARIO
@@ -96,6 +104,8 @@
 
 #define ID_ANI_MARIO_SMALL_HOLD_RUN_RIGHT 1650
 #define ID_ANI_MARIO_SMALL_HOLD_RUN_LEFT 1651
+#define ID_ANI_MARIO_SMALL_HOLD_JUMP_RIGHT 1652
+#define ID_ANI_MARIO_SMALL_HOLD_JUMP_LEFT 1653
 
 #define ID_ANI_MARIO_SMALL_HOLD_STAND_RIGHT 1660
 #define ID_ANI_MARIO_SMALL_HOLD_STAND_LEFT 1661
@@ -136,6 +146,8 @@
 
 #define ID_ANI_MARIO_RACCOON_HOLD_RUN_RIGHT 2700
 #define ID_ANI_MARIO_RACCOON_HOLD_RUN_LEFT 2701
+#define ID_ANI_MARIO_RACCOON_HOLD_JUMP_RIGHT 2702
+#define ID_ANI_MARIO_RACCOON_HOLD_JUMP_LEFT 2703
 
 #pragma endregion
 
@@ -158,7 +170,7 @@
 #define MARIO_SMALL_BBOX_WIDTH  13
 #define MARIO_SMALL_BBOX_HEIGHT 12
 
-#define MARIO_RACCOON_BBOX_WIDTH (MARIO_BIG_BBOX_WIDTH + 0)
+#define MARIO_RACCOON_BBOX_WIDTH (MARIO_BIG_BBOX_WIDTH + 5)
 #define MARIO_RACCOON_BBOX_HEIGHT 25
 #define MARIO_RACCOON_SITTING_BBOX_WIDTH (MARIO_BIG_SITTING_BBOX_WIDTH + 0)
 #define MARIO_RACCOON_SITTING_BBOX_HEIGHT 16
@@ -171,6 +183,8 @@
 
 class CMario : public CGameObject
 {
+	CKoopas* _koopas;
+
 	BOOLEAN isSitting;
 	float maxVx;
 	float ax;				// acceleration on x 
@@ -180,6 +194,7 @@ class CMario : public CGameObject
 	int untouchable; 
 	ULONGLONG untouchable_start;
 	BOOLEAN isOnPlatform;
+	int holdable;
 	int coin; 
 
 	int flag;
@@ -211,6 +226,8 @@ public:
 		coin = 0;
 		flag = 0;
 		time_start = 0;
+		holdable = 0;
+		_koopas = NULL;
 	}
 	void Update(DWORD dt, vector<LPGAMEOBJECT>* coObjects);
 	void Render();
@@ -231,4 +248,6 @@ public:
 	int GetLevel() { return level; }
 
 	void GetBoundingBox(float& left, float& top, float& right, float& bottom);
+
+	int isHolding() { return _koopas != NULL; }
 };
