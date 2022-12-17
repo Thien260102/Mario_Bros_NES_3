@@ -109,19 +109,28 @@ void CKoopas::OnCollisionWithGoomba(LPCOLLISIONEVENT e)
 {
 	CGoomba* goomba = dynamic_cast<CGoomba*>(e->obj);
 	
-	if (state == KOOPAS_STATE_ATTACKING)
+	if (goomba->GetState() == GOOMBA_STATE_DIE_1 || goomba->GetState() == GOOMBA_STATE_DIE_2)
+		return;
+	
+	switch (state)
 	{
-		if (goomba->GetState() != GOOMBA_STATE_DIE_1 && goomba->GetState() != GOOMBA_STATE_DIE_2)
-		{
-			goomba->SetState(GOOMBA_STATE_DIE_2);
+	case KOOPAS_STATE_SHELL:
+		goomba->SetState(GOOMBA_STATE_DIE_2);
+		goomba->Deflected(0);
+		this->SetState(KOOPAS_STATE_DIE);
+		this->Deflected(0);
+		break;
 
-			float gx, gy;
-			goomba->GetPosition(gx, gy);
-			if (gx >= x)
-				goomba->Deflected(DEFLECT_DIRECTION_RIGHT);
-			else
-				goomba->Deflected(DEFLECT_DIRECTION_LEFT);
-		}
+	case KOOPAS_STATE_ATTACKING:
+		goomba->SetState(GOOMBA_STATE_DIE_2);
+
+		float gx, gy;
+		goomba->GetPosition(gx, gy);
+		if (gx >= x)
+			goomba->Deflected(DEFLECT_DIRECTION_RIGHT);
+		else
+			goomba->Deflected(DEFLECT_DIRECTION_LEFT);
+		break;
 	}
 }
 
@@ -129,25 +138,56 @@ void CKoopas::OnCollisionWithKoopas(LPCOLLISIONEVENT e)
 {
 	CKoopas* koopas = dynamic_cast<CKoopas*>(e->obj);
 
+	if (koopas->state == KOOPAS_STATE_DIE)
+		return;
+
+	switch (state)
+	{
+	case KOOPAS_STATE_ATTACKING:
+		float kx, ky;
+		koopas->GetPosition(kx, ky);
+
+		if ((koopas->state == KOOPAS_STATE_ATTACKING) || (koopas->state == KOOPAS_STATE_SHELL && koopas->isHeld))
+		{
+			this->SetState(KOOPAS_STATE_DIE);
+
+			if (kx >= x)
+				this->Deflected(DEFLECT_DIRECTION_LEFT);
+			else
+				this->Deflected(DEFLECT_DIRECTION_RIGHT);
+		}
+		koopas->SetState(KOOPAS_STATE_DIE);
+		koopas->Deflected(this->vx);
+
+		break;
+
+	default:
+		if (koopas->state == KOOPAS_STATE_SHELL && koopas->isHeld)
+		{
+			koopas->SetState(KOOPAS_STATE_DIE);
+			this->SetState(KOOPAS_STATE_DIE);
+		}
+		break;
+	}
+
 	if (state == KOOPAS_STATE_ATTACKING)
 	{
-		if (koopas->GetState() != KOOPAS_STATE_DIE)
+
+		float kx, ky;
+		koopas->GetPosition(kx, ky);
+
+		if (koopas->GetState() == KOOPAS_STATE_ATTACKING)
 		{
-			float kx, ky;
-			koopas->GetPosition(kx, ky);
+			this->SetState(KOOPAS_STATE_DIE);
 
-			if (koopas->GetState() == KOOPAS_STATE_ATTACKING)
-			{
-				this->SetState(KOOPAS_STATE_DIE);
-
-				if (kx >= x)
-					this->Deflected(DEFLECT_DIRECTION_LEFT);
-				else
-					this->Deflected(DEFLECT_DIRECTION_RIGHT);
-			}
-			koopas->SetState(KOOPAS_STATE_DIE);
-			koopas->Deflected(this->vx);
+			if (kx >= x)
+				this->Deflected(DEFLECT_DIRECTION_LEFT);
+			else
+				this->Deflected(DEFLECT_DIRECTION_RIGHT);
 		}
+		koopas->SetState(KOOPAS_STATE_DIE);
+		koopas->Deflected(this->vx);
+
 	}
 }
 
