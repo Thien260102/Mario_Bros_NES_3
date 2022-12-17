@@ -114,11 +114,22 @@ void CKoopas::OnCollisionWithGoomba(LPCOLLISIONEVENT e)
 	
 	switch (state)
 	{
+	case KOOPAS_STATE_WALKING:
+		float g_vx, g_vy;
+		goomba->GetSpeed(g_vx, g_vy);
+
+		goomba->SetSpeed(-g_vx, g_vy);
+
+		this->vx = -this->vx;
+		break;
 	case KOOPAS_STATE_SHELL:
-		goomba->SetState(GOOMBA_STATE_DIE_2);
-		goomba->Deflected(0);
-		this->SetState(KOOPAS_STATE_DIE);
-		this->Deflected(0);
+		if (isHeld)
+		{
+			goomba->SetState(GOOMBA_STATE_DIE_2);
+			goomba->Deflected(0);
+			this->SetState(KOOPAS_STATE_DIE);
+			this->Deflected(0);
+		}
 		break;
 
 	case KOOPAS_STATE_ATTACKING:
