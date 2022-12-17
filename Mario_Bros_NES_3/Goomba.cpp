@@ -37,7 +37,7 @@ void CGoomba::OnNoCollision(DWORD dt)
 void CGoomba::OnCollisionWith(LPCOLLISIONEVENT e)
 {
 	//if (!e->obj->IsBlocking()) return;
-	if (dynamic_cast<CGoomba*>(e->obj)) return;
+	//if (dynamic_cast<CGoomba*>(e->obj)) return;
 
 	if (e->ny != 0)
 	{
@@ -52,6 +52,8 @@ void CGoomba::OnCollisionWith(LPCOLLISIONEVENT e)
 
 	if (dynamic_cast<CBrick*>(e->obj))
 		OnCollisionWithBrick(e);
+	else if (dynamic_cast<CGoomba*>(e->obj))
+		OnCollisionWithGoomba(e);
 }
 
 void CGoomba::OnCollisionWithBrick(LPCOLLISIONEVENT e)
@@ -69,6 +71,20 @@ void CGoomba::OnCollisionWithBrick(LPCOLLISIONEVENT e)
 			this->Deflected(DEFLECT_DIRECTION_RIGHT);
 		else
 			this->Deflected(DEFLECT_DIRECTION_LEFT);
+	}
+}
+
+void CGoomba::OnCollisionWithGoomba(LPCOLLISIONEVENT e)
+{
+	CGoomba* goomba = dynamic_cast<CGoomba*>(e->obj);
+
+	if (goomba->state == GOOMBA_STATE_DIE_1 || goomba->state == GOOMBA_STATE_DIE_2)
+		return;
+
+	if (e->nx != 0)
+	{
+		goomba->vx = -this->vx;
+		this->vx = this->vx;
 	}
 }
 

@@ -37,7 +37,7 @@ protected:
 
 	virtual void OnCollisionWith(LPCOLLISIONEVENT e);
 	void OnCollisionWithBrick(LPCOLLISIONEVENT e);
-
+	void OnCollisionWithGoomba(LPCOLLISIONEVENT e);
 	int GetAniId();
 
 public: 	
