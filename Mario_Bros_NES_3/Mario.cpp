@@ -256,7 +256,10 @@ void CMario::OnCollisionWithBrick(LPCOLLISIONEVENT e)
 			if (level == MARIO_LEVEL_SMALL && brick->GetState() != BRICK_STATE_DEFLECT)
 				brick->SetState(BRICK_STATE_DEFLECT);
 			else if (level != MARIO_LEVEL_SMALL)
+			{
+				brick->BrokenByMarioJump();
 				brick->SetType(BRICK_TYPE_BREAK);
+			}
 		}
 		else if (flag == MARIO_ATTACK_TIME && e->nx != 0) // MARIO Raccoon attack
 		{
@@ -267,7 +270,10 @@ void CMario::OnCollisionWithBrick(LPCOLLISIONEVENT e)
 
 	case BRICK_TYPE_QUESTION:
 		if ((e->ny > 0) || (flag == MARIO_ATTACK_TIME && e->nx != 0))
+		{
 			brick->SetType(BRICK_TYPE_EMPTY);
+			brick->BrokenByMarioJump();
+		}
 		break;
 	}
 }
