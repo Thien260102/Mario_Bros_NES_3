@@ -84,7 +84,7 @@ void CKoopas::OnCollisionWithBrick(LPCOLLISIONEVENT e)
 {
 	CBrick* brick = dynamic_cast<CBrick*>(e->obj);
 
-	if (brick->IsAttacking() && e->ny != 0)
+	if (brick->IsAttacking() && brick->IsBrokenByMarioJump() && e->ny != 0)
 	{
 		this->SetState(KOOPAS_STATE_SHELL);
 
