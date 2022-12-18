@@ -36,6 +36,7 @@ protected:
 
 	float ay;
 	int type;
+	bool isBrokenByMarioJump;
 
 	ULONGLONG time_start;
 
@@ -62,6 +63,7 @@ public:
 		ay = 0;
 		vx = 0;
 		vy = 0;
+		isBrokenByMarioJump = false;
 	}
 	void Render();
 	void GetBoundingBox(float& l, float& t, float& r, float& b);
@@ -69,4 +71,7 @@ public:
 	void SetType(int Type);
 	void SetState(int State);
 	bool IsAttacking();
+
+	void BrokenByMarioJump() { isBrokenByMarioJump = true; }
+	bool IsBrokenByMarioJump() { return isBrokenByMarioJump; }
 };
