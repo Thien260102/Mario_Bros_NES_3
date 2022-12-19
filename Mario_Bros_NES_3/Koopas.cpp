@@ -207,6 +207,11 @@ void CKoopas::Update(DWORD dt, vector<LPGAMEOBJECT>* coObjects)
 	if(state == KOOPAS_STATE_WALKING)
 		phaseChecker->Update(dt, coObjects);
 
+	if (isHeld == true)
+		ay = 0;
+	else
+		ay = KOOPAS_GRAVITY;
+
 	vy += ay * dt;
 	vx += ax * dt;
 
