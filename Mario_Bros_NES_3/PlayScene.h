@@ -8,6 +8,7 @@
 #include "Goomba.h"
 #include "Mushroom.h"
 #include "Koopas.h"
+#include "Plant.h"
 
 
 class CPlayScene: public CScene
