@@ -1,5 +1,6 @@
 #pragma once
 #include "GameObject.h"
+#include "Bullet.h"
 
 #define PLANT_RISING_DOWNING_SPEED 0.01f
 
@@ -41,12 +42,13 @@ protected:
 	float Mario_x, Mario_y;
 
 	ULONGLONG time_start;
+	CGameObject* _bullet;
 
 	virtual void GetBoundingBox(float& left, float& top, float& right, float& bottom);
 	virtual void Render();
 
 
-	virtual int IsCollidable() { return 1; }
+	virtual int IsCollidable() { return 0; }
 	virtual int IsBlocking() { return 0; }
 
 	virtual void Update(DWORD dt, vector<LPGAMEOBJECT>* coObjects);
@@ -65,6 +67,7 @@ public:
 		vx = 0;
 		ay = 0;
 		SetState(PLANT_STATE_RISE);
+		_bullet = NULL;
 	}
 
 	virtual void SetState(int state);

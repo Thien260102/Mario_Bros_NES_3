@@ -74,15 +74,26 @@ void CPlant::Update(DWORD dt, vector<LPGAMEOBJECT>* coObjects)
 	}
 
 	//Get position of Mario
+	CPlayScene* playScene = NULL;
 
-	if (dynamic_cast<CPlayScene*>(CGame::GetInstance()->GetCurrentScene()))
+	if (playScene = dynamic_cast<CPlayScene*>(CGame::GetInstance()->GetCurrentScene()))
 	{
-		dynamic_cast<CPlayScene*>(CGame::GetInstance()->GetCurrentScene())->GetPlayer()->GetPosition(Mario_x, Mario_y);
+		playScene->GetPlayer()->GetPosition(Mario_x, Mario_y);
 	}
 
-	DebugOut(L"Mario y = %f, y = %f\n", Mario_y, y);
+	
+	if (_bullet != NULL)
+	{
+		vector<LPGAMEOBJECT> objects;
+		_bullet->Update(dt, &objects);
+
+		objects.push_back(playScene->GetPlayer());
+		CCollision::GetInstance()->Process(_bullet, dt, &objects);
+	}
 	CGameObject::Update(dt, coObjects);
 	//CCollision::GetInstance()->Process(this, dt, coObjects);
+
+	
 }
 
 void CPlant::SetState(int State)
@@ -99,6 +110,17 @@ void CPlant::SetState(int State)
 	case PLANT_STATE_ATTACK:
 		time_start = GetTickCount64();
 		vy = 0;
+
+		if (_type == PLANT_TYPE_GREEN)
+			return;
+
+		_bullet = new CBullet(x, y, BULLET_BY_PLANT);
+
+		float direction_x, direction_y;
+		direction_x = (Mario_x >= x) ? BULLET_DIRECTION_RIGHT : BULLET_DIRECTION_LEFT;
+		direction_y = (Mario_y >= y) ? BULLET_DIRECTION_BOT : BULLET_DIRECTION_TOP;
+		dynamic_cast<CBullet*>(_bullet)->SetDirection(direction_x, direction_y);
+
 		break;
 	case PLANT_STATE_IDLE:
 		time_start = GetTickCount64();
@@ -145,4 +167,7 @@ void CPlant::Render()
 
 	CAnimations::GetInstance()->Get(aniId)->Render(x, y);
 	RenderBoundingBox();
+
+	if (_bullet != NULL)
+		_bullet->Render();
 }
