@@ -1,5 +1,8 @@
 #include "Plant.h"
-
+#include "debug.h"
+#include "Mario.h"
+#include "Game.h"
+#include "PlayScene.h"
 
 void CPlant::GetBoundingBox(float& left, float& top, float& right, float& bottom)
 {
@@ -24,23 +27,82 @@ void CPlant::Update(DWORD dt, vector<LPGAMEOBJECT>* coObjects)
 	vy += ay * dt;
 	y += vy * dt;
 
+
+	switch (state)
+	{
+	case PLANT_STATE_RISE:
+
+		switch (_type)
+		{
+		case PLANT_TYPE_GREEN:
+		case PLANT_TYPE_GREEN_FIRE:
+			if (old_y - y > PLANT_GREEN_BBOX_HEIGHT)
+			{
+				y = old_y - PLANT_GREEN_BBOX_HEIGHT;
+				SetState(PLANT_STATE_ATTACK);
+			}
+			break;
+
+		case PLANT_TYPE_RED_FIRE:
+			if (old_y - y > PLANT_RED_BBOX_HEIGHT)
+			{
+				y = old_y - PLANT_RED_BBOX_HEIGHT;
+				SetState(PLANT_STATE_ATTACK);
+			}
+			break;
+		}
+
+		break;
+	case PLANT_STATE_DOWN:
+		if (y - old_y >= 0) // state DOWN
+		{
+			y = old_y;
+			SetState(PLANT_STATE_IDLE);
+		}
+		break;
+	case PLANT_STATE_ATTACK:
+	case PLANT_STATE_IDLE:
+		if ((GetTickCount64() - time_start) > PLANT_ATTACK_IDLE_TIME)
+		{
+			time_start = 0;
+			if (state == PLANT_STATE_IDLE)
+				SetState(PLANT_STATE_RISE);
+			else if (state == PLANT_STATE_ATTACK)
+				SetState(PLANT_STATE_DOWN);
+		}
+		break;
+	}
+
+	//Get position of Mario
+
+	if (dynamic_cast<CPlayScene*>(CGame::GetInstance()->GetCurrentScene()))
+	{
+		dynamic_cast<CPlayScene*>(CGame::GetInstance()->GetCurrentScene())->GetPlayer()->GetPosition(Mario_x, Mario_y);
+	}
+
+	DebugOut(L"Mario y = %f, y = %f\n", Mario_y, y);
 	CGameObject::Update(dt, coObjects);
 	//CCollision::GetInstance()->Process(this, dt, coObjects);
 }
 
 void CPlant::SetState(int State)
 {
-	CGameObject::SetState(state);
+	CGameObject::SetState(State);
 	switch (state)
 	{
 	case PLANT_STATE_RISE:
-		ay = 0;
+		vy = -PLANT_RISING_DOWNING_SPEED;
 		break;
 	case PLANT_STATE_DOWN:
-		ay = 0;
+		vy = PLANT_RISING_DOWNING_SPEED;
 		break;
 	case PLANT_STATE_ATTACK:
-		ay = 0;
+		time_start = GetTickCount64();
+		vy = 0;
+		break;
+	case PLANT_STATE_IDLE:
+		time_start = GetTickCount64();
+		vy = 0;
 		break;
 	}
 }
@@ -57,10 +119,20 @@ int CPlant::GetAniId()
 
 	case PLANT_TYPE_GREEN_FIRE:
 		aniId = ID_ANI_PLANT_GREEN_FIRE;
+		if (Mario_y >= y) // y Mario < y Plant
+			aniId = ID_ANI_PLANT_GREEN_TARGET_BOT;
+		else
+			aniId = ID_ANI_PLANT_GREEN_TARGET_TOP;
 		break;
 
 	case PLANT_TYPE_RED_FIRE:
 		aniId = ID_ANI_PLANT_RED_FIRE;
+		if (Mario_y >= y) // y Mario < y Plant
+			aniId = ID_ANI_PLANT_RED_TARGET_BOT;
+		else
+			aniId = ID_ANI_PLANT_RED_TARGET_TOP;
+
+
 		break;
 	}
 
@@ -71,6 +143,6 @@ void CPlant::Render()
 {
 	int aniId = GetAniId();
 
-	CAnimations::GetInstance()->Get(7000)->Render(x, y);
+	CAnimations::GetInstance()->Get(aniId)->Render(x, y);
 	RenderBoundingBox();
 }
