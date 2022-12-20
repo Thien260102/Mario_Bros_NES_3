@@ -5,6 +5,7 @@
 #include "Animations.h"
 
 #include "debug.h"
+#include "PhaseChecker.h"
 #include "Koopas.h"
 
 #define MARIO_WALKING_SPEED		0.1f
@@ -170,7 +171,7 @@
 #define MARIO_SMALL_BBOX_WIDTH  13
 #define MARIO_SMALL_BBOX_HEIGHT 12
 
-#define MARIO_RACCOON_BBOX_WIDTH (MARIO_BIG_BBOX_WIDTH + 5)
+#define MARIO_RACCOON_BBOX_WIDTH (MARIO_BIG_BBOX_WIDTH)
 #define MARIO_RACCOON_BBOX_HEIGHT 25
 #define MARIO_RACCOON_SITTING_BBOX_WIDTH (MARIO_BIG_SITTING_BBOX_WIDTH + 0)
 #define MARIO_RACCOON_SITTING_BBOX_HEIGHT 16
@@ -231,7 +232,7 @@ public:
 		time_start = 0;
 		holdable = 0;
 		_koopas = NULL;
-		_tail = new CPhaseChecker(x, y, MARIO_TAIL_WIDTH, MARIO_TAIL_HEIGHT);
+		_tail = new CPhaseChecker(x, y, MARIO_TAIL_WIDTH, MARIO_TAIL_HEIGHT, PHASECHECK_BY_MARIO);
 	}
 	void Update(DWORD dt, vector<LPGAMEOBJECT>* coObjects);
 	void Render();
