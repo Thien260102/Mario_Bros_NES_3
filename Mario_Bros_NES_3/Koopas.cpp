@@ -3,6 +3,7 @@
 #include "Goomba.h"
 #include "Mario.h"
 #include "Brick.h"
+#include "Plant.h"
 
 void CKoopas::GetBoundingBox(float& left, float& top, float& right, float& bottom)
 {
@@ -71,6 +72,7 @@ void CKoopas::OnCollisionWith(LPCOLLISIONEVENT e)
 
 	phaseChecker->SetSpeed(vx, 1);
 
+	DebugOut(L"isHeld = %d\n", isHeld);
 
 	if (dynamic_cast<CBrick*>(e->obj))
 		OnCollisionWithBrick(e);
@@ -78,6 +80,8 @@ void CKoopas::OnCollisionWith(LPCOLLISIONEVENT e)
 		OnCollisionWithGoomba(e);
 	else if (dynamic_cast<CKoopas*>(e->obj))
 		OnCollisionWithKoopas(e);
+	else if (dynamic_cast<CPlant*>(e->obj))
+		OnCollisionWithPlant(e);
 }
 
 void CKoopas::OnCollisionWithBrick(LPCOLLISIONEVENT e)
@@ -173,7 +177,7 @@ void CKoopas::OnCollisionWithKoopas(LPCOLLISIONEVENT e)
 		break;
 
 	default:
-		if (koopas->state == KOOPAS_STATE_SHELL && koopas->isHeld)
+		if (koopas->isHeld)
 		{
 			koopas->SetState(KOOPAS_STATE_DIE);
 			this->SetState(KOOPAS_STATE_DIE);
@@ -199,6 +203,22 @@ void CKoopas::OnCollisionWithKoopas(LPCOLLISIONEVENT e)
 		koopas->SetState(KOOPAS_STATE_DIE);
 		koopas->Deflected(this->vx);
 
+	}
+}
+
+void CKoopas::OnCollisionWithPlant(LPCOLLISIONEVENT e)
+{
+	if ((state == KOOPAS_STATE_ATTACKING) || isHeld)
+	{
+		e->obj->Delete();
+		this->SetState(KOOPAS_STATE_DIE);
+
+		float px, py;
+		e->obj->GetPosition(px, py);
+		if (px > x)
+			this->Deflected(DEFLECT_DIRECTION_RIGHT);
+		else
+			this->Deflected(DEFLECT_DIRECTION_LEFT);
 	}
 }
 
@@ -252,7 +272,7 @@ void CKoopas::Render()
 void CKoopas::SetState(int state)
 {
 	CGameObject::SetState(state);
-	isHeld = 0;
+	isHeld = false;
 	switch (state)
 	{
 	case KOOPAS_STATE_SHELL:
