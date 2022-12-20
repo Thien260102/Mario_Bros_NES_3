@@ -140,12 +140,12 @@ void CMario::OnCollisionWithKoopas(LPCOLLISIONEVENT e)
 		}
 		else if (holdable && _koopas == NULL)
 		{
+			koopas->isHold();
 			_koopas = koopas;
 			if(nx >= 0)
 				_koopas->SetPosition(x + MARIO_BIG_BBOX_WIDTH / 2 + KOOPAS_BBOX_WIDTH / 2, y);
 			else
 				_koopas->SetPosition(x - MARIO_BIG_BBOX_WIDTH / 2 - KOOPAS_BBOX_WIDTH / 2, y);
-			koopas->isHold();
 		}
 	}
 	// jump on top >> Koopas and deflect a bit 

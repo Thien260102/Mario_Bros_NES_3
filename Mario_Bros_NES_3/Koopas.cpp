@@ -176,7 +176,17 @@ void CKoopas::OnCollisionWithKoopas(LPCOLLISIONEVENT e)
 
 		break;
 
-	default:
+	case KOOPAS_STATE_WALKING:
+		this->vx = -vx;
+		if (vx < 0)
+		{
+			this->phaseChecker->SetPosition(x - KOOPAS_BBOX_WIDTH, y);
+		}
+		else
+			this->phaseChecker->SetPosition(x + KOOPAS_BBOX_WIDTH, y);
+		this->SetSpeed(vx, vy);
+		break;
+	case KOOPAS_STATE_SHELL:
 		if (koopas->isHeld)
 		{
 			koopas->SetState(KOOPAS_STATE_DIE);
@@ -209,6 +219,8 @@ void CKoopas::OnCollisionWithKoopas(LPCOLLISIONEVENT e)
 void CKoopas::OnCollisionWithPlant(LPCOLLISIONEVENT e)
 {
 	if ((state == KOOPAS_STATE_ATTACKING) || isHeld)
+		e->obj->Delete();
+	else if (isHeld)
 	{
 		e->obj->Delete();
 		this->SetState(KOOPAS_STATE_DIE);
