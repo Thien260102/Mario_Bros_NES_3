@@ -1,22 +1,33 @@
 # id	left	top	right	bottom	texture_id
 [SPRITES]
-#RED fire
+#RED fire (width = 15, height = 31)
 37101	7	33	22	64	11
 37102	7	71	22	102	11
 
-#GREEN 
+#GREEN (width = 15, height = 23)
 37201	7	107	22	130	11
 37202	7	137	22	160	11
 
-#GREEN fire
+#GREEN fire (width = 15, height = 23)
 37301	6	166	21	189	11
 37302	6	195	21	218	11
 
 # ani_id	sprite1_id	time1	sprite2_id	time2	...
 [ANIMATIONS]
 #GREEN
-7000	37201	1000	37202	1000
+#Rising and downing
+7000	37201	100	37202	100
+
 #GREEN FIRE
-7001	37301	1000	37302	1000
+#Rising and downing
+7100	37301	100	37302	100
+#Target top & bot
+7101	37302	100
+7102	37301	100
+
 #RED FIRE
-7002	37101	1000	37102	1000
+#Rising and downing
+7200	37101	100	37102	100
+#Target top & bot
+7201	37102	100
+7202	37101	100
