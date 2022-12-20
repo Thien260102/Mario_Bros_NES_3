@@ -175,7 +175,8 @@
 #define MARIO_RACCOON_SITTING_BBOX_WIDTH (MARIO_BIG_SITTING_BBOX_WIDTH + 0)
 #define MARIO_RACCOON_SITTING_BBOX_HEIGHT 16
 
-#define MARIO_RACCOON_ATTACK_WIDTH 10 // when Mario Raccoon attack, width increase
+#define MARIO_TAIL_WIDTH 10
+#define MARIO_TAIL_HEIGHT 5
 
 #define MARIO_UNTOUCHABLE_TIME 2500
 #define MARIO_ATTACK_TIME 300
@@ -184,6 +185,7 @@
 class CMario : public CGameObject
 {
 	CKoopas* _koopas;
+	CGameObject* _tail;
 
 	BOOLEAN isSitting;
 	float maxVx;
@@ -206,6 +208,7 @@ class CMario : public CGameObject
 	void OnCollisionWithMushroom(LPCOLLISIONEVENT e);
 	void OnCollisionWithKoopas(LPCOLLISIONEVENT e);
 	void OnCollisionWithBrick(LPCOLLISIONEVENT e);
+	void OnCollisionWithPlant(LPCOLLISIONEVENT e);
 
 	int GetAniIdBig();
 	int GetAniIdSmall();
@@ -228,6 +231,7 @@ public:
 		time_start = 0;
 		holdable = 0;
 		_koopas = NULL;
+		_tail = new CPhaseChecker(x, y, MARIO_TAIL_WIDTH, MARIO_TAIL_HEIGHT);
 	}
 	void Update(DWORD dt, vector<LPGAMEOBJECT>* coObjects);
 	void Render();
@@ -245,6 +249,7 @@ public:
 
 	void SetLevel(int l);
 	void StartUntouchable() { untouchable = 1; untouchable_start = GetTickCount64(); }
+	int IsUntouchable() { return untouchable; }
 	int GetLevel() { return level; }
 
 	void GetBoundingBox(float& left, float& top, float& right, float& bottom);
