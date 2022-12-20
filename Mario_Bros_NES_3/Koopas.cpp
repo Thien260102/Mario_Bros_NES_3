@@ -58,7 +58,7 @@ void CKoopas::OnCollisionWith(LPCOLLISIONEVENT e)
 	// phaseCheck is falling ?
 	float px, py;
 	phaseChecker->GetPosition(px, py);
-	if (state == KOOPAS_STATE_WALKING && py - this->y > 10)
+	if (py - this->y > 10)
 	{
 		vx = -vx;
 
