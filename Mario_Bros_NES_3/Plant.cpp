@@ -65,7 +65,9 @@ void CPlant::Update(DWORD dt, vector<LPGAMEOBJECT>* coObjects)
 		if ((GetTickCount64() - time_start) > PLANT_ATTACK_IDLE_TIME)
 		{
 			time_start = 0;
-			if (state == PLANT_STATE_IDLE)
+			DebugOut(L"x = %f, Mario x = %f \n", x, Mario_x);
+			if (state == PLANT_STATE_IDLE
+				&& ((abs(Mario_x - x) > DISTANCE_BETWEEN_MARIO_AND_PLANT)))
 				SetState(PLANT_STATE_RISE);
 			else if (state == PLANT_STATE_ATTACK)
 				SetState(PLANT_STATE_DOWN);

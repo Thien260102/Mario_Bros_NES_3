@@ -2,7 +2,7 @@
 #include "GameObject.h"
 #include "Bullet.h"
 
-#define PLANT_RISING_DOWNING_SPEED 0.01f
+#define PLANT_RISING_DOWNING_SPEED 0.02f
 
 #define PLANT_TYPE_GREEN 1
 #define PLANT_TYPE_GREEN_FIRE 2
@@ -19,6 +19,8 @@
 
 #define PLANT_RED_BBOX_WIDTH 15
 #define PLANT_RED_BBOX_HEIGHT 31
+
+#define DISTANCE_BETWEEN_MARIO_AND_PLANT 30 // Plant only rise when distance 30 from Mario
 
 #define ID_ANI_PLANT_GREEN 7000
 
