@@ -1,6 +1,11 @@
 #pragma once
+#ifndef CKOOPAS_H
+#define CKOOPAS_H
+
 #include "GameObject.h"
 #include "PhaseChecker.h"
+
+
 
 #define KOOPAS_GRAVITY 0.002f
 #define KOOPAS_WALKING_SPEED 0.05f
@@ -42,24 +47,24 @@ protected:
 	float ax;
 	float ay;
 	int level;
-	int isHeld;
+	bool isHeld;
 
 	ULONGLONG time_start;
 	
 	virtual int IsCollidable() { return state != KOOPAS_STATE_DIE; }
 	virtual int IsBlocking() { return 0; }
-	virtual void Deflected(int Direction);
 
 	void OnCollisionWithGoomba(LPCOLLISIONEVENT e);
 	void OnCollisionWithKoopas(LPCOLLISIONEVENT e);
 	void OnCollisionWithBrick(LPCOLLISIONEVENT e);
+	void OnCollisionWithPlant(LPCOLLISIONEVENT e);
 
 	int GetAniId();
 public:
 	CKoopas(float x, float y) :CGameObject(x, y)
 	{
 		phaseChecker = new CPhaseChecker(x - KOOPAS_BBOX_WIDTH - KOOPAS_PHASE_CHECK_WIDTH / 2, y,
-			KOOPAS_PHASE_CHECK_WIDTH, KOOPAS_PHASE_CHECK_HEIGHT);
+			KOOPAS_PHASE_CHECK_WIDTH, KOOPAS_PHASE_CHECK_HEIGHT, PHASECHECK_BY_KOOPAS);
 		phaseChecker->SetSpeed(0, KOOPAS_WALKING_SPEED);
 
 		this->ax = 0;
@@ -83,6 +88,10 @@ public:
 	void SetNx(int nx) { this->nx = nx; }
 
 	bool IsHeld() { return isHeld; }
-	void isHold() { isHeld = 1; }
+	void isHold() { isHeld = true; }
+
+	virtual void Deflected(int Direction);
 };
 
+
+#endif // !CKOOPAS_H
