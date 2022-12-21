@@ -65,7 +65,6 @@ void CPlant::Update(DWORD dt, vector<LPGAMEOBJECT>* coObjects)
 		if ((GetTickCount64() - time_start) > PLANT_ATTACK_IDLE_TIME)
 		{
 			time_start = 0;
-			DebugOut(L"x = %f, Mario x = %f \n", x, Mario_x);
 			if (state == PLANT_STATE_IDLE
 				&& ((abs(Mario_x - x) > DISTANCE_BETWEEN_MARIO_AND_PLANT)))
 				SetState(PLANT_STATE_RISE);
@@ -92,10 +91,9 @@ void CPlant::Update(DWORD dt, vector<LPGAMEOBJECT>* coObjects)
 		objects.push_back(playScene->GetPlayer());
 		CCollision::GetInstance()->Process(_bullet, dt, &objects);
 	}
-	CGameObject::Update(dt, coObjects);
-	//CCollision::GetInstance()->Process(this, dt, coObjects);
 
-	
+	CGameObject::Update(dt, coObjects);
+	CCollision::GetInstance()->Process(this, dt, coObjects);
 }
 
 void CPlant::SetState(int State)
@@ -172,4 +170,18 @@ void CPlant::Render()
 
 	if (_bullet != NULL)
 		_bullet->Render();
+}
+
+void CPlant::OnCollisionWith(LPCOLLISIONEVENT e)
+{
+	if (dynamic_cast<CKoopas*>(e->obj))
+	{
+		CKoopas* koopas = dynamic_cast<CKoopas*>(e->obj);
+
+		if (koopas->GetState() == KOOPAS_STATE_SHELL && koopas->IsHeld())
+		{
+			this->Delete();
+			koopas->SetState(KOOPAS_STATE_DIE);
+		}
+	}
 }
