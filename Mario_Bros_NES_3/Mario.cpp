@@ -62,10 +62,29 @@ void CMario::Update(DWORD dt, vector<LPGAMEOBJECT> *coObjects)
 		untouchable = 0;
 	}
 
-	if (flag == MARIO_ATTACK_TIME && (GetTickCount64() - time_start > flag))
+	if (flag == MARIO_ATTACK_TIME)
 	{
-		flag = 0;
-		time_start = 0;
+		if ((GetTickCount64() - time_start > flag))
+		{
+			flag = 0;
+			time_start = 0;
+		}
+
+		if (level == MARIO_LEVEL_RACCOON)
+		{
+			CPhaseChecker* tail = dynamic_cast<CPhaseChecker*>(_tail);
+			float temp = 1; //to determine direction
+			if (nx >= 0) temp = -1;
+
+			tail->SetPosition(x + temp * MARIO_RACCOON_BBOX_WIDTH / 2 + temp * MARIO_TAIL_WIDTH / 2,
+				y + MARIO_TAIL_POSTION_ADJUST);
+
+			tail->SetSpeed(vx, vy);
+			if (flag == MARIO_ATTACK_TIME)
+				tail->Attack(nx);
+
+			_tail->Update(dt, coObjects);
+		}
 	}
 
 	if (flag == MARIO_KICK_TIME && (GetTickCount64() - time_start > flag))
@@ -78,20 +97,7 @@ void CMario::Update(DWORD dt, vector<LPGAMEOBJECT> *coObjects)
 	
 	
 
-	if (level == MARIO_LEVEL_RACCOON)
-	{
-		float temp = 1; //to determine direction
-		if (nx >= 0) temp = -1;
-
-		_tail->SetPosition(x + temp * MARIO_RACCOON_BBOX_WIDTH / 2 + temp * MARIO_TAIL_WIDTH / 2,
-			y + 1);
-
-		_tail->SetSpeed(vx, vy);
-		if (flag == MARIO_ATTACK_TIME)
-			dynamic_cast<CPhaseChecker*>(_tail)->Attack(nx);
-
-		_tail->Update(dt, coObjects);
-	}
+	
 	CCollision::GetInstance()->Process(this, dt, coObjects);	
 }
 
@@ -851,14 +857,14 @@ void CMario::GetBoundingBox(float& left, float& top, float& right, float& bottom
 
 		if (isSitting)
 		{
-			left = x - MARIO_RACCOON_SITTING_BBOX_WIDTH / 2 + 4 * flag;
+			left = x - MARIO_RACCOON_SITTING_BBOX_WIDTH / 2;
 			top = y - MARIO_RACCOON_SITTING_BBOX_HEIGHT / 2;
 			right = left + MARIO_RACCOON_SITTING_BBOX_WIDTH;
 			bottom = top + MARIO_RACCOON_SITTING_BBOX_HEIGHT;
 		}
 		else
 		{
-			left = x - MARIO_RACCOON_BBOX_WIDTH / 2 + 4 * flag;
+			left = x - MARIO_RACCOON_BBOX_WIDTH / 2;
 			top = y - MARIO_RACCOON_BBOX_HEIGHT / 2;
 			right = left + MARIO_RACCOON_BBOX_WIDTH;
 			bottom = top + MARIO_RACCOON_BBOX_HEIGHT;
