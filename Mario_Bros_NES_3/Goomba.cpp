@@ -1,6 +1,7 @@
 #include "Goomba.h"
 #include "debug.h"
 #include "Brick.h"
+#include "Koopas.h"
 
 CGoomba::CGoomba(float x, float y):CGameObject(x, y)
 {
@@ -54,6 +55,8 @@ void CGoomba::OnCollisionWith(LPCOLLISIONEVENT e)
 		OnCollisionWithBrick(e);
 	else if (dynamic_cast<CGoomba*>(e->obj))
 		OnCollisionWithGoomba(e);
+	else if (dynamic_cast<CKoopas*>(e->obj))
+		OnCollisionWithKoopas(e);
 }
 
 void CGoomba::OnCollisionWithBrick(LPCOLLISIONEVENT e)
@@ -86,6 +89,33 @@ void CGoomba::OnCollisionWithGoomba(LPCOLLISIONEVENT e)
 		goomba->vx = -this->vx;
 		this->vx = this->vx;
 	}
+}
+
+void CGoomba::OnCollisionWithKoopas(LPCOLLISIONEVENT e)
+{
+	CKoopas* koopas = dynamic_cast<CKoopas*>(e->obj);
+
+	switch (koopas->GetState())
+	{
+	case KOOPAS_STATE_ATTACKING:
+		this->SetState(GOOMBA_STATE_DIE_2);
+		
+		if (e->nx >= 0)
+			this->Deflected(DEFLECT_DIRECTION_RIGHT);
+		else
+			this->Deflected(DEFLECT_DIRECTION_LEFT);
+		break;
+
+	case KOOPAS_STATE_SHELL:
+		if (koopas->IsHeld())
+		{
+			DebugOut(L"Goomba collide Koopas\n");
+			koopas->SetState(KOOPAS_STATE_DIE);
+			this->SetState(GOOMBA_STATE_DIE_2);
+		}
+
+	}
+
 }
 
 void CGoomba::Update(DWORD dt, vector<LPGAMEOBJECT> *coObjects)
