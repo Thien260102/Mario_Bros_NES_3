@@ -184,4 +184,10 @@ void CPlant::OnCollisionWith(LPCOLLISIONEVENT e)
 			koopas->SetState(KOOPAS_STATE_DIE);
 		}
 	}
+	else if (dynamic_cast<CPhaseChecker*>(e->obj))
+	{
+		CPhaseChecker* phaseChecker = dynamic_cast<CPhaseChecker*>(e->obj);
+		if (phaseChecker->GetType() == PHASECHECK_BY_MARIO)
+			this->Delete();
+	}
 }
