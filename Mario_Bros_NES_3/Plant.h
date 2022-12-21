@@ -50,12 +50,12 @@ protected:
 	virtual void Render();
 
 
-	virtual int IsCollidable() { return 0; }
+	virtual int IsCollidable() { return 1; }
 	virtual int IsBlocking() { return 0; }
 
 	virtual void Update(DWORD dt, vector<LPGAMEOBJECT>* coObjects);
 	virtual void OnNoCollision(DWORD dt) {}
-	virtual void OnCollisionWith(LPCOLLISIONEVENT e) {}
+	virtual void OnCollisionWith(LPCOLLISIONEVENT e);
 	int GetAniId();
 public:
 	CPlant(float x, float y, int type) :CGameObject(x, y)
