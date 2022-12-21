@@ -21,6 +21,40 @@ void CMario::Update(DWORD dt, vector<LPGAMEOBJECT> *coObjects)
 
 	if (abs(vx) > abs(maxVx)) vx = maxVx;
 
+	//solve case Mario is holding Koopas
+	if (_koopas != NULL)
+	{
+		if (_koopas->IsHeld() == false)
+			_koopas = NULL;
+		else
+		{
+			if (_koopas->GetNx() != nx)
+			{
+				_koopas->SetNx(nx);
+				float temp = -1; // to determine direction 
+				if (nx >= 0) temp = 1;
+				switch (level)
+				{
+				case MARIO_LEVEL_SMALL:
+					_koopas->SetPosition(x + temp * MARIO_SMALL_BBOX_WIDTH / 2 + temp * KOOPAS_BBOX_WIDTH / 2,
+						y - MARIO_SMALL_BBOX_HEIGHT / 2);
+					break;
+
+				case MARIO_LEVEL_BIG:
+					_koopas->SetPosition(x + temp * MARIO_BIG_BBOX_WIDTH / 2 + temp * KOOPAS_BBOX_WIDTH / 2, y);
+					break;
+
+				case MARIO_LEVEL_RACCOON:
+					_koopas->SetPosition(x + temp * MARIO_RACCOON_BBOX_WIDTH / 2 + temp * KOOPAS_BBOX_WIDTH / 2,
+						y + 1);
+					break;
+				}
+			}
+
+			_koopas->SetSpeed(vx, vy);
+		}
+	}
+
 	// reset untouchable timer if untouchable time has passed
 	if ( GetTickCount64() - untouchable_start > MARIO_UNTOUCHABLE_TIME) 
 	{
@@ -41,33 +75,8 @@ void CMario::Update(DWORD dt, vector<LPGAMEOBJECT> *coObjects)
 	}
 
 	isOnPlatform = false;
-	//solve case Mario is holding Koopas
-	if (_koopas != NULL)
-	{
-		if (_koopas->IsHeld() == false)
-			_koopas = NULL;
-		else
-		{
-			float temp = -1; // to determine direction 
-			if (nx >= 0) temp = 1;
-			switch (level)
-			{
-			case MARIO_LEVEL_SMALL:
-				_koopas->SetPosition(x + temp * MARIO_SMALL_BBOX_WIDTH / 2 + temp * KOOPAS_BBOX_WIDTH / 2,
-					y - MARIO_SMALL_BBOX_HEIGHT / 2);
-				break;
-
-			case MARIO_LEVEL_BIG:
-				_koopas->SetPosition(x + temp * MARIO_BIG_BBOX_WIDTH / 2 + temp * KOOPAS_BBOX_WIDTH / 2, y);
-				break;
-
-			case MARIO_LEVEL_RACCOON:
-				_koopas->SetPosition(x + temp * MARIO_RACCOON_BBOX_WIDTH / 2 + temp * KOOPAS_BBOX_WIDTH / 2, 
-					y + 1);
-				break;
-			}
-		}
-	}
+	
+	
 
 	if (level == MARIO_LEVEL_RACCOON)
 	{
@@ -98,6 +107,8 @@ void CMario::OnCollisionWith(LPCOLLISIONEVENT e)
 	{
 		vy = 0;
 		if (e->ny < 0) isOnPlatform = true;
+		if (_koopas != NULL && _koopas->IsHeld())
+			_koopas->SetSpeed(vx, vy);
 	}
 	else 
 	if (e->nx != 0 && e->obj->IsBlocking())
@@ -135,17 +146,31 @@ void CMario::OnCollisionWithKoopas(LPCOLLISIONEVENT e)
 		if (e->ny != 0 || (holdable == 0 && e->nx != 0))
 		{
 			this->SetState(MARIO_STATE_KICK);
-			koopas->SetNx(-this->nx);
+			koopas->SetNx(-nx);
 			koopas->SetState(KOOPAS_STATE_ATTACKING);
 		}
 		else if (holdable && _koopas == NULL)
 		{
 			koopas->isHold();
 			_koopas = koopas;
-			if(nx >= 0)
-				_koopas->SetPosition(x + MARIO_BIG_BBOX_WIDTH / 2 + KOOPAS_BBOX_WIDTH / 2, y);
-			else
-				_koopas->SetPosition(x - MARIO_BIG_BBOX_WIDTH / 2 - KOOPAS_BBOX_WIDTH / 2, y);
+			float temp = -1; // to determine direction 
+			if (nx >= 0) temp = 1;
+			switch (level)
+			{
+			case MARIO_LEVEL_SMALL:
+				_koopas->SetPosition(x + temp * MARIO_SMALL_BBOX_WIDTH / 2 + temp * KOOPAS_BBOX_WIDTH / 2,
+					y - MARIO_SMALL_BBOX_HEIGHT / 2);
+				break;
+
+			case MARIO_LEVEL_BIG:
+				_koopas->SetPosition(x + temp * MARIO_BIG_BBOX_WIDTH / 2 + temp * KOOPAS_BBOX_WIDTH / 2, y);
+				break;
+
+			case MARIO_LEVEL_RACCOON:
+				_koopas->SetPosition(x + temp * MARIO_RACCOON_BBOX_WIDTH / 2 + temp * KOOPAS_BBOX_WIDTH / 2,
+					y + 1);
+				break;
+			}
 		}
 	}
 	// jump on top >> Koopas and deflect a bit 
@@ -783,7 +808,7 @@ void CMario::SetState(int state)
 		if (_koopas != NULL)
 		{
 			this->SetState(MARIO_STATE_KICK);
-			_koopas->SetNx(-this->nx);
+			_koopas->SetNx(-nx);
 			_koopas->SetState(KOOPAS_STATE_ATTACKING);
 			_koopas = NULL;
 		}
