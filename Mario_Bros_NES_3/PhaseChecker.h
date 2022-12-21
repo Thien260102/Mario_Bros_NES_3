@@ -10,7 +10,8 @@
 
 
 #define PHASECHECK_GRAVITY 0.002f
-#define PHASECHECK_ATTACK_SPEED	1.0f
+#define PHASECHECK_ATTACK_SPEED	1.4f
+#define PHASECHECK_ATTACK_RANGE 3.0f
 
 #define PHASECHECK_BY_KOOPAS 10
 #define PHASECHECK_BY_MARIO 20
@@ -22,6 +23,8 @@ class CPhaseChecker : public CGameObject
 protected:
 	int width;
 	int height;
+
+	float old_x;
 
 	int _type;
 
@@ -45,7 +48,7 @@ protected:
 	virtual void Update(DWORD dt, vector<LPGAMEOBJECT>* coObjects);
 	virtual void Render()
 	{
-		RenderBoundingBox();
+			RenderBoundingBox();
 	}
 public:
 	//CPhaseCheck() : CGameObject() {}
@@ -57,11 +60,17 @@ public:
 		width = Width;
 		height = Height;
 		_type = type;
+		old_x = x;
 	}
 
-	void Attack(int direction) { vx += PHASECHECK_ATTACK_SPEED * direction; }
+	void Attack(int direction) 
+	{ 
+		vx += PHASECHECK_ATTACK_SPEED * direction; 
+		old_x = x;
+	}
 
-	bool isAttacking() { return abs(vx) >= PHASECHECK_ATTACK_SPEED; }
+	int GetType() { return _type; }
+
 };
 
 #endif // !CPHASECHECKER_H

@@ -13,6 +13,19 @@ void CPhaseChecker::Update(DWORD dt, vector<LPGAMEOBJECT>* coObjects)
 	vy += ay * dt;
 	vx += ax * dt;
 
+	// use this case if tail of Mario over the attack range
+	if (abs(x + vx * dt - old_x) > 4 * width)
+	{
+		if (vx >= 0)
+		{
+			vx = (PHASECHECK_ATTACK_RANGE * width + old_x - x) / dt;
+		}
+		else
+		{
+			vx = (old_x - PHASECHECK_ATTACK_RANGE * width - x) / dt;
+		}
+	}
+
 	CGameObject::Update(dt, coObjects);
 	CCollision::GetInstance()->Process(this, dt, coObjects);
 }
@@ -23,8 +36,7 @@ void CPhaseChecker::OnCollisionWith(LPCOLLISIONEVENT e)
 	{
 		vy = 0;
 	}
-	if (_type == PHASECHECK_BY_KOOPAS || e->nx == 0
-		|| abs(vx) < PHASECHECK_ATTACK_SPEED)// Is Mario attacking?
+	if (_type == PHASECHECK_BY_KOOPAS || e->nx == 0)
 		return;
 
 	if (dynamic_cast<CBrick*>(e->obj))
@@ -68,7 +80,7 @@ void CPhaseChecker::OnCollisionWithGoomba(LPCOLLISIONEVENT e)
 
 void CPhaseChecker::OnCollisionWithKoopas(LPCOLLISIONEVENT e)
 {
-	e->obj->SetState(200);
+	e->obj->SetState(200); // KOOPAS_STATE_DIE 200
 	if (e->nx > 0)
 		e->obj->Deflected(DEFLECT_DIRECTION_LEFT);
 	else
