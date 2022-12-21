@@ -51,7 +51,7 @@ protected:
 
 	ULONGLONG time_start;
 	
-	virtual int IsCollidable() { return state != KOOPAS_STATE_DIE; }
+	virtual int IsCollidable() { return state != KOOPAS_STATE_DIE && isHeld == false; }
 	virtual int IsBlocking() { return 0; }
 
 	void OnCollisionWithGoomba(LPCOLLISIONEVENT e);
@@ -85,6 +85,7 @@ public:
 
 	void SetLevel(int level);
 
+	int GetNx() { return nx; }
 	void SetNx(int nx) { this->nx = nx; }
 
 	bool IsHeld() { return isHeld; }

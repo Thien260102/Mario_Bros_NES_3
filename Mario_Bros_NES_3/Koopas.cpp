@@ -31,7 +31,7 @@ void CKoopas::OnNoCollision(DWORD dt)
 
 void CKoopas::OnCollisionWith(LPCOLLISIONEVENT e)
 {
-	//
+	
 
 	if (e->ny != 0)
 	{
@@ -40,6 +40,9 @@ void CKoopas::OnCollisionWith(LPCOLLISIONEVENT e)
 			vx = 0;
 
 	}
+	////
+	//if (this->isHeld && e->obj->IsBlocking())
+	//	return;
 	//change direction when Koopas blocked by brick
 	if (e->obj->IsBlocking() && e->nx != 0)
 	{
@@ -71,8 +74,6 @@ void CKoopas::OnCollisionWith(LPCOLLISIONEVENT e)
 	}
 
 	phaseChecker->SetSpeed(vx, 1);
-
-	DebugOut(L"isHeld = %d\n", isHeld);
 
 	if (dynamic_cast<CBrick*>(e->obj))
 		OnCollisionWithBrick(e);
@@ -119,21 +120,13 @@ void CKoopas::OnCollisionWithGoomba(LPCOLLISIONEVENT e)
 	switch (state)
 	{
 	case KOOPAS_STATE_WALKING:
+	case KOOPAS_STATE_SHELL:
 		float g_vx, g_vy;
 		goomba->GetSpeed(g_vx, g_vy);
 
 		goomba->SetSpeed(-g_vx, g_vy);
 
 		this->vx = -this->vx;
-		break;
-	case KOOPAS_STATE_SHELL:
-		if (isHeld)
-		{
-			goomba->SetState(GOOMBA_STATE_DIE_2);
-			goomba->Deflected(0);
-			this->SetState(KOOPAS_STATE_DIE);
-			this->Deflected(0);
-		}
 		break;
 
 	case KOOPAS_STATE_ATTACKING:
@@ -153,29 +146,43 @@ void CKoopas::OnCollisionWithKoopas(LPCOLLISIONEVENT e)
 {
 	CKoopas* koopas = dynamic_cast<CKoopas*>(e->obj);
 
-	if (koopas->state == KOOPAS_STATE_DIE)
+	if (koopas->state == KOOPAS_STATE_DIE || state == KOOPAS_STATE_DIE)
 		return;
+
+	int flag = 0;
+
+	if (koopas->state == KOOPAS_STATE_ATTACKING)
+		flag = 1;
+	else if (koopas->state == KOOPAS_STATE_SHELL && koopas->isHeld)
+		flag = 2;
 
 	switch (state)
 	{
 	case KOOPAS_STATE_ATTACKING:
-		float kx, ky;
-		koopas->GetPosition(kx, ky);
+		koopas->SetState(KOOPAS_STATE_DIE);
 
-		if ((koopas->state == KOOPAS_STATE_ATTACKING) || (koopas->state == KOOPAS_STATE_SHELL && koopas->isHeld))
-		{
+		if (flag)
 			this->SetState(KOOPAS_STATE_DIE);
 
-			if (kx >= x)
+		if (koopas->x >= x)
+		{
+			if (state == KOOPAS_STATE_DIE)
 				this->Deflected(DEFLECT_DIRECTION_LEFT);
-			else
-				this->Deflected(DEFLECT_DIRECTION_RIGHT);
+
+			koopas->Deflected(DEFLECT_DIRECTION_RIGHT);
 		}
-		koopas->SetState(KOOPAS_STATE_DIE);
-		koopas->Deflected(this->vx);
+		else
+		{
+			if (state == KOOPAS_STATE_DIE)
+				this->Deflected(DEFLECT_DIRECTION_RIGHT);
+
+			koopas->Deflected(DEFLECT_DIRECTION_LEFT);
+		}
+
 
 		break;
 
+	case KOOPAS_STATE_SHELL:
 	case KOOPAS_STATE_WALKING:
 		this->vx = -vx;
 		if (vx < 0)
@@ -184,54 +191,38 @@ void CKoopas::OnCollisionWithKoopas(LPCOLLISIONEVENT e)
 		}
 		else
 			this->phaseChecker->SetPosition(x + KOOPAS_BBOX_WIDTH, y);
-		this->SetSpeed(vx, vy);
-		break;
-	case KOOPAS_STATE_SHELL:
-		if (koopas->isHeld)
+		if (koopas->state == KOOPAS_STATE_WALKING)
 		{
-			koopas->SetState(KOOPAS_STATE_DIE);
-			this->SetState(KOOPAS_STATE_DIE);
-		}
-		break;
-	}
-
-	if (state == KOOPAS_STATE_ATTACKING)
-	{
-
-		float kx, ky;
-		koopas->GetPosition(kx, ky);
-
-		if (koopas->GetState() == KOOPAS_STATE_ATTACKING)
-		{
-			this->SetState(KOOPAS_STATE_DIE);
-
-			if (kx >= x)
-				this->Deflected(DEFLECT_DIRECTION_LEFT);
+			koopas->vx = -vx;
+			if (koopas->vx < 0)
+			{
+				koopas->phaseChecker->SetPosition(koopas->x - KOOPAS_BBOX_WIDTH, koopas->y);
+			}
 			else
-				this->Deflected(DEFLECT_DIRECTION_RIGHT);
+				koopas->phaseChecker->SetPosition(koopas->x + KOOPAS_BBOX_WIDTH, koopas->y);
 		}
-		koopas->SetState(KOOPAS_STATE_DIE);
-		koopas->Deflected(this->vx);
 
+		if (flag)
+		{
+			this->SetState(KOOPAS_STATE_DIE);
+			if (flag == 2)
+				koopas->SetState(KOOPAS_STATE_DIE);
+			else
+				if (x >= koopas->x)
+					this->Deflected(DEFLECT_DIRECTION_RIGHT);
+				else
+					this->Deflected(DEFLECT_DIRECTION_LEFT);
+		}
+		break;
 	}
+
+
 }
 
 void CKoopas::OnCollisionWithPlant(LPCOLLISIONEVENT e)
 {
-	if ((state == KOOPAS_STATE_ATTACKING) || isHeld)
+	if ((state == KOOPAS_STATE_ATTACKING))
 		e->obj->Delete();
-	else if (isHeld)
-	{
-		e->obj->Delete();
-		this->SetState(KOOPAS_STATE_DIE);
-
-		float px, py;
-		e->obj->GetPosition(px, py);
-		if (px > x)
-			this->Deflected(DEFLECT_DIRECTION_RIGHT);
-		else
-			this->Deflected(DEFLECT_DIRECTION_LEFT);
-	}
 }
 
 void CKoopas::Update(DWORD dt, vector<LPGAMEOBJECT>* coObjects)
