@@ -14,7 +14,7 @@ void CPhaseChecker::Update(DWORD dt, vector<LPGAMEOBJECT>* coObjects)
 	vx += ax * dt;
 
 	// use this case if tail of Mario over the attack range
-	if (abs(x + vx * dt - old_x) > 4 * width)
+	if (_type == PHASECHECK_BY_MARIO && abs(x + vx * dt - old_x) > 4 * width)
 	{
 		if (vx >= 0)
 		{
