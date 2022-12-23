@@ -119,8 +119,15 @@ void CPlayScene::_ParseSection_OBJECTS(string line)
 
 	case OBJECT_TYPE_GOOMBA: obj = new CGoomba(x, y); break;
 	case OBJECT_TYPE_KOOPAS: obj = new CKoopas(x, y); break;
-	case OBJECT_TYPE_BRICK: obj = new CBrick(x, y, BRICK_TYPE_GOLD); break;
-	case OBJECT_TYPE_QUESTION_BRICK: obj = new CBrick(x, y, BRICK_TYPE_QUESTION); break;
+
+	case OBJECT_TYPE_BRICK: 
+	{
+		int type = atoi(tokens[3].c_str());
+		int type_object = atoi(tokens[4].c_str());
+		obj = new CBrick(x, y, type, type_object);
+		break;
+	}
+		
 	case OBJECT_TYPE_COIN: obj = new CCoin(x, y); break;
 	case OBJECT_TYPE_PLANT: obj = new CPlant(x, y, PLANT_TYPE_RED_FIRE); break;
 
@@ -240,7 +247,7 @@ void CPlayScene::Update(DWORD dt)
 {
 	// We know that Mario is the first object in the list hence we won't add him into the colliable object list
 	// TO-DO: This is a "dirty" way, need a more organized way 
-
+	
 	vector<LPGAMEOBJECT> coObjects;
 	for (size_t i = 1; i < objects.size(); i++)
 	{
