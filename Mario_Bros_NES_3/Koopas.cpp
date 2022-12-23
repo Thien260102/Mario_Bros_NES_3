@@ -193,7 +193,7 @@ void CKoopas::OnCollisionWithKoopas(LPCOLLISIONEVENT e)
 			this->phaseChecker->SetPosition(x + KOOPAS_BBOX_WIDTH, y);
 		if (koopas->state == KOOPAS_STATE_WALKING)
 		{
-			koopas->vx = -vx;
+			koopas->vx = -koopas->vx;
 			if (koopas->vx < 0)
 			{
 				koopas->phaseChecker->SetPosition(koopas->x - KOOPAS_BBOX_WIDTH, koopas->y);
