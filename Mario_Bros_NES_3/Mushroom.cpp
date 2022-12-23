@@ -1,18 +1,20 @@
 #include "Mushroom.h"
+#include "Mario.h"
+#include "PlayScene.h"
 
 CMushroom::CMushroom(float x, float y, int type) : CGameObject(x, y)
 {
+	old_y = 0;
+	time_start = 0;
 	this->type = type;
-	if (type == SUPER_LEAF)
+	if (type == MUSHROOM_TYPE_SUPER_LEAF)
 	{
-		this->ax = MUSHROOM_WALKING_SPEED / 1000;
-		this->ay = MUSHROOM_GRAVITY / 6;
-		start = GetTickCount64();
+		time_start = GetTickCount64();
 	}
 
 	this->ax = 0;
 	this->ay = MUSHROOM_GRAVITY;
-	vx = -MUSHROOM_WALKING_SPEED;
+	vx = MUSHROOM_WALKING_SPEED;
 
 }
 
@@ -29,11 +31,26 @@ void CMushroom::Update(DWORD dt, vector<LPGAMEOBJECT>* coObjects)
 	vx += ax * dt;
 	vy += ay * dt;
 
-	if (type == SUPER_LEAF)
+	if (ay == 0 && (old_y - y) >= 16.0f)
 	{
-		OnNoCollision(dt);
+		ay = MUSHROOM_GRAVITY;
+		vx = MUSHROOM_WALKING_SPEED;
+		if (type == MUSHROOM_TYPE_SUPER_LEAF)
+		{
+			time_start = GetTickCount64();
+		}
+	}
+	else if (type == MUSHROOM_TYPE_SUPER_LEAF && vy > 0)
+	{
 		IsDiversion();
 		vy = ay * dt;
+		if ((LPPLAYSCENE)CGame::GetInstance()->GetCurrentScene())
+		{
+			CMario* mario = (CMario*)((LPPLAYSCENE)CGame::GetInstance()->GetCurrentScene())->GetPlayer();
+			vector<LPGAMEOBJECT> object;
+			object.push_back(mario);
+			CCollision::GetInstance()->Process(this, dt, &object);
+		}
 		return;
 	}
 
@@ -44,14 +61,14 @@ void CMushroom::Update(DWORD dt, vector<LPGAMEOBJECT>* coObjects)
 void CMushroom::Render()
 {
 	int spriteId;
-	if (type == MUSHROOM_SUPER)
+	if (type == MUSHROOM_TYPE_SUPER)
 		spriteId = ID_SPRITE_SUPERMUSHROOM;
-	else if (type == MUSHROOM_1UP)
+	else if (type == MUSHROOM_TYPE_1UP)
 		spriteId = ID_SPRITE_1UPMUSHROOM;
 	else
 		spriteId = ID_SPRITE_SUPERLEAF;
 	CSprites::GetInstance()->Get(spriteId)->Draw(x, y);
-	//RenderBoundingBox();
+	RenderBoundingBox();
 }
 
 void CMushroom::OnNoCollision(DWORD dt)
@@ -62,9 +79,45 @@ void CMushroom::OnNoCollision(DWORD dt)
 
 void CMushroom::OnCollisionWith(LPCOLLISIONEVENT e)
 {
-	if (!e->obj->IsBlocking()) return;
-	if (dynamic_cast<CGoomba*>(e->obj)) return;
-	if (dynamic_cast<CMushroom*>(e->obj)) return;
+	if (dynamic_cast<CMario*>(e->obj))
+	{
+		CMario* mario = dynamic_cast<CMario*>(e->obj);
+
+		if (type == MUSHROOM_TYPE_1UP)
+		{
+			// + 1 up
+		}
+		else
+		{
+			switch (mario->GetLevel())
+			{
+			case MARIO_LEVEL_SMALL:
+				mario->SetLevel(MARIO_LEVEL_BIG);
+				break;
+			case MARIO_LEVEL_BIG:
+				mario->SetLevel(MARIO_LEVEL_RACCOON);
+				break;
+			}
+
+		}
+		this->Delete();
+	}
+	else if (dynamic_cast<CBrick*>(e->obj))
+	{
+		DebugOut(L"Brick collide with Mushroom\n");
+		CBrick* brick = dynamic_cast<CBrick*>(e->obj);
+		if (brick->IsAttacking())
+		{
+			this->Deflected();
+			this->vx = -vx;
+		}
+	}
+
+	if (!e->obj->IsBlocking() 
+		|| (dynamic_cast<CGoomba*>(e->obj)) 
+		|| (dynamic_cast<CMushroom*>(e->obj)))
+		return;
+
 
 	if (e->ny != 0)
 	{
@@ -80,9 +133,23 @@ void CMushroom::OnCollisionWith(LPCOLLISIONEVENT e)
 
 void CMushroom::IsDiversion()
 {
-	if (GetTickCount64() - start >= TIME_LEAF_DIVERT)
+	if (GetTickCount64() - time_start >= TIME_LEAF_DIVERT)
 	{
 		vx = -vx;
-		start = GetTickCount64();
+		time_start = GetTickCount64();
 	}
+}
+
+void CMushroom::CreatedByBrick()
+{
+	old_y = y;
+
+	ay = 0;
+	vx = 0;
+	vy = -MUSHROOM_CREATE_SPEED;
+}
+
+void CMushroom::Deflected(int direction)
+{
+	vy = -MUSHROOM_DEFLECT_SPEED;
 }
