@@ -93,10 +93,19 @@ void CMario::Update(DWORD dt, vector<LPGAMEOBJECT> *coObjects)
 		time_start = 0;
 	}
 
-	isOnPlatform = false;
-	
-	
+	if (fly_start != 0 && (GetTickCount64() - fly_start) > MARIO_FLY_TIME)
+	{
+		fly_start = 0;
+		float_start = GetTickCount64();
+	}
 
+	if (isOnPlatform)
+	{
+		fly_start = 0;
+		float_start = 0;
+	}
+
+	isOnPlatform = false;
 	
 	CCollision::GetInstance()->Process(this, dt, coObjects);	
 }
@@ -600,16 +609,28 @@ int CMario::GetAniIdRaccoon()
 			{
 			case true:
 				if (nx >= 0)
-					aniId = ID_ANI_MARIO_RACCOON_JUMP_RUN_RIGHT;
+				{
+					if (vy < 0) aniId = ID_ANI_MARIO_RACCOON_JUMP_RUN_UP_RIGHT;
+					else aniId = ID_ANI_MARIO_RACCOON_JUMP_RUN_DOWN_RIGHT;
+				}
 				else
-					aniId = ID_ANI_MARIO_RACCOON_JUMP_RUN_LEFT;
+				{
+					if (vy < 0) aniId = ID_ANI_MARIO_RACCOON_JUMP_RUN_UP_LEFT;
+					else aniId = ID_ANI_MARIO_RACCOON_JUMP_RUN_DOWN_LEFT;
+				}
 				break;
 
 			case false:
 				if (nx >= 0)
-					aniId = ID_ANI_MARIO_RACCOON_JUMP_WALK_RIGHT;
+				{
+					if (vy <= 0) aniId = ID_ANI_MARIO_RACCOON_JUMP_WALK_UP_RIGHT;
+					else aniId = ID_ANI_MARIO_RACCOON_JUMP_WALK_DOWN_RIGHT;
+				}
 				else
-					aniId = ID_ANI_MARIO_RACCOON_JUMP_WALK_LEFT;
+				{
+					if (vy <= 0) aniId = ID_ANI_MARIO_RACCOON_JUMP_WALK_UP_LEFT;
+					else aniId = ID_ANI_MARIO_RACCOON_JUMP_WALK_DOWN_LEFT;
+				}
 				break;
 			}
 			break;
@@ -673,6 +694,19 @@ int CMario::GetAniIdRaccoon()
 
 		}
 
+	if (_koopas == NULL)
+	{
+		if (float_start != 0)
+		{
+			if (nx >= 0) aniId = ID_ANI_MARIO_RACCOON_FLOAT_RIGHT;
+			else aniId = ID_ANI_MARIO_RACCOON_FLOAT_LEFT;
+		}
+		else if (fly_start != 0)
+			{
+				if (nx >= 0) aniId = ID_ANI_MARIO_RACCOON_FLY_RIGHT;
+				else aniId = ID_ANI_MARIO_RACCOON_FLY_LEFT;
+			}
+	}
 
 	if (flag == MARIO_KICK_TIME)
 	{
@@ -818,6 +852,33 @@ void CMario::SetState(int state)
 			_koopas->SetState(KOOPAS_STATE_ATTACKING);
 			_koopas = NULL;
 		}
+		break;
+
+	case MARIO_STATE_FLY:
+		if (isSitting || level != MARIO_LEVEL_RACCOON) break;
+
+		if (fly_start == 0 && float_start == 0
+			&& (this->state == MARIO_STATE_RUNNING_LEFT || this->state == MARIO_STATE_RUNNING_RIGHT))
+		{
+			float_start = 0;
+			fly_start = GetTickCount64();
+		}
+
+		if (fly_start == 0) float_start = GetTickCount64();
+
+		if (fly_start != 0)
+		{
+			vy -= MARIO_FLY_UP_SPEED_Y;
+		}
+		else if(float_start != 0)
+			vy -= MARIO_FLY_DOWN_SPEED_Y;
+
+		break;
+
+	case MARIO_STATE_RELEASE_FLY:
+		if(vy > 0)
+			vy = 0;
+
 		break;
 	}
 
