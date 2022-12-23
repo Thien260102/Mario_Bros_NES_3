@@ -30,6 +30,11 @@
 
 #define BRICK_STATE_DEFLECT 10
 
+#define BRICK_CONTAIN_NONE 0
+#define BRICK_CONTAIN_SUPER_MUSHROOM_LEAF 100
+#define BRICK_CONTAIN_COIN 101
+#define BRICK_CONTAIN_1UP_MUSHROOM 102
+
 class CBrick : public CGameObject {
 protected:
 	float old_y;
@@ -37,6 +42,7 @@ protected:
 	float ay;
 	int type;
 	bool isBrokenByMarioJump;
+	int containObject;
 
 	ULONGLONG time_start;
 
@@ -49,10 +55,8 @@ protected:
 	virtual void OnCollisionWith(LPCOLLISIONEVENT e) {}
 
 	virtual void Update(DWORD dt, vector<LPGAMEOBJECT>* coObjects);
-
-	void Update(DWORD dt);
 public:
-	CBrick(float x, float y, int Type) : CGameObject(x, y) 
+	CBrick(float x, float y, int Type, int type_object) : CGameObject(x, y) 
 	{
 		type = -1;
 		state = -1;
@@ -64,6 +68,8 @@ public:
 		vx = 0;
 		vy = 0;
 		isBrokenByMarioJump = false;
+		
+		containObject = type_object;
 	}
 	void Render();
 	void GetBoundingBox(float& l, float& t, float& r, float& b);
