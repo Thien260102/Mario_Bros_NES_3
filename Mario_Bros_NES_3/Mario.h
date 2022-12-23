@@ -18,7 +18,7 @@
 #define MARIO_JUMP_SPEED_Y		0.4f
 #define MARIO_JUMP_RUN_SPEED_Y	0.45f
 
-#define MARIO_FLY_UP_SPEED_Y 0.2f
+#define MARIO_FLY_UP_SPEED_Y 0.3f
 #define MARIO_FLY_DOWN_SPEED_Y 0.06f
 
 #define MARIO_GRAVITY			0.001f
@@ -160,10 +160,10 @@
 #define ID_ANI_MARIO_RACCOON_HOLD_JUMP_RIGHT 2702
 #define ID_ANI_MARIO_RACCOON_HOLD_JUMP_LEFT 2703
 
-#define ID_ANI_MARIO_RACCOON_FLY_UP_RIGHT 2801
-#define ID_ANI_MARIO_RACCOON_FLY_UP_LEFT 2802
-#define ID_ANI_MARIO_RACCOON_FLY_DOWN_RIGHT 2811
-#define ID_ANI_MARIO_RACCOON_FLY_DOWN_LEFT 2812
+#define ID_ANI_MARIO_RACCOON_FLY_RIGHT 2801
+#define ID_ANI_MARIO_RACCOON_FLY_LEFT 2802
+#define ID_ANI_MARIO_RACCOON_FLOAT_RIGHT 2811
+#define ID_ANI_MARIO_RACCOON_FLOAT_LEFT 2812
 #pragma endregion
 
 #define GROUND_Y 160.0f
@@ -217,7 +217,9 @@ class CMario : public CGameObject
 	int coin; 
 
 	int flag;
-	ULONGLONG time_start; // to manage render time of some animations;
+	ULONGLONG time_start; // to manage render time of some states (attack, kick), animations
+	ULONGLONG fly_start;
+	ULONGLONG float_start;
 
 	void OnCollisionWithGoomba(LPCOLLISIONEVENT e);
 	void OnCollisionWithCoin(LPCOLLISIONEVENT e);
@@ -244,11 +246,16 @@ public:
 		untouchable_start = -1;
 		isOnPlatform = false;
 		coin = 0;
+		
 		flag = 0;
 		time_start = 0;
+		
 		holdable = 0;
 		_koopas = NULL;
+
 		_tail = new CPhaseChecker(x, y, MARIO_TAIL_WIDTH, MARIO_TAIL_HEIGHT, PHASECHECK_BY_MARIO);
+		fly_start = 0;
+		float_start = 0;
 	}
 	void Update(DWORD dt, vector<LPGAMEOBJECT>* coObjects);
 	void Render();
@@ -274,4 +281,6 @@ public:
 	int IsHolding() { return _koopas != NULL; }
 
 	BOOLEAN IsOnPlatform() { return isOnPlatform; }
+
+	bool IsFlying() { return fly_start != 0 || float_start != 0; }
 };
