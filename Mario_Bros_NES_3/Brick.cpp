@@ -2,20 +2,17 @@
 #include "debug.h"
 #include "Goomba.h"
 #include "Koopas.h"
+#include "Mario.h"
+#include "Game.h"
+#include "PlayScene.h"
+#include "Mushroom.h"
+#include "Coin.h"
 
 void CBrick::Update(DWORD dt, vector<LPGAMEOBJECT>* coObjects)
 {
 	if (time_start == -1)
 		return;
 
-	this->Update(dt);
-
-	//CGameObject::Update(dt, coObjects);
-	//CCollision::GetInstance()->Process(this, dt, coObjects);
-}
-
-void CBrick::Update(DWORD dt)
-{
 	vy += ay * dt;
 
 	x += vx * dt;
@@ -30,6 +27,46 @@ void CBrick::Update(DWORD dt)
 			time_start = -1;
 			vy = 0;
 			ay = 0;
+
+			CGameObject* _object = NULL;
+			switch (containObject)
+			{
+			case BRICK_CONTAIN_SUPER_MUSHROOM_LEAF:
+			{
+				CMario* mario = (CMario*)((LPPLAYSCENE)CGame::GetInstance()->GetCurrentScene())->GetPlayer();
+
+				switch (mario->GetLevel())
+				{
+				case MARIO_LEVEL_SMALL:
+					_object = new CMushroom(x, y, MUSHROOM_TYPE_SUPER);
+					break;
+
+				case MARIO_LEVEL_BIG:
+				case MARIO_LEVEL_RACCOON:
+					_object = new CMushroom(x, y, MUSHROOM_TYPE_SUPER_LEAF);
+
+					break;
+				}
+				((CMushroom*)_object)->CreatedByBrick();
+			}
+				break;
+
+			case BRICK_CONTAIN_COIN:
+				_object = new CCoin(x, y);
+				_object->Deflected();
+				break;
+
+			case BRICK_CONTAIN_1UP_MUSHROOM:
+				_object = new CMushroom(x, y, MUSHROOM_TYPE_1UP);
+				((CMushroom*)_object)->CreatedByBrick();
+				break;
+			}
+
+
+			if (_object != NULL)
+			{
+				((LPPLAYSCENE)CGame::GetInstance()->GetCurrentScene())->GetObjects().push_back(_object);
+			}
 		}
 	}
 	else if (type == BRICK_TYPE_BREAK)
@@ -42,10 +79,10 @@ void CBrick::Update(DWORD dt)
 				vector<CBrick*>::iterator it;
 				for (it = bricks.begin(); it != bricks.end(); it++)
 				{
-					CBrick* o = *it;
-					if (o->IsDeleted())
+					CBrick* b = *it;
+					if (b->IsDeleted())
 					{
-						delete o;
+						delete b;
 						*it = NULL;
 					}
 				}
@@ -60,12 +97,12 @@ void CBrick::Update(DWORD dt)
 	{
 		for (int i = 0; i < 3; i++)
 		{
-			bricks[i]->Update(dt);
+			bricks[i]->Update(dt, coObjects);
 		}
 
 	}
-}
 
+}
 
 void CBrick::Render()
 {
@@ -101,14 +138,14 @@ void CBrick::GetBoundingBox(float& l, float& t, float& r, float& b)
 
 void CBrick::SetType(int Type)
 {
+	if (containObject != BRICK_CONTAIN_NONE && Type == BRICK_TYPE_BREAK)
+	{
+		SetType(BRICK_TYPE_EMPTY);
+		return;
+	}
+
 	switch (Type)
 	{
-	case BRICK_TYPE_GOLD:
-
-		break;
-	case BRICK_TYPE_QUESTION:
-
-		break;
 	case BRICK_TYPE_EMPTY:
 		time_start = GetTickCount64();
 		old_y = y;
@@ -124,17 +161,17 @@ void CBrick::SetType(int Type)
 		if (type == BRICK_TYPE_GOLD)
 		{
 
-			bricks.push_back(new CBrick(x + BRICK_BBOX_WIDTH, y, BRICK_TYPE_BREAK));
+			bricks.push_back(new CBrick(x + BRICK_BBOX_WIDTH, y, BRICK_TYPE_BREAK, BRICK_CONTAIN_NONE));
 			bricks[0]->SetSpeed(BRICK_BREAK_DEFLECT_X, -BRICK_BREAK_DEFLECT_Y);
 			bricks[0]->time_start = GetTickCount64();
 			bricks[0]->ay = BRICK_GRAVITY;
 
-			bricks.push_back(new CBrick(x, y + BRICK_BBOX_HEIGHT, BRICK_TYPE_BREAK));
+			bricks.push_back(new CBrick(x, y + BRICK_BBOX_HEIGHT, BRICK_TYPE_BREAK, BRICK_CONTAIN_NONE));
 			bricks[1]->SetSpeed(-BRICK_BREAK_DEFLECT_X, -BRICK_BREAK_DEFLECT_X);
 			bricks[1]->time_start = GetTickCount64();
 			bricks[1]->ay = BRICK_GRAVITY;
 
-			bricks.push_back(new CBrick(x + BRICK_BBOX_WIDTH, y + BRICK_BBOX_HEIGHT, BRICK_TYPE_BREAK));
+			bricks.push_back(new CBrick(x + BRICK_BBOX_WIDTH, y + BRICK_BBOX_HEIGHT, BRICK_TYPE_BREAK, BRICK_CONTAIN_NONE));
 			bricks[2]->SetSpeed(BRICK_BREAK_DEFLECT_X, -BRICK_BREAK_DEFLECT_X);
 			bricks[2]->time_start = GetTickCount64();
 			bricks[2]->ay = BRICK_GRAVITY;
@@ -155,6 +192,8 @@ void CBrick::SetState(int State)
 		time_start = GetTickCount64();
 		old_y = y;
 		Deflected(0);
+		if (containObject != NULL)
+			SetType(BRICK_TYPE_EMPTY);
 		break;
 	}
 	this->state = State;
