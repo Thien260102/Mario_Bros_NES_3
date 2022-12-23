@@ -239,7 +239,7 @@ void CMario::OnCollisionWithMushroom(LPCOLLISIONEVENT e)
 {
 	CMushroom* mushroom = (CMushroom*)e->obj;
 
-	if (mushroom->getType() == MUSHROOM_1UP)
+	if (mushroom->getType() == MUSHROOM_TYPE_1UP)
 	{
 		// + 1 up
 	}
@@ -868,10 +868,10 @@ void CMario::SetState(int state)
 
 		if (fly_start != 0)
 		{
-			vy -= MARIO_FLY_UP_SPEED_Y;
+			vy -= MARIO_FLY_SPEED_Y;
 		}
 		else if(float_start != 0)
-			vy -= MARIO_FLY_DOWN_SPEED_Y;
+			vy -= MARIO_FLOAT_SPEED_Y;
 
 		break;
 
