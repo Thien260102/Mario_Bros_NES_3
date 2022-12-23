@@ -6,15 +6,17 @@
 #include "Brick.h"
 #include "Goomba.h"
 
-#define MUSHROOM_GRAVITY 0.002f
+#define MUSHROOM_GRAVITY 0.001f
 #define MUSHROOM_WALKING_SPEED 0.065f
+#define MUSHROOM_CREATE_SPEED 0.01f
+#define MUSHROOM_DEFLECT_SPEED 0.2f
 
 #define MUSHROOM_BBOX_WIDTH 15
 #define MUSHROOM_BBOX_HEIGHT 15
 
-#define MUSHROOM_SUPER 1
-#define MUSHROOM_1UP 2
-#define SUPER_LEAF 3
+#define MUSHROOM_TYPE_SUPER 1
+#define MUSHROOM_TYPE_1UP 2
+#define MUSHROOM_TYPE_SUPER_LEAF 3
 
 #define TIME_LEAF_DIVERT 500
 
@@ -24,7 +26,8 @@ protected:
 	float ax;
 	float ay;
 	int type;
-	ULONGLONG start;
+	ULONGLONG time_start;
+	float old_y;
 
 	virtual void GetBoundingBox(float& left, float& top, float& right, float& bottom);
 	virtual void Update(DWORD dt, vector<LPGAMEOBJECT>* coObjects);
@@ -37,8 +40,10 @@ protected:
 	virtual void OnCollisionWith(LPCOLLISIONEVENT e);
 
 	void IsDiversion();
+	virtual void Deflected(int direction = 0);
 public:
 	CMushroom(float x, float y, int type);
 	int getType() { return type; }
+	void CreatedByBrick();
 };
 
