@@ -9,6 +9,7 @@
 #define COIN_GRAVITY 0.001f //use when Mario jump into Brick from below
 
 #define ID_ANI_COIN 11000
+#define ID_ANI_COIN_DEFLECT 11001
 
 //#define	COIN_WIDTH 10
 #define COIN_BBOX_WIDTH 15
