@@ -53,7 +53,7 @@ void CSampleKeyHandler::OnKeyUp(int KeyCode)
 	switch (KeyCode)
 	{
 	case DIK_S:
-		if (mario->IsFlying() || mario->IsFloat())
+		if (mario->IsFlying() || mario->IsFloat()) 
 			mario->SetState(MARIO_STATE_RELEASE_FLY);
 		else
 			mario->SetState(MARIO_STATE_RELEASE_JUMP);
