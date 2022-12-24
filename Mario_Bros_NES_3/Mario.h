@@ -15,7 +15,7 @@
 #define MARIO_ACCEL_WALK_X	0.0005f
 #define MARIO_ACCEL_RUN_X	0.0007f
 
-#define MARIO_JUMP_SPEED_Y		0.4f
+#define MARIO_JUMP_SPEED_Y		0.38f
 #define MARIO_JUMP_RUN_SPEED_Y	0.45f
 
 #define MARIO_FLY_SPEED_Y 0.25f
@@ -183,7 +183,7 @@
 #define MARIO_SIT_HEIGHT_ADJUST ((MARIO_BIG_BBOX_HEIGHT-MARIO_BIG_SITTING_BBOX_HEIGHT)/2)
 
 #define MARIO_SMALL_BBOX_WIDTH  13
-#define MARIO_SMALL_BBOX_HEIGHT 12
+#define MARIO_SMALL_BBOX_HEIGHT 13
 
 #define MARIO_RACCOON_BBOX_WIDTH (MARIO_BIG_BBOX_WIDTH)
 #define MARIO_RACCOON_BBOX_HEIGHT 25
@@ -282,5 +282,6 @@ public:
 
 	BOOLEAN IsOnPlatform() { return isOnPlatform; }
 
-	bool IsFlying() { return fly_start != 0 || float_start != 0; }
+	bool IsFlying() { return fly_start != 0; }
+	bool IsFloat() { return float_start != 0; }
 };
