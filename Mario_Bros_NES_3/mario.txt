@@ -1,6 +1,6 @@
 # id	left	top	right	bottom	texture_id
 [SPRITES]
-#####  BIG ############### 
+#####  BIG ###############  
 #IDLE (Width = 13, height = 27)
 11121	216	243	229	270	1
 11111	176	243	189	270	1
