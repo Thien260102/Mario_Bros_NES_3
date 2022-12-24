@@ -104,7 +104,6 @@ void CMushroom::OnCollisionWith(LPCOLLISIONEVENT e)
 	}
 	else if (dynamic_cast<CBrick*>(e->obj))
 	{
-		DebugOut(L"Brick collide with Mushroom\n");
 		CBrick* brick = dynamic_cast<CBrick*>(e->obj);
 		if (brick->IsAttacking())
 		{
@@ -142,6 +141,12 @@ void CMushroom::IsDiversion()
 
 void CMushroom::CreatedByBrick()
 {
+	if (type == MUSHROOM_TYPE_SUPER_LEAF)
+	{
+		Deflected();
+		return;
+	}
+
 	old_y = y;
 
 	ay = 0;
