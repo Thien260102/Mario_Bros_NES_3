@@ -19,11 +19,16 @@
 #define ID_ANI_GOOMBA_WALKING 5000
 #define ID_ANI_GOOMBA_DIE_1 5001 // die by mario jump on the head
 
+#define GOOMBA_TYPE_NORMAL 1
+#define GOOMBA_TYPE_RED_FLY 2
+
 class CGoomba : public CGameObject
 {
 protected:
 	float ax;				
 	float ay; 
+
+	int _type;
 
 	ULONGLONG time_start;
 
@@ -42,7 +47,7 @@ protected:
 	int GetAniId();
 
 public: 	
-	CGoomba(float x, float y);
+	CGoomba(float x, float y, int type);
 	virtual void SetState(int state);
 
 	virtual void Deflected(int Direction);
