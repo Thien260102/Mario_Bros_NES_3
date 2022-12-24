@@ -1,6 +1,6 @@
 # id	left	top	right	bottom	texture_id
 [SPRITES]
-# Ground
+# Ground 
 #top(width = 15, height = 15)
 51000	443	154	458	169	21
 52000	460	154	475	169	21
@@ -88,5 +88,5 @@
 46039	1004	222	1019	237	21
 
 
-# ani_id	sprite1_id	time1	sprite2_id	time2	...
+# ani_id 	sprite1_id	time1	sprite2_id	time2	...
 [ANIMATIONS]
