@@ -154,7 +154,6 @@ int CPlant::GetAniId()
 		else
 			aniId = ID_ANI_PLANT_RED_TARGET_TOP;
 
-
 		break;
 	}
 

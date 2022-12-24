@@ -11,11 +11,14 @@
 #include "Mushroom.h"
 #include "Brick.h"
 #include "Plant.h"
+#include "Platform.h"
 
 #include "Collision.h"
 
 void CMario::Update(DWORD dt, vector<LPGAMEOBJECT> *coObjects)
 {
+	if (x < 10) x = 10;
+
 	vy += ay * dt;
 	vx += ax * dt;
 
@@ -118,17 +121,41 @@ void CMario::OnNoCollision(DWORD dt)
 
 void CMario::OnCollisionWith(LPCOLLISIONEVENT e)
 {
-	if (e->ny != 0 && e->obj->IsBlocking())
+	if (e->ny != 0 )//&& e->obj->IsBlocking())
 	{
-		vy = 0;
+		if (dynamic_cast<CPlatform*>(e->obj))
+		{
+			CPlatform* platform = dynamic_cast<CPlatform*>(e->obj);
+			switch (platform->GetType())
+			{
+			case PLATFORM_TYPE_BLOCK:
+				vy = 0;
+				break;
+			case PLATFORM_TYPE_NORMAL:
+				if (e->ny < 0)
+					vy = 0;
+			}
+
+		}
+		else if (e->obj->IsBlocking())
+			vy = 0;
+	
 		if (e->ny < 0) isOnPlatform = true;
+
 		if (_koopas != NULL && _koopas->IsHeld())
 			_koopas->SetSpeed(vx, vy);
 	}
-	else 
-	if (e->nx != 0 && e->obj->IsBlocking())
+	else if (e->nx != 0)
 	{
-		vx = 0;
+		if (dynamic_cast<CPlatform*>(e->obj))
+		{
+			if (dynamic_cast<CPlatform*>(e->obj)->GetType() == PLATFORM_TYPE_BLOCK)
+			{
+				vx = 0;
+			}
+		}
+		else if (e->obj->IsBlocking())
+			vx = 0;
 	}
 
 	if (dynamic_cast<CGoomba*>(e->obj))
