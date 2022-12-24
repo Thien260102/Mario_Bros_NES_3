@@ -17,6 +17,6 @@ height	240
 0	textures\mario.png
 1	textures\mario2.png
 #10	textures\enemies.png
-11	textures\enemies2.png
+11	textures\enemies2_nobg.png
 20	textures\misc.png
-21	textures\misc2.png
+21	textures\misc2_nobg.png
