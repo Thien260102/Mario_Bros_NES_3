@@ -10,6 +10,7 @@
 #include "Koopas.h"
 #include "Plant.h"
 
+#define DEFAULT_CAMERA_POSITION_Y 223
 
 class CPlayScene: public CScene
 {
