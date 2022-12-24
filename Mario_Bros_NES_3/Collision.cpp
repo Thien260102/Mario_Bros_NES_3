@@ -2,6 +2,7 @@
 #include "GameObject.h"
 
 #include "debug.h"
+#include "Platform.h"
 
 #define BLOCK_PUSH_FACTOR 0.2f
 
@@ -201,12 +202,19 @@ void CCollision::Filter( LPGAMEOBJECT objSrc,
 			continue;
 		}
 
-		if (c->t < min_tx && c->nx != 0 && filterX == 1) {
+		if (c->t < min_tx && c->nx != 0 && filterX == 1 && c->obj->IsBlocking() == 1) { //BLOCK , IsBlocking == 2 or 0 : Non block
 			min_tx = c->t; min_ix = i;
 		}
 
 		if (c->t < min_ty && c->ny != 0 && filterY == 1) {
-			min_ty = c->t; min_iy = i;
+			if (c->obj->IsBlocking() == 2 && c->ny < 0)
+			{
+				min_ty = c->t; min_iy = i;
+			}
+			else if (c->obj->IsBlocking() == 1)
+			{
+				min_ty = c->t; min_iy = i;
+			}
 		}
 	}
 
@@ -245,9 +253,11 @@ void CCollision::Process(LPGAMEOBJECT objSrc, DWORD dt, vector<LPGAMEOBJECT>* co
 		objSrc->GetSpeed(vx, vy);
 		dx = vx * dt;
 		dy = vy * dt;
-
+		//DebugOut(L"vy: %f, dt: %ld , y: %f   ", vy, dt, y);
+		
 		if (colX != NULL && colY != NULL) 
 		{
+			//DebugOut(L"case colX && colY != NULL    ");
 			if (colY->t < colX->t)	// was collision on Y first ?
 			{
 				y += colY->t * dy + colY->ny * BLOCK_PUSH_FACTOR;
@@ -318,20 +328,20 @@ void CCollision::Process(LPGAMEOBJECT objSrc, DWORD dt, vector<LPGAMEOBJECT>* co
 		else
 		if (colX != NULL)
 		{
-			x += colX->t * dx + colX->nx * BLOCK_PUSH_FACTOR;
+			x += colX->t * dx + colX->nx * BLOCK_PUSH_FACTOR; //DebugOut(L"case colX != NULL, dy: %f \n", dy);
 			y += dy;
 			objSrc->OnCollisionWith(colX);
 		}
 		else 
 			if (colY != NULL)
 			{
-				x += dx;
+				x += dx; //DebugOut(L"case colY != NULL, y: %f\n", y);
 				y += colY->t * dy + colY->ny * BLOCK_PUSH_FACTOR;
 				objSrc->OnCollisionWith(colY);
 			}
 			else // both colX & colY are NULL 
 			{
-				x += dx;
+				x += dx; //DebugOut(L"case colX = colY = NULL\n");
 				y += dy;
 			}
 
