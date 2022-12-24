@@ -120,7 +120,7 @@ void CPlayScene::_ParseSection_OBJECTS(string line)
 	case OBJECT_TYPE_GOOMBA:
 	{
 		int type = atoi(tokens[3].c_str());
-		obj = new CGoomba(x, y, type); break;
+		obj = new CGoomba(x, y, type); break; 
 	}
 	case OBJECT_TYPE_KOOPAS: obj = new CKoopas(x, y); break;
 
@@ -137,7 +137,7 @@ void CPlayScene::_ParseSection_OBJECTS(string line)
 	case OBJECT_TYPE_PLANT: 
 	{
 		int type = atoi(tokens[3].c_str());
-		obj = new CPlant(x, y, type); break;
+		obj = new CPlant(x, y, type); break; 
 
 	}
 	case OBJECT_TYPE_PLATFORM:
@@ -154,7 +154,7 @@ void CPlayScene::_ParseSection_OBJECTS(string line)
 			x, y,
 			cell_width, cell_height, length,
 			sprite_begin, sprite_middle, sprite_end,
-			type
+			type 
 		);
 
 		break;
@@ -289,7 +289,7 @@ void CPlayScene::Update(DWORD dt)
 
 	DebugOutTitle(L"mario y: %f cy: %f", cy, old_cy);
 
-	if (mario->GetLevel() == MARIO_LEVEL_RACCOON)
+	if (mario->GetLevel() == MARIO_LEVEL_RACCOON) 
 	{
 		if ((cy - old_cy) < (game->GetBackBufferHeight() / 3) && mario->IsFlying()) // Case Mario is flying or on the platform in the sky
 		{
