@@ -12,7 +12,6 @@ CMushroom::CMushroom(float x, float y, int type) : CGameObject(x, y)
 		time_start = GetTickCount64();
 	}
 
-	this->ax = 0;
 	this->ay = MUSHROOM_GRAVITY;
 	vx = MUSHROOM_WALKING_SPEED;
 
@@ -28,30 +27,39 @@ void CMushroom::GetBoundingBox(float& left, float& top, float& right, float& bot
 
 void CMushroom::Update(DWORD dt, vector<LPGAMEOBJECT>* coObjects)
 {
-	vx += ax * dt;
 	vy += ay * dt;
 
-	if (ay == 0 && (old_y - y) >= 16.0f)
+	switch (type)
 	{
-		ay = MUSHROOM_GRAVITY;
-		vx = MUSHROOM_WALKING_SPEED;
-		if (type == MUSHROOM_TYPE_SUPER_LEAF)
+	case MUSHROOM_TYPE_SUPER_LEAF:
+		if (vy > 0) // created time out
 		{
-			time_start = GetTickCount64();
+			if (vx == 0) // time deflect out
+			{
+				vx = MUSHROOM_WALKING_SPEED;
+				time_start = GetTickCount64();
+			}
+
+			IsDiversion();
+			vy = ay * dt;
+			if ((LPPLAYSCENE)CGame::GetInstance()->GetCurrentScene())
+			{
+				CMario* mario = (CMario*)((LPPLAYSCENE)CGame::GetInstance()->GetCurrentScene())->GetPlayer();
+				vector<LPGAMEOBJECT> object;
+				object.push_back(mario);
+				CCollision::GetInstance()->Process(this, dt, &object);
+			}
+			return;
 		}
-	}
-	else if (type == MUSHROOM_TYPE_SUPER_LEAF && vy > 0)
-	{
-		IsDiversion();
-		vy = ay * dt;
-		if ((LPPLAYSCENE)CGame::GetInstance()->GetCurrentScene())
+
+		break;
+
+	default:
+		if ((old_y - y) >= MUSHROOM_DEFLECT_MAX_HEIGHT) // created time out
 		{
-			CMario* mario = (CMario*)((LPPLAYSCENE)CGame::GetInstance()->GetCurrentScene())->GetPlayer();
-			vector<LPGAMEOBJECT> object;
-			object.push_back(mario);
-			CCollision::GetInstance()->Process(this, dt, &object);
+			ay = MUSHROOM_GRAVITY;
+			vx = MUSHROOM_WALKING_SPEED;
 		}
-		return;
 	}
 
 	CGameObject::Update(dt, coObjects);
@@ -141,13 +149,13 @@ void CMushroom::IsDiversion()
 
 void CMushroom::CreatedByBrick()
 {
+	old_y = y;
+
 	if (type == MUSHROOM_TYPE_SUPER_LEAF)
 	{
 		Deflected();
 		return;
 	}
-
-	old_y = y;
 
 	ay = 0;
 	vx = 0;
@@ -157,4 +165,5 @@ void CMushroom::CreatedByBrick()
 void CMushroom::Deflected(int direction)
 {
 	vy = -MUSHROOM_DEFLECT_SPEED;
+	vx *= direction;
 }
