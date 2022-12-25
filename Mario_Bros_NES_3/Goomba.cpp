@@ -87,8 +87,8 @@ void CGoomba::OnCollisionWithGoomba(LPCOLLISIONEVENT e)
 
 	if (e->nx != 0)
 	{
-		goomba->vx = -this->vx;
-		this->vx = this->vx;
+		goomba->vx = this->vx;
+		this->vx = -this->vx;
 	}
 }
 
