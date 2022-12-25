@@ -11,6 +11,8 @@
 #define MUSHROOM_CREATE_SPEED 0.02f
 #define MUSHROOM_DEFLECT_SPEED 0.3f
 
+#define MUSHROOM_DEFLECT_MAX_HEIGHT 16.0f
+
 #define MUSHROOM_BBOX_WIDTH 15
 #define MUSHROOM_BBOX_HEIGHT 15
 
@@ -23,7 +25,6 @@
 class CMushroom: public CGameObject
 {
 protected:
-	float ax;
 	float ay;
 	int type;
 	ULONGLONG time_start;
