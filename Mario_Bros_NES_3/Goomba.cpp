@@ -246,7 +246,7 @@ void CGoomba::SetState(int state)
 			time_start = GetTickCount64();
 			break;
 		case GOOMBA_STATE_WALKING: 
-			vx = -GOOMBA_WALKING_SPEED;
+			
 			break;
 		case GOOMBA_STATE_FLYING:
 			vy = -GOOMBA_FLY_SPEED_Y;
@@ -270,6 +270,8 @@ int CGoomba::GetAniId()
 
 		if (state == GOOMBA_STATE_DIE_1)
 			aniId = ID_ANI_GOOMBA_DIE_1;
+		else if (state == GOOMBA_STATE_DIE_2)
+			aniId = ID_ANI_GOOMBA_DIE_2;
 
 		break;
 
@@ -278,13 +280,16 @@ int CGoomba::GetAniId()
 
 		if (state == GOOMBA_STATE_DIE_1)
 			aniId = ID_ANI_RED_GOOMBA_DIE_1;
+		else if (state == GOOMBA_STATE_DIE_2)
+			aniId = ID_ANI_RED_GOOMBA_DIE_2;
+
 		break;
 
 	case GOOMBA_TYPE_RED_WING:
 		aniId = ID_ANI_RED_WING_GOOMBA_WALKING;
 
 		if (state == GOOMBA_STATE_DIE_2)
-			aniId = ID_ANI_RED_GOOMBA_WALKING;
+			aniId = ID_ANI_RED_GOOMBA_DIE_2;
 		else if (state == GOOMBA_STATE_FLYING)
 			aniId = ID_ANI_RED_WING_GOOMBA_FLYING;
 		else if (state == GOOMBA_STATE_JUMPING)
