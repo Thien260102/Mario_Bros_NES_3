@@ -25,9 +25,11 @@
 
 #define ID_ANI_GOOMBA_WALKING 5000
 #define ID_ANI_GOOMBA_DIE_1 5001 // die by mario jump on the head
+#define ID_ANI_GOOMBA_DIE_2 5002 // die by Mario Racoon's tail attack
 
 #define ID_ANI_RED_GOOMBA_WALKING 5100
 #define ID_ANI_RED_GOOMBA_DIE_1 5101 // die by mario jump on the head
+#define ID_ANI_RED_GOOMBA_DIE_2	5102 // die by Mario Racoon's tail attack
 
 #define ID_ANI_RED_WING_GOOMBA_FLYING 5200
 #define ID_ANI_RED_WING_GOOMBA_WALKING 5201
