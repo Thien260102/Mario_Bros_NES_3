@@ -141,19 +141,39 @@ int CPlant::GetAniId()
 
 	case PLANT_TYPE_GREEN_FIRE:
 		aniId = ID_ANI_PLANT_GREEN_FIRE;
-		if (Mario_y >= y) // y Mario < y Plant
-			aniId = ID_ANI_PLANT_GREEN_TARGET_BOT;
+		if (Mario_x < x)
+		{
+			if (Mario_y >= y) // y Mario < y Plant
+				aniId = ID_ANI_PLANT_GREEN_TARGET_BOT_LEFT;
+			else
+				aniId = ID_ANI_PLANT_GREEN_TARGET_TOP_LEFT;
+		}
 		else
-			aniId = ID_ANI_PLANT_GREEN_TARGET_TOP;
+		{
+			if (Mario_y >= y) // y Mario < y Plant
+				aniId = ID_ANI_PLANT_GREEN_TARGET_BOT_RIGHT;
+			else
+				aniId = ID_ANI_PLANT_GREEN_TARGET_TOP_RIGHT;
+		}
+		
 		break;
 
 	case PLANT_TYPE_RED_FIRE:
 		aniId = ID_ANI_PLANT_RED_FIRE;
-		if (Mario_y >= y) // y Mario < y Plant
-			aniId = ID_ANI_PLANT_RED_TARGET_BOT;
+		if (Mario_x <= x)
+		{
+			if (Mario_y >= y) // y Mario < y Plant
+				aniId = ID_ANI_PLANT_RED_TARGET_BOT_LEFT;
+			else
+				aniId = ID_ANI_PLANT_RED_TARGET_TOP_LEFT;
+		}
 		else
-			aniId = ID_ANI_PLANT_RED_TARGET_TOP;
-
+		{
+			if (Mario_y >= y) // y Mario < y Plant
+				aniId = ID_ANI_PLANT_RED_TARGET_BOT_RIGHT;
+			else
+				aniId = ID_ANI_PLANT_RED_TARGET_TOP_RIGHT;
+		}
 		break;
 	}
 
