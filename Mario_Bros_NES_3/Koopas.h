@@ -11,7 +11,7 @@
 #define KOOPAS_WALKING_SPEED 0.04f
 #define KOOPAS_ATTACKING_SPEED 0.2f
 
-#define KOOPAS_DIE_DEFLECT  0.2f
+#define KOOPAS_DIE_DEFLECT  0.3f
 
 #define KOOPAS_BBOX_WIDTH 14
 #define KOOPAS_BBOX_HEIGHT 24
@@ -44,12 +44,12 @@ class CKoopas :public CGameObject
 protected:
 	CGameObject* phaseChecker;
 
-	float ax;
 	float ay;
 	int level;
 	bool isHeld;
 
-	ULONGLONG time_start;
+	ULONGLONG time_start; // use in case Koopas die, and Koopas shell to Koopas walking
+	ULONGLONG deflection_start;
 	
 	virtual int IsCollidable() { return state != KOOPAS_STATE_DIE && isHeld == false; }
 	virtual int IsBlocking() { return 0; }
@@ -67,12 +67,13 @@ public:
 			KOOPAS_PHASE_CHECK_WIDTH, KOOPAS_PHASE_CHECK_HEIGHT, PHASECHECK_BY_KOOPAS);
 		phaseChecker->SetSpeed(0, KOOPAS_WALKING_SPEED);
 
-		this->ax = 0;
 		this->ay = KOOPAS_GRAVITY;
 		time_start = -1;
 		SetState(KOOPAS_STATE_WALKING);
 		level = KOOPAS_LEVEL_NORMAL;
 		isHeld = 0;
+
+		deflection_start = 0;
 	}
 	void SetState(int state);
 
