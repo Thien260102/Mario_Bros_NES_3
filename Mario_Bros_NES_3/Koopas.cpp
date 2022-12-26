@@ -6,6 +6,28 @@
 #include "Plant.h"
 #include "Platform.h"
 
+CKoopas::CKoopas(float x, float y, int type) :CGameObject(x, y)
+{
+	phaseChecker = new CPhaseChecker(x - KOOPAS_BBOX_WIDTH - KOOPAS_PHASE_CHECK_WIDTH / 2, y,
+		KOOPAS_PHASE_CHECK_WIDTH, KOOPAS_PHASE_CHECK_HEIGHT, PHASECHECK_BY_KOOPAS);
+	phaseChecker->SetSpeed(0, KOOPAS_WALKING_SPEED);
+
+	_type = type;
+	this->ay = KOOPAS_GRAVITY;
+	time_start = -1;
+
+	if (_type == KOOPAS_TYPE_GREEN_FLY)
+		SetState(KOOPAS_STATE_FLYING);
+	else
+		SetState(KOOPAS_STATE_WALKING);
+
+	vx = -KOOPAS_WALKING_SPEED;
+
+	isHeld = false;
+	isUp = false;
+	deflection_start = 0;
+}
+
 void CKoopas::GetBoundingBox(float& left, float& top, float& right, float& bottom)
 {
 	if (state == KOOPAS_STATE_SHELL || state == KOOPAS_STATE_ATTACKING || state == KOOPAS_STATE_DIE)
@@ -88,7 +110,7 @@ void CKoopas::OnCollisionWith(LPCOLLISIONEVENT e)
 	// phaseCheck is falling ?
 	float px, py;
 	phaseChecker->GetPosition(px, py);
-	if (py - this->y > 10)
+	if (py - this->y > 10 && _type != KOOPAS_TYPE_GREEN_FLY) // Wing Koopas don't need to solve phaseChecker.
 	{
 		vx = -vx;
 
@@ -270,8 +292,8 @@ void CKoopas::Update(DWORD dt, vector<LPGAMEOBJECT>* coObjects)
 
 	if ((state == KOOPAS_STATE_SHELL) && (GetTickCount64() - time_start > KOOPAS_SHELL_TIMEOUT))
 	{
-		SetLevel(KOOPAS_LEVEL_NORMAL);
 		SetState(KOOPAS_STATE_WALKING);
+		y -= (KOOPAS_BBOX_HEIGHT - KOOPAS_BBOX_HEIGHT_DIE);
 		time_start = -1;
 		return;
 	}
@@ -281,6 +303,13 @@ void CKoopas::Update(DWORD dt, vector<LPGAMEOBJECT>* coObjects)
 		phaseChecker->Delete();
 		return;
 	}
+	else if (state == KOOPAS_STATE_FLYING && (GetTickCount64() - time_start) > KOOPAS_FLY_TIMEOUT
+		&& vy == ay * dt) // Koopas only fly when it on platform
+	{
+		time_start = -1;
+		SetState(KOOPAS_STATE_FLYING);
+	}
+
 
 	CGameObject::Update(dt, coObjects);
 	CCollision::GetInstance()->Process(this, dt, coObjects);
@@ -293,7 +322,6 @@ void CKoopas::Render()
 		phaseChecker->RenderBoundingBox();
 
 	int aniId = GetAniId();
-	
 
 	CAnimations::GetInstance()->Get(aniId)->Render(x, y);
 	RenderBoundingBox();
@@ -306,10 +334,10 @@ void CKoopas::SetState(int state)
 {
 	CGameObject::SetState(state);
 	isHeld = false;
+	isUp = false;
 	switch (state)
 	{
 	case KOOPAS_STATE_SHELL:
-		SetLevel(KOOPAS_LEVEL_SHELL);
 		time_start = GetTickCount64();
 		y += (KOOPAS_BBOX_HEIGHT - KOOPAS_BBOX_HEIGHT_DIE) / 2;
 		vx = 0;
@@ -326,37 +354,93 @@ void CKoopas::SetState(int state)
 	case KOOPAS_STATE_DIE:
 		time_start = GetTickCount64();
 		break;
+	case KOOPAS_STATE_FLYING:
+		time_start = GetTickCount64();
+		vy = -KOOPAS_FLY_SPEED_Y;
+		break;
 	}
-}
-
-void CKoopas::SetLevel(int level)
-{
-	if (this->level == KOOPAS_LEVEL_SHELL)
-	{
-		y -= (KOOPAS_BBOX_HEIGHT - KOOPAS_BBOX_HEIGHT_DIE) / 2;
-	}
-
-	this->level = level;
 }
 
 int CKoopas::GetAniId()
 {
-	int aniId = ID_ANI_KOOPAS_WALKING;
+	int aniId = ID_ANI_RED_KOOPAS_WALKING_LEFT;
 
-	if (state == KOOPAS_STATE_DIE)
+	switch (_type)
 	{
-		aniId = ID_ANI_KOOPAS_SHELL;
+	case KOOPAS_TYPE_RED:
+		if (vx >= 0)
+			aniId = ID_ANI_RED_KOOPAS_WALKING_RIGHT;
+
+		if (state == KOOPAS_STATE_DIE)
+		{
+			aniId = ID_ANI_RED_KOOPAS_SHELL_UP;
+		}
+		else if (state == KOOPAS_STATE_SHELL)
+		{
+			switch (isUp)
+			{
+			case true:
+				aniId = ID_ANI_RED_KOOPAS_SHELL_UP;
+				if (GetTickCount64() - time_start >= 4000)
+					aniId = ID_ANI_RED_KOOPAS_REFORM_UP;
+				break;
+
+			case false:
+				aniId = ID_ANI_RED_KOOPAS_SHELL_DOWN;
+
+				if (GetTickCount64() - time_start >= 4000)
+					aniId = ID_ANI_RED_KOOPAS_REFORM_DOWN;
+				break;
+			}
+			
+		}
+		else if (state == KOOPAS_STATE_ATTACKING)
+		{
+			aniId = ID_ANI_RED_KOOPAS_ATTACKING;
+		}
+		break;
+
+	case KOOPAS_TYPE_GREEN:
+		aniId = ID_ANI_GREEN_KOOPAS_WALKING_LEFT;
+		if (vx >= 0)
+			aniId = ID_ANI_GREEN_KOOPAS_WALKING_RIGHT;
+
+		if (state == KOOPAS_STATE_DIE)
+		{
+			aniId = ID_ANI_GREEN_KOOPAS_SHELL_UP;
+		}
+		else if (state == KOOPAS_STATE_SHELL)
+		{
+			switch (isUp)
+			{
+			case true:
+				aniId = ID_ANI_GREEN_KOOPAS_SHELL_UP;
+				if (GetTickCount64() - time_start >= 4000)
+					aniId = ID_ANI_GREEN_KOOPAS_REFORM_UP;
+				break;
+
+			case false:
+				aniId = ID_ANI_GREEN_KOOPAS_SHELL_DOWN;
+
+				if (GetTickCount64() - time_start >= 4000)
+					aniId = ID_ANI_GREEN_KOOPAS_REFORM_DOWN;
+				break;
+			}
+		}
+		else if (state == KOOPAS_STATE_ATTACKING)
+		{
+			aniId = ID_ANI_GREEN_KOOPAS_ATTACKING;
+		}
+		break;
+
+	case KOOPAS_TYPE_GREEN_FLY:
+		if (vx >= 0) aniId = ID_ANI_GREEN_WING_KOOPAS_FLYING_RIGHT;
+		else aniId = ID_ANI_GREEN_WING_KOOPAS_FLYING_LEFT;
+
+		break;
 	}
-	else if (state == KOOPAS_STATE_SHELL)
-	{
-		aniId = ID_ANI_KOOPAS_SHELL;
-		if (GetTickCount64() - time_start >= 4000)
-			aniId = ID_ANI_KOOPAS_REFORM;
-	}
-	else if (state == KOOPAS_STATE_ATTACKING)
-	{
-		aniId = ID_ANI_KOOPAS_ATTACKING;
-	}
+
+	
 
 	return aniId;
 }
@@ -368,4 +452,8 @@ void CKoopas::Deflected(int Direction)
 
 	vx = Direction * KOOPAS_WALKING_SPEED;
 	deflection_start = GetTickCount64();
+	isUp = true;
+
+	if (_type == KOOPAS_TYPE_GREEN_FLY)
+		_type = KOOPAS_TYPE_GREEN;
 }
