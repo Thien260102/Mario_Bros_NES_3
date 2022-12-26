@@ -80,7 +80,7 @@ void CPhaseChecker::OnCollisionWithGoomba(LPCOLLISIONEVENT e)
 
 void CPhaseChecker::OnCollisionWithKoopas(LPCOLLISIONEVENT e)
 {
-	e->obj->SetState(200); // KOOPAS_STATE_DIE 200
+	e->obj->SetState(200); // KOOPAS_STATE_SHELL 200
 	if (e->nx > 0)
 		e->obj->Deflected(DEFLECT_DIRECTION_LEFT);
 	else
