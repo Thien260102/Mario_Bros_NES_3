@@ -4,6 +4,7 @@
 #include "Mario.h"
 #include "Brick.h"
 #include "Plant.h"
+#include "Platform.h"
 
 void CKoopas::GetBoundingBox(float& left, float& top, float& right, float& bottom)
 {
@@ -31,22 +32,47 @@ void CKoopas::OnNoCollision(DWORD dt)
 
 void CKoopas::OnCollisionWith(LPCOLLISIONEVENT e)
 {
-	
+	if (state == KOOPAS_STATE_SHELL && deflection_start == 0)
+	{
+		vx = 0;
+	}
 
 	if (e->ny != 0)
 	{
-		vy = 0;
-		if (time_start != -1)
-			vx = 0;
+		// solve collision with new Platform
+		if (dynamic_cast<CPlatform*>(e->obj))
+		{
+			CPlatform* platform = dynamic_cast<CPlatform*>(e->obj);
+			switch (platform->GetType())
+			{
+			case PLATFORM_TYPE_BLOCK:
+				vy = 0;
+				break;
+			case PLATFORM_TYPE_NORMAL:
+				if (e->ny < 0)
+					vy = 0;
+			}
 
+		}
+		else if (e->obj->IsBlocking())
+			vy = 0;
 	}
 	////
 	//if (this->isHeld && e->obj->IsBlocking())
 	//	return;
 	//change direction when Koopas blocked by brick
-	if (e->obj->IsBlocking() && e->nx != 0)
+	else if (e->nx != 0)
 	{
-		vx = -vx;
+		// solve collision with new Platform
+		if (dynamic_cast<CPlatform*>(e->obj))
+		{
+			if (dynamic_cast<CPlatform*>(e->obj)->GetType() == PLATFORM_TYPE_BLOCK)
+			{
+				vx = -vx;
+			}
+		}
+		else if (e->obj->IsBlocking())
+			vx = -vx;
 
 		float p_vx, p_vy;
 		phaseChecker->GetSpeed(p_vx, p_vy);
@@ -227,6 +253,11 @@ void CKoopas::OnCollisionWithPlant(LPCOLLISIONEVENT e)
 
 void CKoopas::Update(DWORD dt, vector<LPGAMEOBJECT>* coObjects)
 {
+	if (deflection_start != 0 && vy == 0)
+	{
+		deflection_start = 0;
+	}
+
 	if(state == KOOPAS_STATE_WALKING)
 		phaseChecker->Update(dt, coObjects);
 
@@ -236,7 +267,6 @@ void CKoopas::Update(DWORD dt, vector<LPGAMEOBJECT>* coObjects)
 		ay = KOOPAS_GRAVITY;
 
 	vy += ay * dt;
-	vx += ax * dt;
 
 	if ((state == KOOPAS_STATE_SHELL) && (GetTickCount64() - time_start > KOOPAS_SHELL_TIMEOUT))
 	{
@@ -245,7 +275,7 @@ void CKoopas::Update(DWORD dt, vector<LPGAMEOBJECT>* coObjects)
 		time_start = -1;
 		return;
 	}
-	if ((state == KOOPAS_STATE_DIE) && (GetTickCount64() - time_start > KOOPAS_DIE_TIMEOUT))
+	else if ((state == KOOPAS_STATE_DIE) && (GetTickCount64() - time_start > KOOPAS_DIE_TIMEOUT))
 	{
 		isDeleted = true;
 		phaseChecker->Delete();
@@ -337,5 +367,5 @@ void CKoopas::Deflected(int Direction)
 	ay = KOOPAS_GRAVITY;
 
 	vx = Direction * KOOPAS_WALKING_SPEED;
-	ax = 0;
+	deflection_start = GetTickCount64();
 }
