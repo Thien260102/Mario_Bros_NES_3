@@ -122,7 +122,11 @@ void CPlayScene::_ParseSection_OBJECTS(string line)
 		int type = atoi(tokens[3].c_str());
 		obj = new CGoomba(x, y, type); break; 
 	}
-	case OBJECT_TYPE_KOOPAS: obj = new CKoopas(x, y); break;
+	case OBJECT_TYPE_KOOPAS: 
+	{
+		int type = atoi(tokens[3].c_str());
+		obj = new CKoopas(x, y, type); break;
+	}
 
 	case OBJECT_TYPE_BRICK: 
 	{
@@ -317,6 +321,8 @@ void CPlayScene::Render()
 {
 	for (int i = objects.size() - 1; i >= 0; i--)
 		objects[i]->Render();
+	/*for (int i = 0; i < objects.size(); i++)
+		objects[i]->Render();*/
 }
 
 /*
