@@ -70,6 +70,8 @@ void CPhaseChecker::OnCollisionWithBrick(LPCOLLISIONEVENT e)
 void CPhaseChecker::OnCollisionWithGoomba(LPCOLLISIONEVENT e)
 {
 	CGoomba* goomba = dynamic_cast<CGoomba*>(e->obj);
+	if (goomba->GetState() == GOOMBA_STATE_DIE_1 || goomba->GetState() == GOOMBA_STATE_DIE_2)
+		return;
 
 	goomba->SetState(GOOMBA_STATE_DIE_2);
 	if (e->nx > 0)
