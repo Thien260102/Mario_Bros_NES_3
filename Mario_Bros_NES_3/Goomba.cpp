@@ -4,7 +4,7 @@
 #include "Koopas.h"
 #include "Platform.h"
 
-CGoomba::CGoomba(float x, float y, int type):CGameObject(x, y)
+CGoomba::CGoomba(float x, float y, int type, int l):CGameObject(x, y)
 {
 	this->ax = 0;
 	this->ay = GOOMBA_GRAVITY;
@@ -13,8 +13,9 @@ CGoomba::CGoomba(float x, float y, int type):CGameObject(x, y)
 	jump_count = 0;
 	redWing_start = -1;
 	vx = -GOOMBA_WALKING_SPEED;
+	SetLevel(l);
 
-	if (_type != GOOMBA_TYPE_RED_WING)
+	if (level != GOOMBA_LEVEL_WING)
 		SetState(GOOMBA_STATE_WALKING);
 	else
 		SetState(GOOMBA_STATE_JUMPING);
@@ -31,7 +32,7 @@ void CGoomba::GetBoundingBox(float& left, float& top, float& right, float& botto
 	}
 	else
 	{
-		if (_type == GOOMBA_TYPE_RED_WING)
+		if (level == GOOMBA_LEVEL_WING)
 		{
 			left = x - GOOMBA_BBOX_WIDTH / 2;
 			top = y - GOOMBA_WING_BBOX_HEIGHT / 2;
@@ -173,7 +174,7 @@ void CGoomba::Update(DWORD dt, vector<LPGAMEOBJECT> *coObjects)
 		return;
 	}
 	
-	if (_type == GOOMBA_TYPE_RED_WING)
+	if (level == GOOMBA_LEVEL_WING)
 	{
 		//DebugOut(L"State: %d\n", state);
 		switch (state)
@@ -230,9 +231,9 @@ void CGoomba::SetState(int state)
 	switch (state)
 	{
 		case GOOMBA_STATE_DIE_1:
-			if (_type == GOOMBA_TYPE_RED_WING)
+			if (level == GOOMBA_LEVEL_WING)
 			{
-				_type = GOOMBA_TYPE_RED;
+				SetLevel(GOOMBA_LEVEL_NORMAL);
 				SetState(GOOMBA_STATE_WALKING);
 				return;
 			}
@@ -278,22 +279,23 @@ int CGoomba::GetAniId()
 	case GOOMBA_TYPE_RED:
 		aniId = ID_ANI_RED_GOOMBA_WALKING;
 
-		if (state == GOOMBA_STATE_DIE_1)
-			aniId = ID_ANI_RED_GOOMBA_DIE_1;
-		else if (state == GOOMBA_STATE_DIE_2)
-			aniId = ID_ANI_RED_GOOMBA_DIE_2;
+		if (level == GOOMBA_LEVEL_NORMAL)
+		{
 
-		break;
-
-	case GOOMBA_TYPE_RED_WING:
-		aniId = ID_ANI_RED_WING_GOOMBA_WALKING;
-
-		if (state == GOOMBA_STATE_DIE_2)
-			aniId = ID_ANI_RED_GOOMBA_DIE_2;
-		else if (state == GOOMBA_STATE_FLYING)
-			aniId = ID_ANI_RED_WING_GOOMBA_FLYING;
-		else if (state == GOOMBA_STATE_JUMPING)
-			aniId = ID_ANI_RED_WING_GOOMBA_JUMPING;
+			if (state == GOOMBA_STATE_DIE_1)
+				aniId = ID_ANI_RED_GOOMBA_DIE_1;
+			else if (state == GOOMBA_STATE_DIE_2)
+				aniId = ID_ANI_RED_GOOMBA_DIE_2;
+		}
+		else
+			if (state == GOOMBA_STATE_DIE_2)
+				aniId = ID_ANI_RED_GOOMBA_DIE_2;
+			else if (state == GOOMBA_STATE_FLYING)
+				aniId = ID_ANI_RED_WING_GOOMBA_FLYING;
+			else if (state == GOOMBA_STATE_JUMPING)
+				aniId = ID_ANI_RED_WING_GOOMBA_JUMPING;
+			else if (state == GOOMBA_STATE_WALKING)
+				aniId = ID_ANI_RED_WING_GOOMBA_WALKING;
 
 		break;
 	}
@@ -308,4 +310,14 @@ void CGoomba::Deflected(int Direction)
 
 	vx = Direction * GOOMBA_WALKING_SPEED;
 	ax = 0;
+}
+
+void CGoomba::SetLevel(int l)
+{
+	if (level == GOOMBA_LEVEL_WING)
+	{
+		y -= (GOOMBA_WING_BBOX_HEIGHT - GOOMBA_BBOX_HEIGHT);
+	}
+
+	level = l;
 }
