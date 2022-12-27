@@ -4,32 +4,33 @@ mario.txt
 coin.txt
 misc.txt
 brick.txt
+mushroom.txt
+goomba.txt
+koopas.txt
+plant.txt
+bullet.txt
 #
 [OBJECTS]
 # type	x	y	extra_settings per object type
-# type: 0 = Mario , 1 = Brick, 2 = Goomba, 3 = Koopas
-# See OBJECT_TYPE constants in AssetIDs.h
+# type: 0 = Mario , 1 = Brick, 2 = Goomba, 3 = Koopas, 4 = coin, 5 = platform, 8 = plant
+# See OBJECT_TYPE constants in AssetIDs.h 
 
 # MARIO
-0	120	10
+0	10	380
 
-#COIN
-4	100	120
-4	120	120
-4	140	120
-4	160	120
-4	180	120
+#Brick x	y	type(gold =1, question =2)	object(none(0), Supermushroom/leaf (100), coin(101), 1up(102))
 
+#Goomba x	y	type(normal = 1, Red: 2)level (1: normal, 2: wing)
+2	944	382	2	2
+#Koopas x	y	type(red: 10, green: 11) level (1: normal, 2: wing)
+3	577	359	11	2
 
-4	100	100
-4	120	100
-4	140	100
-4	160	100
-4	180	100
+#Platform 
+#ID	x	y	width	heigth	length	begin	middle	end	type(block: 10, normal: 20, nocollision: 30)
+#GROUND
+5	8	416	15	15	41	51000	52000	53000	10
+5	623	416	15	15	31	53100	53200	53300	10
+5	623	400	15	15	31	51000	52000	53000	10
+5	1152	416	15	15	23	51000	52000	53000	10
 
-#Platform
-5	100	180	16	15	32	20001	52000	20001
-
-#Portal 
-50	200	160	216	180	5
 
