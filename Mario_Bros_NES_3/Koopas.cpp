@@ -240,6 +240,7 @@ void CKoopas::OnCollisionWithKoopas(LPCOLLISIONEVENT e)
 
 		break;
 
+	case KOOPAS_STATE_FLYING:
 	case KOOPAS_STATE_SHELL:
 	case KOOPAS_STATE_WALKING:
 		this->vx = -vx;
