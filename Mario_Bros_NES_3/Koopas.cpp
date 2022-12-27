@@ -92,19 +92,28 @@ void CKoopas::OnCollisionWith(LPCOLLISIONEVENT e)
 			if (dynamic_cast<CPlatform*>(e->obj)->GetType() == PLATFORM_TYPE_BLOCK)
 			{
 				vx = -vx;
+
+				float p_vx, p_vy;
+				phaseChecker->GetSpeed(p_vx, p_vy);
+
+				if (p_vx >= this->vx)
+					phaseChecker->SetPosition(x - KOOPAS_BBOX_WIDTH, y);
+				else
+					phaseChecker->SetPosition(x + KOOPAS_BBOX_WIDTH, y);
 			}
 		}
 		else if (e->obj->IsBlocking())
+		{
 			vx = -vx;
+			float p_vx, p_vy;
+			phaseChecker->GetSpeed(p_vx, p_vy);
 
-		float p_vx, p_vy;
-		phaseChecker->GetSpeed(p_vx, p_vy);
+			if (p_vx >= this->vx)
+				phaseChecker->SetPosition(x - KOOPAS_BBOX_WIDTH, y);
+			else
+				phaseChecker->SetPosition(x + KOOPAS_BBOX_WIDTH, y);
+		}
 
-		if (p_vx >= this->vx)
-			phaseChecker->SetPosition(x - KOOPAS_BBOX_WIDTH, y);
-		else
-			phaseChecker->SetPosition(x + KOOPAS_BBOX_WIDTH, y);
-		
 	}
 
 
