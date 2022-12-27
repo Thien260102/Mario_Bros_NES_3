@@ -48,8 +48,6 @@ protected:
 	float Mario_x, Mario_y;
 
 	ULONGLONG time_start;
-	CGameObject* _bullet;
-
 	virtual void GetBoundingBox(float& left, float& top, float& right, float& bottom);
 	virtual void Render();
 
@@ -73,7 +71,6 @@ public:
 		vx = 0;
 		ay = 0;
 		SetState(PLANT_STATE_RISE);
-		_bullet = NULL;
 	}
 
 	virtual void SetState(int state);
