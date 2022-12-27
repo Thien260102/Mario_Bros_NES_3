@@ -40,7 +40,7 @@ public:
 		vy = 0;
 	}
 
-	int GetBulletType() { return type; }
+	int GetBulletType() { return _type; }
 
 	void SetDirection(float d1, float d2)
 	{
