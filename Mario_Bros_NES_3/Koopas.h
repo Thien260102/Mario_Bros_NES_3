@@ -33,7 +33,9 @@
 
 #define KOOPAS_TYPE_RED	10
 #define KOOPAS_TYPE_GREEN 11
-#define KOOPAS_TYPE_GREEN_FLY 12
+
+#define KOOPAS_LEVEL_NORMAL 1
+#define KOOPAS_LEVEL_WING 2
 
 #define ID_ANI_RED_KOOPAS_WALKING_LEFT 6000
 #define ID_ANI_RED_KOOPAS_WALKING_RIGHT 6001
@@ -63,6 +65,7 @@ protected:
 	float ay;
 	bool isHeld;
 	int _type;
+	int level;
 
 	ULONGLONG time_start; // use in case Koopas die, Koopas flying, and Koopas shell to Koopas walking
 	ULONGLONG deflection_start; // Mario Raccoon'tail attack
@@ -77,7 +80,7 @@ protected:
 
 	int GetAniId();
 public:
-	CKoopas(float x, float y, int type);
+	CKoopas(float x, float y, int type, int l);
 	void SetState(int state);
 
 	void OnNoCollision(DWORD dt);
@@ -87,6 +90,8 @@ public:
 	void Update(DWORD dt, vector<LPGAMEOBJECT>* coObjects);
 	void Render();
 
+	void SetLevel(int l);
+	int GetLevel() { return level; }
 	int GetNx() { return nx; }
 	void SetNx(int nx) { this->nx = nx; }
 
