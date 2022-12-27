@@ -25,37 +25,17 @@ void CBullet::Update(DWORD dt, vector<LPGAMEOBJECT>* coObjects)
 		this->Delete();
 	
 	CGameObject::Update(dt, coObjects);
-	CCollision::GetInstance()->Process(this, dt, coObjects);
+	//CCollision::GetInstance()->Process(this, dt, coObjects);
 }
 
 void CBullet::OnCollisionWith(LPCOLLISIONEVENT e)
 {
-	if (dynamic_cast<CMario*>(e->obj)->IsUntouchable() == 0)
-	{
-		CMario* mario = dynamic_cast<CMario*>(e->obj);
-
-		switch (mario->GetLevel())
-		{
-		case MARIO_LEVEL_SMALL:
-			mario->SetState(MARIO_STATE_DIE);
-			break;
-		case MARIO_LEVEL_BIG:
-			mario->SetLevel(MARIO_LEVEL_SMALL);
-			mario->StartUntouchable();
-			break;
-		case MARIO_LEVEL_RACCOON:
-			mario->SetLevel(MARIO_LEVEL_BIG);
-			mario->StartUntouchable();
-			break;
-
-		}
-	}
+	
 }
 
 void CBullet::Render()
 {
 	int aniId = ID_ANI_BULLET_FIRE;
-
 
 	CAnimations::GetInstance()->Get(aniId)->Render(x, y);
 	RenderBoundingBox();
