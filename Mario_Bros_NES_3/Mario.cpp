@@ -129,18 +129,25 @@ void CMario::OnCollisionWith(LPCOLLISIONEVENT e)
 			switch (platform->GetType())
 			{
 			case PLATFORM_TYPE_BLOCK:
+				isOnPlatform = true;
 				vy = 0;
 				break;
 			case PLATFORM_TYPE_NORMAL:
 				if (e->ny < 0)
+				{
 					vy = 0;
+					isOnPlatform = true;
+				}
+				break;
 			}
 
 		}
 		else if (e->obj->IsBlocking())
+		{
+			if (e->ny < 0) isOnPlatform = true;
 			vy = 0;
+		}
 	
-		if (e->ny < 0) isOnPlatform = true;
 
 		if (_koopas != NULL && _koopas->IsHeld())
 			_koopas->SetSpeed(vx, vy);
@@ -172,6 +179,26 @@ void CMario::OnCollisionWith(LPCOLLISIONEVENT e)
 		OnCollisionWithBrick(e);
 	else if (dynamic_cast<CPlant*>(e->obj))
 		OnCollisionWithPlant(e);
+	else if (dynamic_cast<CBullet*>(e->obj))
+	{
+		if (this->IsUntouchable() && dynamic_cast<CBullet*>(e->obj)->GetBulletType() == BULLET_BY_MARIO)
+			return;
+
+		switch (level)
+		{
+		case MARIO_LEVEL_SMALL:
+			this->SetState(MARIO_STATE_DIE);
+			break;
+		case MARIO_LEVEL_BIG:
+			this->SetLevel(MARIO_LEVEL_SMALL);
+			this->StartUntouchable();
+			break;
+		case MARIO_LEVEL_RACCOON:
+			this->SetLevel(MARIO_LEVEL_BIG);
+			this->StartUntouchable();
+			break;
+		}
+	}
 	
 }
 
