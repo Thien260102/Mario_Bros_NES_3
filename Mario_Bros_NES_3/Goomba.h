@@ -37,7 +37,9 @@
 
 #define GOOMBA_TYPE_NORMAL 1
 #define GOOMBA_TYPE_RED 2
-#define GOOMBA_TYPE_RED_WING 3
+
+#define GOOMBA_LEVEL_NORMAL 1
+#define GOOMBA_LEVEL_WING 2
 
 #define GOOMBA_JUMP 3
 
@@ -51,6 +53,7 @@ protected:
 	float ay; 
 
 	int _type;
+	int level;
 
 	ULONGLONG time_start; // use in case Goomba Die
 
@@ -72,8 +75,11 @@ protected:
 	int GetAniId();
 
 public: 	
-	CGoomba(float x, float y, int type);
+	CGoomba(float x, float y, int type, int l = 1);
 	virtual void SetState(int state);
+
+	void SetLevel(int l);
+	int GetLevel() { return level; }
 
 	virtual void Deflected(int Direction);
 	void Update(DWORD dt, vector<LPGAMEOBJECT>* coObjects);
