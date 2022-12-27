@@ -40,6 +40,8 @@ public:
 		vy = 0;
 	}
 
+	int GetBulletType() { return type; }
+
 	void SetDirection(float d1, float d2)
 	{
 		vx = d1 * BULLET_SPEED_X;
