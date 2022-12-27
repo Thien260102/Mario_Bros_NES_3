@@ -27,14 +27,14 @@ bullet.txt
 1	416	320	2	101
 1	704	352	2	101
 1	1440	128	1	102
-#Goomba x	y	type(normal = 1, Red: 2, Red wing: 3)
-2	224	380	1
-2	528	380	1
-2	832	385	1
-2	880	385	1
-2	944	382	3
-#Koopas x	y	type(red: 10, green: 11, green wing: 12)
-3	577	359	10
+#Goomba x	y	type(normal = 1, Red: 2) level(normal: 1, wing: 2)
+2	224	380	1	1
+2	528	380	1	1
+2	832	385	1	1
+2	880	385	1	1
+2	944	382	2	2
+#Koopas x	y	type(red: 10, green: 11) level(normal: 1, wing: 2)
+3	577	359	10	1
 #Coin
 4	1073	320
 4	1105	288
