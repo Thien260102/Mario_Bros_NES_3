@@ -197,8 +197,7 @@ bullet.txt
 
 
 #plant x	y	type(Green: 1, type green fire: 2, red fire: 3)
-8	360	376	2
-
+8	360	376	3
 #Portal 
-50	200	160	216	180	1
+#50	200	160	216	180	1
 
