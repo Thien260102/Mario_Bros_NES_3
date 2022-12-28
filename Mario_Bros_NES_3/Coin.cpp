@@ -1,7 +1,13 @@
 #include "Coin.h"
+#include "Brick.h"
+#include "Game.h"
+#include "PlayScene.h"
 
 void CCoin::Update(DWORD dt, vector<LPGAMEOBJECT>* coObjects)
 {
+	if (remainTime_start != 0)
+		CoinTransformBrick();
+
 	if (vy == 0 && ay == 0)
 		return;
 
@@ -12,6 +18,20 @@ void CCoin::Update(DWORD dt, vector<LPGAMEOBJECT>* coObjects)
 	{
 		vy += ay * dt;
 		y += vy * dt;
+	}
+}
+
+void CCoin::CoinTransformBrick()
+{
+	if (GetTickCount64() - remainTime_start > COIN_TIMEOUT)
+	{
+		if ((LPPLAYSCENE)CGame::GetInstance()->GetCurrentScene())
+		{
+			this->Delete();
+
+			CGameObject* brick = new CBrick(x, y);
+			((LPPLAYSCENE)CGame::GetInstance()->GetCurrentScene())->GetObjects().push_back(brick);
+		}
 	}
 }
 
