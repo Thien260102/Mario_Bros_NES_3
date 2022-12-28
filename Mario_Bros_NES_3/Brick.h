@@ -34,6 +34,7 @@
 #define BRICK_CONTAIN_SUPER_MUSHROOM_LEAF 100
 #define BRICK_CONTAIN_COIN 101
 #define BRICK_CONTAIN_1UP_MUSHROOM 102
+#define BRICK_CONTAIN_PSWITCH 103
 
 class CBrick : public CGameObject {
 protected:
@@ -56,7 +57,7 @@ protected:
 
 	virtual void Update(DWORD dt, vector<LPGAMEOBJECT>* coObjects);
 public:
-	CBrick(float x, float y, int Type, int type_object) : CGameObject(x, y) 
+	CBrick(float x, float y, int Type = 1, int contain_object = 0) : CGameObject(x, y) 
 	{
 		type = -1;
 		state = -1;
@@ -69,7 +70,7 @@ public:
 		vy = 0;
 		isBrokenByMarioJump = false;
 		
-		containObject = type_object;
+		containObject = contain_object;
 	}
 	void Render();
 	void GetBoundingBox(float& l, float& t, float& r, float& b);
@@ -80,4 +81,5 @@ public:
 
 	void BrokenByMarioJump() { isBrokenByMarioJump = true; }
 	bool IsBrokenByMarioJump() { return isBrokenByMarioJump; }
+	void BrickTransformCoin();
 };
