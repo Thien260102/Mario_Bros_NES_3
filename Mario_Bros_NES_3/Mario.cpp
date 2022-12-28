@@ -12,6 +12,7 @@
 #include "Brick.h"
 #include "Plant.h"
 #include "Platform.h"
+#include "PSwitch.h"
 
 #include "Collision.h"
 
@@ -198,6 +199,10 @@ void CMario::OnCollisionWith(LPCOLLISIONEVENT e)
 			this->StartUntouchable();
 			break;
 		}
+	}
+	else if (dynamic_cast<CPSwitch*>(e->obj))
+	{
+		dynamic_cast<CPSwitch*>(e->obj)->IsActive();
 	}
 	
 }
@@ -506,9 +511,9 @@ int CMario::GetAniIdSmall()
 						aniId = ID_ANI_MARIO_SMALL_BRACE_RIGHT;
 					else if (vx == MARIO_RUNNING_SPEED)
 						aniId = ID_ANI_MARIO_SMALL_RUNNING_RIGHT;
-					else if (vx == MARIO_WALKING_SPEED)
+					else if (abs(vx) < MARIO_WALKING_SPEEDUP)
 						aniId = ID_ANI_MARIO_SMALL_WALKING_RIGHT;
-					else
+					else if (abs(vx) >= MARIO_WALKING_SPEEDUP)
 						aniId = ID_ANI_MARIO_SMALL_WALKING_SPEEDUP_RIGHT;
 				}
 				else // vx < 0
@@ -517,9 +522,9 @@ int CMario::GetAniIdSmall()
 						aniId = ID_ANI_MARIO_SMALL_BRACE_LEFT;
 					else if (vx == -MARIO_RUNNING_SPEED)
 						aniId = ID_ANI_MARIO_SMALL_RUNNING_LEFT;
-					else if (vx == -MARIO_WALKING_SPEED)
+					else if (abs(vx) < MARIO_WALKING_SPEEDUP)
 						aniId = ID_ANI_MARIO_SMALL_WALKING_LEFT;
-					else
+					else if (abs(vx) >= MARIO_WALKING_SPEEDUP)
 						aniId = ID_ANI_MARIO_SMALL_WALKING_SPEEDUP_LEFT;
 				}
 				break;
@@ -622,9 +627,9 @@ int CMario::GetAniIdBig()
 						aniId = ID_ANI_MARIO_BRACE_RIGHT;
 					else if (vx == MARIO_RUNNING_SPEED)
 						aniId = ID_ANI_MARIO_RUNNING_RIGHT;
-					else if (vx == MARIO_WALKING_SPEED)
+					else if (abs(vx) < MARIO_WALKING_SPEEDUP)
 						aniId = ID_ANI_MARIO_WALKING_RIGHT;
-					else
+					else if (abs(vx) >= MARIO_WALKING_SPEEDUP)
 						aniId = ID_ANI_MARIO_WALKING_SPEEDUP_RIGHT;
 				}
 				else // vx < 0
@@ -633,9 +638,9 @@ int CMario::GetAniIdBig()
 						aniId = ID_ANI_MARIO_BRACE_LEFT;
 					else if (vx == -MARIO_RUNNING_SPEED)
 						aniId = ID_ANI_MARIO_RUNNING_LEFT;
-					else if (vx == -MARIO_WALKING_SPEED)
+					else if (abs(vx) < MARIO_WALKING_SPEEDUP)
 						aniId = ID_ANI_MARIO_WALKING_LEFT;
-					else
+					else if(abs(vx) >= MARIO_WALKING_SPEEDUP)
 						aniId = ID_ANI_MARIO_WALKING_SPEEDUP_LEFT;
 				}
 				break;
@@ -753,9 +758,9 @@ int CMario::GetAniIdRaccoon()
 						aniId = ID_ANI_MARIO_RACCOON_BRACE_RIGHT;
 					else if (vx == MARIO_RUNNING_SPEED)
 						aniId = ID_ANI_MARIO_RACCOON_RUNNING_RIGHT;
-					else if (vx == MARIO_WALKING_SPEED)
+					else if (abs(vx) < MARIO_WALKING_SPEEDUP)
 						aniId = ID_ANI_MARIO_RACCOON_WALKING_RIGHT;
-					else
+					else if (abs(vx) >= MARIO_WALKING_SPEEDUP)
 						aniId = ID_ANI_MARIO_RACCOON_WALKING_SPEEDUP_RIGHT;
 				}
 				else // vx < 0
@@ -764,9 +769,9 @@ int CMario::GetAniIdRaccoon()
 						aniId = ID_ANI_MARIO_RACCOON_BRACE_LEFT;
 					else if (vx == -MARIO_RUNNING_SPEED)
 						aniId = ID_ANI_MARIO_RACCOON_RUNNING_LEFT;
-					else if (vx == -MARIO_WALKING_SPEED)
+					else if (abs(vx) < MARIO_WALKING_SPEEDUP)
 						aniId = ID_ANI_MARIO_RACCOON_WALKING_LEFT;
-					else
+					else if (abs(vx) >= MARIO_WALKING_SPEEDUP)
 						aniId = ID_ANI_MARIO_RACCOON_WALKING_SPEEDUP_LEFT;
 				}
 				break;
