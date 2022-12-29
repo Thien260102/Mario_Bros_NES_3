@@ -122,6 +122,8 @@
 #define ID_ANI_MARIO_SMALL_HOLD_STAND_RIGHT 1660
 #define ID_ANI_MARIO_SMALL_HOLD_STAND_LEFT 1661
 
+#define ID_ANI_MARIO_SMALL_TRANSFORM_BIG_RIGHT 1688
+#define ID_ANI_MARIO_SMALL_TRANSFORM_BIG_LEFT 1689
 
 //	RACCOON MARIO	//
 #define ID_ANI_MARIO_RACCOON_IDLE_RIGHT 1700
@@ -206,6 +208,7 @@
 #define MARIO_KICK_TIME 200
 #define MARIO_FLY_TIME 4000
 #define MARIO_REFLOAT_TIME 200
+#define MARIO_TRANSFORMATION_TIME 600
 
 class CMario : public CGameObject
 {
@@ -228,6 +231,7 @@ class CMario : public CGameObject
 	ULONGLONG time_start; // to manage render time of some states (attack, kick), animations
 	ULONGLONG fly_start;
 	ULONGLONG float_start;
+	ULONGLONG transform_start;
 
 	void OnCollisionWithGoomba(LPCOLLISIONEVENT e);
 	void OnCollisionWithCoin(LPCOLLISIONEVENT e);
@@ -264,6 +268,7 @@ public:
 		_tail = new CPhaseChecker(x, y, MARIO_TAIL_WIDTH, MARIO_TAIL_HEIGHT, PHASECHECK_BY_MARIO);
 		fly_start = 0;
 		float_start = 0;
+		transform_start = 0;
 	}
 	void Update(DWORD dt, vector<LPGAMEOBJECT>* coObjects);
 	void Render();
@@ -292,4 +297,7 @@ public:
 
 	bool IsFlying() { return fly_start != 0; }
 	bool IsFloating() { return float_start != 0; }
+
+	void SetTransform_start() { transform_start = GetTickCount64(); }
+	bool IsTransforming() { return transform_start != 0; }
 };
