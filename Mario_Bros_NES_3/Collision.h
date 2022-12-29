@@ -83,5 +83,22 @@ public:
 
 	void Process(LPGAMEOBJECT objSrc, DWORD dt, vector<LPGAMEOBJECT>* coObjects);
 
+	static int AABB(
+		float sl,			// source left
+		float st,			// source top
+		float sr,			// source right 
+		float sb,			// source bottom
+		float dl,			// destination left
+		float dt,
+		float dr,
+		float db);
+
+	void Scan(//Get the first object in objDests
+		LPGAMEOBJECT objSrc,
+		vector<LPGAMEOBJECT>* objDests,
+		LPGAMEOBJECT& objCollided); 
+
+	void Process(LPGAMEOBJECT objSrc, vector<LPGAMEOBJECT>* coObjects); // use in case Mario Raccoon's tail attacking
+
 	static CCollision* GetInstance();
 };

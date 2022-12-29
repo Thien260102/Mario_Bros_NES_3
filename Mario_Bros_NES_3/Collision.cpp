@@ -1,5 +1,6 @@
 #include "Collision.h"
 #include "GameObject.h"
+#include "PhaseChecker.h"
 
 #include "debug.h"
 #include "Platform.h"
@@ -362,4 +363,55 @@ void CCollision::Process(LPGAMEOBJECT objSrc, DWORD dt, vector<LPGAMEOBJECT>* co
 
 
 	for (UINT i = 0; i < coEvents.size(); i++) delete coEvents[i];
+}
+
+int CCollision::AABB(
+	float sl, float st, float sr, float sb,
+	float dl, float dt, float dr, float db)
+{
+	return sl < dr
+		&& sr > dl
+		&& st < db
+		&& sb > dt;
+		
+}
+
+void CCollision::Scan(LPGAMEOBJECT objSrc, 
+	vector<LPGAMEOBJECT>* objDests,
+	LPGAMEOBJECT& objCollided)
+{
+	float sl, st, sr, sb;
+	objSrc->GetBoundingBox(sl, st, sr, sb);
+
+	for (int i = 0; i < objDests->size(); i++)
+	{
+		if (objDests->at(i)->IsDeleted())
+			continue;
+		if(dynamic_cast<CPlatform*>(objDests->at(i)) || dynamic_cast<CPhaseChecker*>(objDests->at(i)))
+			continue;
+		if (objDests->at(i)->IsBlocking())
+			continue;
+
+		float dl, dt, dr, db;
+		objDests->at(i)->GetBoundingBox(dl, dt, dr, db);
+
+		if (AABB(sl, st, sr, sb, dl, dt, dr, db))
+		{
+			objCollided = objDests->at(i);
+			DebugOut(L"source: l:%f, t:%f, r:%f, b:%f, destination: l:%f, t:%f, r:%f, b:%f\n", sl, st, sr, sb, dl, dt, dr, db);
+			return;
+		}
+	}
+}
+
+void CCollision::Process(LPGAMEOBJECT objSrc, vector<LPGAMEOBJECT>* coObjects)
+{
+	LPGAMEOBJECT objCollided = NULL;
+	if (objSrc->IsCollidable())
+	{
+		Scan(objSrc, coObjects, objCollided);
+	}
+
+	if (objCollided != NULL)
+		objSrc->OnCollisionWith(objCollided);
 }
