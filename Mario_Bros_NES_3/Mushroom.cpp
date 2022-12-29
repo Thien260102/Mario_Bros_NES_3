@@ -92,6 +92,8 @@ void CMushroom::OnNoCollision(DWORD dt)
 
 void CMushroom::OnCollisionWith(LPCOLLISIONEVENT e)
 {
+	if (isDeleted) return;
+
 	if (dynamic_cast<CMario*>(e->obj))
 	{
 		CMario* mario = dynamic_cast<CMario*>(e->obj);
@@ -102,6 +104,9 @@ void CMushroom::OnCollisionWith(LPCOLLISIONEVENT e)
 		}
 		else
 		{
+			if (mario->GetLevel() != MARIO_LEVEL_RACCOON)
+				mario->SetTransform_start();
+
 			switch (mario->GetLevel())
 			{
 			case MARIO_LEVEL_SMALL:
@@ -111,7 +116,6 @@ void CMushroom::OnCollisionWith(LPCOLLISIONEVENT e)
 				mario->SetLevel(MARIO_LEVEL_RACCOON);
 				break;
 			}
-
 		}
 		this->Delete();
 	}
