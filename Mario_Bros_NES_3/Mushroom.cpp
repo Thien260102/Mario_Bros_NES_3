@@ -74,7 +74,12 @@ void CMushroom::Render()
 	else if (type == MUSHROOM_TYPE_1UP)
 		spriteId = ID_SPRITE_1UPMUSHROOM;
 	else
-		spriteId = ID_SPRITE_SUPERLEAF;
+	{
+		if (vx > 0)
+			spriteId = ID_SPRITE_SUPERLEAF_RIGHT;
+		else
+			spriteId = ID_SPRITE_SUPERLEAF_LEFT;
+	}
 	CSprites::GetInstance()->Get(spriteId)->Draw(x, y);
 	RenderBoundingBox();
 }
