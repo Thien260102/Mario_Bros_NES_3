@@ -307,6 +307,9 @@ void CPlayScene::Update(DWORD dt)
 		}
 		else
 			cy = old_cy;
+
+		if (cy < CAMERA_POSITION_MIN_Y)
+			cy = CAMERA_POSITION_MIN_Y;
 	}
 	else
 		cy = DEFAULT_CAMERA_POSITION_Y;
