@@ -95,7 +95,8 @@ void CPhaseChecker::OnCollisionWithBrick(LPCOLLISIONEVENT e)
 		brick->SetType(BRICK_TYPE_EMPTY);
 		break;
 	}
-
+	
+	isAttackedFront = PHASECHECK_COLLIDED_BRICK;
 }
 
 void CPhaseChecker::OnCollisionWithGoomba(LPCOLLISIONEVENT e)
@@ -109,6 +110,8 @@ void CPhaseChecker::OnCollisionWithGoomba(LPCOLLISIONEVENT e)
 		goomba->Deflected(DEFLECT_DIRECTION_LEFT);
 	else
 		goomba->Deflected(DEFLECT_DIRECTION_RIGHT);
+
+	isAttackedFront = PHASECHECK_COLLIDED_GOOMBA;
 }
 
 void CPhaseChecker::OnCollisionWithKoopas(LPCOLLISIONEVENT e)
@@ -121,11 +124,14 @@ void CPhaseChecker::OnCollisionWithKoopas(LPCOLLISIONEVENT e)
 		e->obj->Deflected(DEFLECT_DIRECTION_LEFT);
 	else
 		e->obj->Deflected(DEFLECT_DIRECTION_RIGHT);
+
+	isAttackedFront = PHASECHECK_COLLIDED_KOOPAS;
 }
 
 void CPhaseChecker::OnCollisionWithPlant(LPCOLLISIONEVENT e)
 {
 	e->obj->Delete();
+	isAttackedFront = PHASECHECK_COLLIDED_PLANT;
 }
 
 void CPhaseChecker::OnNoCollision(DWORD dt)
@@ -138,13 +144,8 @@ void CPhaseChecker::OnNoCollision(DWORD dt)
 void CPhaseChecker::OnCollisionWith(LPGAMEOBJECT obj)
 {
 	isAttackedBehind = true;
-	if (dynamic_cast<CBrick*>(obj))
-	{
-		DebugOut(L"Hello brick\n");
-		obj->Delete();
 
-	}
-	else if (dynamic_cast<CGoomba*>(obj))
+	if (dynamic_cast<CGoomba*>(obj))
 	{
 		CGoomba* goomba = dynamic_cast<CGoomba*>(obj);
 		if (goomba->GetState() == GOOMBA_STATE_DIE_1 || goomba->GetState() == GOOMBA_STATE_DIE_2)
@@ -189,7 +190,8 @@ void CPhaseChecker::Render()
 		{
 			animations->Get(ID_ANI_TAIL_MARIO_ATTACKED_ENEMIES)->Render(x, y);
 		}
-		else if (isAttackedFront && (GetTickCount64() - attack_start) > PHASECHECK_ATTACK_TIME / 2)
+		else if (isAttackedFront && isAttackedFront != PHASECHECK_COLLIDED_BRICK
+			&& (GetTickCount64() - attack_start) > PHASECHECK_ATTACK_TIME / 2)
 		{
 			animations->Get(ID_ANI_TAIL_MARIO_ATTACKED_ENEMIES)->Render(x + nx * PHASECHECK_ATTACK_RANGE * width, y);
 		}
