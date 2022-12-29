@@ -68,29 +68,35 @@ void CMario::Update(DWORD dt, vector<LPGAMEOBJECT> *coObjects)
 
 	if (flag == MARIO_ATTACK_TIME)
 	{
+		CPhaseChecker* tail = dynamic_cast<CPhaseChecker*>(_tail);
 		if ((GetTickCount64() - time_start > flag))
 		{
 			flag = 0;
 			time_start = 0;
+			tail->SetAttackTime(time_start);
 		}
-
-		if (level == MARIO_LEVEL_RACCOON)
+		else
 		{
-			CPhaseChecker* tail = dynamic_cast<CPhaseChecker*>(_tail);
 			float temp = 1; //to determine direction
 			if (nx >= 0) temp = -1;
+
 
 			tail->SetPosition(x + temp * MARIO_RACCOON_BBOX_WIDTH / 2 + temp * MARIO_TAIL_WIDTH / 2,
 				y + MARIO_TAIL_POSTION_ADJUST);
 
 			tail->SetSpeed(vx, vy);
-			if (flag == MARIO_ATTACK_TIME)
+
+			if (tail->IsAttacking() == false)
 				tail->Attack(nx);
+
+			tail->SetAttackTime(time_start);
 
 			_tail->Update(dt, coObjects);
 		}
-	}
+		
+		
 
+	}
 	if (flag == MARIO_KICK_TIME && (GetTickCount64() - time_start > flag))
 	{
 		flag = 0;
@@ -182,7 +188,7 @@ void CMario::OnCollisionWith(LPCOLLISIONEVENT e)
 		OnCollisionWithPlant(e);
 	else if (dynamic_cast<CBullet*>(e->obj))
 	{
-		if (this->IsUntouchable() && dynamic_cast<CBullet*>(e->obj)->GetBulletType() == BULLET_BY_MARIO)
+		if (this->IsUntouchable() || dynamic_cast<CBullet*>(e->obj)->GetBulletType() == BULLET_BY_MARIO)
 			return;
 
 		switch (level)
