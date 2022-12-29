@@ -1,5 +1,10 @@
 # id	left	top	right	bottom	texture_id
 [SPRITES]
-60000	300	189	315	204	20
-61000	318	189	333	204	20
-62000	300	208	315	221	20
+#Super mushroom
+60000	0	0	15	15	20
+#1up Mushroom
+61000	18	0	33	15	20
+
+#SUper leaf RIGHT & LEFT
+62000	18	17	33	30	20
+62100	0	17	15	30	20
