@@ -118,6 +118,35 @@
 #body	
 61104	341	324	356	339	21
 
+#END of map 1.1
+#Edge
+65000	698	69	713	84	21
+65001	698	86	713	101	21
+#Tree
+#top
+65100	715	69	730	84	21
+65101	732	69	747	84	21
+#bot
+65110	715	86	730	101	21
+65111	732	86	747	101	21
+#square
+65200	698	35	713	50	21
+
+#gift box
+65300	650	106	675	131	21
+
+#EFFECT
+#Mario's tail has attacked enemies
+65400	519	67	534	82	20
+
+#Big Mario eat SuperLeaf
+65410	455	19	470	34	20
+65411	475	19	489	34	20
+65412	491	19	504	29	20
 
 # ani_id 	sprite1_id	time1	sprite2_id	time2	...
 [ANIMATIONS]
+#Big Mario eating SuperLeaf
+9000	65410	100	65411	100	65412	100
+#Mario's tail attacked enemies
+9100	65400	100
