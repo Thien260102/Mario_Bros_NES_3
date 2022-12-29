@@ -315,6 +315,9 @@ void CMario::OnCollisionWithMushroom(LPCOLLISIONEVENT e)
 	}
 	else
 	{
+		if (level != MARIO_LEVEL_RACCOON)
+			this->SetTransform_start();
+
 		switch (level)
 		{
 			case MARIO_LEVEL_SMALL:
@@ -324,7 +327,6 @@ void CMario::OnCollisionWithMushroom(LPCOLLISIONEVENT e)
 				SetLevel(MARIO_LEVEL_RACCOON);
 				break;
 		}
-
 	}
 	
 
@@ -840,19 +842,35 @@ int CMario::GetAniIdRaccoon()
 void CMario::Render()
 {
 	CAnimations* animations = CAnimations::GetInstance();
-	int aniId = -1;
-
-	if (state == MARIO_STATE_DIE)
-		aniId = ID_ANI_MARIO_DIE;
-	else if (level == MARIO_LEVEL_BIG)
-		aniId = GetAniIdBig();
-	else if (level == MARIO_LEVEL_SMALL)
-		aniId = GetAniIdSmall();
+	if (transform_start != 0 && (GetTickCount64() - transform_start) < MARIO_TRANSFORMATION_TIME)
+	{
+		if (level == MARIO_LEVEL_RACCOON)
+			animations->Get(ID_ANI_BIG_MARIO_EATING_SUPERLEAF)->Render(x, y);
+		else
+			if (nx >= 0)
+				animations->Get(ID_ANI_MARIO_SMALL_TRANSFORM_BIG_RIGHT)->Render(x, y);
+			else
+				animations->Get(ID_ANI_MARIO_SMALL_TRANSFORM_BIG_LEFT)->Render(x, y);
+	}
 	else
-		aniId = GetAniIdRaccoon();
+	{
+		transform_start = 0;
 
-	animations->Get(aniId)->Render(x, y);
-	RenderBoundingBox();
+		int aniId = -1;
+
+		if (state == MARIO_STATE_DIE)
+			aniId = ID_ANI_MARIO_DIE;
+		else if (level == MARIO_LEVEL_BIG)
+			aniId = GetAniIdBig();
+		else if (level == MARIO_LEVEL_SMALL)
+			aniId = GetAniIdSmall();
+		else
+			aniId = GetAniIdRaccoon();
+
+		animations->Get(aniId)->Render(x, y);
+		RenderBoundingBox();
+
+	}
 
 	if (_tail != NULL)
 		_tail->Render();
@@ -1065,4 +1083,3 @@ void CMario::SetLevel(int l)
 
 	level = l;
 }
-
