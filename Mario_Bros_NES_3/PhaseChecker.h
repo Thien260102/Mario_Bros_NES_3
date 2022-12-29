@@ -8,7 +8,6 @@
 #include "Brick.h"
 #include "Plant.h"
 
-
 #define PHASECHECK_GRAVITY 0.001f
 #define PHASECHECK_ATTACK_SPEED	1.5f
 #define PHASECHECK_ATTACK_RANGE 3.0f
@@ -52,10 +51,8 @@ protected:
 	virtual void GetBoundingBox(float& left, float& top, float& right, float& bottom);
 
 	virtual void Update(DWORD dt, vector<LPGAMEOBJECT>* coObjects);
-	virtual void Render()
-	{
-			RenderBoundingBox();
-	}
+	virtual void Render();
+	
 public:
 	//CPhaseCheck() : CGameObject() {}
 	CPhaseChecker(float x, float y, int Width, int Height, int type) : CGameObject(x, y)
@@ -78,6 +75,8 @@ public:
 		old_x = x;
 		isAttackedFront = 0; // only attack 1 gameobject in front of Mario
 		isAttackBehind = 0;  // only attack 1 gameobject(except Block, Platform) behide Mario
+
+		nx = direction;
 	}
 
 	bool IsAttacking() { return attack_start != 0; }
