@@ -27,7 +27,7 @@ protected:
 
 	float old_x;
 	int isAttackedFront;
-	int isAttackBehind;
+	int isAttackedBehind;
 
 	int _type;
 
@@ -66,7 +66,7 @@ public:
 		old_x = x;
 		attack_start = 0;
 		isAttackedFront = 0;
-		isAttackBehind = 0;
+		isAttackedBehind = 0;
 	}
 
 	void Attack(int direction) 
@@ -74,7 +74,7 @@ public:
 		vx += PHASECHECK_ATTACK_SPEED * direction;
 		old_x = x;
 		isAttackedFront = 0; // only attack 1 gameobject in front of Mario
-		isAttackBehind = 0;  // only attack 1 gameobject(except Block, Platform) behide Mario
+		isAttackedBehind = 0;  // only attack 1 gameobject(except Block, Platform) behide Mario
 
 		nx = direction;
 	}

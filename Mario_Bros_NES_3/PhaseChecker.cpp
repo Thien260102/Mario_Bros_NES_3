@@ -1,6 +1,8 @@
 #include "PhaseChecker.h"
 #include "Brick.h"
 #include "debug.h"
+#include "Platform.h"
+#include "AssetIDs.h"
 
 void CPhaseChecker::GetBoundingBox(float& left, float& top, float& right, float& bottom)
 {
@@ -40,7 +42,7 @@ void CPhaseChecker::Update(DWORD dt, vector<LPGAMEOBJECT>* coObjects)
 				vx = (old_x - PHASECHECK_ATTACK_RANGE * width - x) / dt;
 			}
 		}
-		else if (isAttackBehind == false && ((GetTickCount64() - attack_start) < PHASECHECK_ATTACK_TIME / 4))
+		else if (isAttackedBehind == false && ((GetTickCount64() - attack_start) < PHASECHECK_ATTACK_TIME / 4))
 		{
 			CCollision::GetInstance()->Process(this, coObjects);
 		}
@@ -62,7 +64,7 @@ void CPhaseChecker::OnCollisionWith(LPCOLLISIONEVENT e)
 	{
 		vy = 0;
 	}
-	if (_type == PHASECHECK_BY_KOOPAS || e->nx == 0)
+	if (_type == PHASECHECK_BY_KOOPAS || e->nx == 0 || dynamic_cast<CPlatform*>(e->obj))
 		return;
 
 	isAttackedFront = true;
@@ -135,7 +137,7 @@ void CPhaseChecker::OnNoCollision(DWORD dt)
 
 void CPhaseChecker::OnCollisionWith(LPGAMEOBJECT obj)
 {
-	isAttackBehind = true;
+	isAttackedBehind = true;
 	if (dynamic_cast<CBrick*>(obj))
 	{
 		DebugOut(L"Hello brick\n");
@@ -172,6 +174,24 @@ void CPhaseChecker::OnCollisionWith(LPGAMEOBJECT obj)
 		else
 			obj->Deflected(DEFLECT_DIRECTION_RIGHT);
 	}
+	else
+		isAttackedBehind = false;
+}
 
-	//draw collision effect
+void CPhaseChecker::Render()
+{
+	RenderBoundingBox();
+
+	CAnimations* animations = CAnimations::GetInstance();
+	if (attack_start != 0)
+	{
+		if (isAttackedBehind && (GetTickCount64() - attack_start) < PHASECHECK_ATTACK_TIME / 2)
+		{
+			animations->Get(ID_ANI_TAIL_MARIO_ATTACKED_ENEMIES)->Render(x, y);
+		}
+		else if (isAttackedFront && (GetTickCount64() - attack_start) > PHASECHECK_ATTACK_TIME / 2)
+		{
+			animations->Get(ID_ANI_TAIL_MARIO_ATTACKED_ENEMIES)->Render(x + nx * PHASECHECK_ATTACK_RANGE * width, y);
+		}
+	}
 }
