@@ -38,6 +38,8 @@ void CPSwitch::GetBoundingBox(float& l, float& t, float& r, float& b)
 
 void CPSwitch::IsActive()
 {
+	if (isActived) return;
+
 	isActived = true;
 	
 	if ((LPPLAYSCENE)CGame::GetInstance()->GetCurrentScene())
