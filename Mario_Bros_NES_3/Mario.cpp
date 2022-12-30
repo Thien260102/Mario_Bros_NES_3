@@ -547,6 +547,9 @@ int CMario::GetAniIdSmall()
 		else aniId = ID_ANI_MARIO_SMALL_KICK_LEFT;
 	}
 
+	if (ay != MARIO_GRAVITY)
+		aniId = ID_ANI_MARIO_SMALL_GETINTO_PIPE;
+
 	if (aniId == -1) aniId = ID_ANI_MARIO_SMALL_IDLE_RIGHT;
 
 	return aniId;
@@ -662,6 +665,9 @@ int CMario::GetAniIdBig()
 		if (nx > 0) aniId = ID_ANI_MARIO_KICK_RIGHT;
 		else aniId = ID_ANI_MARIO_KICK_LEFT;
 	}
+
+	if (ay != MARIO_GRAVITY)
+		aniId = ID_ANI_MARIO_GETINTO_PIPE;
 
 	if (aniId == -1) aniId = ID_ANI_MARIO_IDLE_RIGHT;
 
@@ -832,6 +838,10 @@ int CMario::GetAniIdRaccoon()
 		if (nx > 0) aniId = ID_ANI_MARIO_RACCOON_ATTACK_RIGHT;
 		else aniId = ID_ANI_MARIO_RACCOON_ATTACK_LEFT;
 	}
+
+	if (ay != MARIO_GRAVITY)
+		aniId = ID_ANI_MARIO_RACCOON_GETINTO_SEWER;
+
 
 	if (aniId == -1) aniId = ID_ANI_MARIO_RACCOON_IDLE_RIGHT;
 
