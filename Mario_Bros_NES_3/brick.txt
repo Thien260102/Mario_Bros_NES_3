@@ -1,6 +1,11 @@
 # id	left	top	right	bottom	texture_id
 [SPRITES]
+##Platform
 20001	1004	18	1019	33	21
+#blu 
+20011	1055	171	1070	186	21
+
+##BRICK
 #gold brick
 20002	1038	35	1053	50	21
 20003	1055	35	1070	50	21
