@@ -88,6 +88,8 @@
 #define ID_ANI_MARIO_HOLD_JUMP_RIGHT 1008
 #define ID_ANI_MARIO_HOLD_JUMP_LEFT 1009
 
+#define ID_ANI_MARIO_GETINTO_PIPE 1010
+
 #define ID_ANI_MARIO_DIE 999
 
 // SMALL MARIO
@@ -124,6 +126,8 @@
 
 #define ID_ANI_MARIO_SMALL_TRANSFORM_BIG_RIGHT 1688
 #define ID_ANI_MARIO_SMALL_TRANSFORM_BIG_LEFT 1689
+
+#define ID_ANI_MARIO_SMALL_GETINTO_PIPE 1699
 
 //	RACCOON MARIO	//
 #define ID_ANI_MARIO_RACCOON_IDLE_RIGHT 1700
@@ -277,6 +281,9 @@ public:
 
 		canGetIntoPipe = 0;
 	}
+
+	void SetGravity(float gravity) { ay = gravity; }
+
 	void Update(DWORD dt, vector<LPGAMEOBJECT>* coObjects);
 	void Render();
 	void SetState(int state);
