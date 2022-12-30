@@ -1,6 +1,7 @@
 #include "Collision.h"
 #include "GameObject.h"
 #include "PhaseChecker.h"
+#include "Brick.h"
 
 #include "debug.h"
 #include "Platform.h"
@@ -387,11 +388,6 @@ void CCollision::Scan(LPGAMEOBJECT objSrc,
 	for (int i = 0; i < objDests->size(); i++)
 	{
 		if (objDests->at(i)->IsDeleted())
-			continue;
-		if(dynamic_cast<CPlatform*>(objDests->at(i)) 
-			|| dynamic_cast<CTeleportGate*>(objDests->at(i))
-			|| dynamic_cast<CBrick*>(objDests->at(i))
-			|| dynamic_cast<CPhaseChecker*>(objDests->at(i)))
 			continue;
 
 		float dl, dt, dr, db;
