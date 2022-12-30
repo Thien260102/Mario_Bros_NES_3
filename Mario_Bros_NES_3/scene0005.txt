@@ -107,6 +107,8 @@ pswitch.txt
 10	2265	90	2951	240	0
 10	3175	240	2330	347	1
 
+#Portal 
+50	2683	330	2706	354	2
 
 #Platform 
 #ID	x	y	width	heigth	length	begin	middle	end	type(block: 10, normal: 20, nocollision: 30)
@@ -499,7 +501,4 @@ pswitch.txt
 8	360	376	3
 8	1800	388	1
 8	1864	372	2
-
-#Portal 
-#50	200	160	216	180	1
 
