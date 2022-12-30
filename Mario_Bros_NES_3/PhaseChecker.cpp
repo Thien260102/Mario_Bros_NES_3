@@ -18,8 +18,8 @@ void CPhaseChecker::Update(DWORD dt, vector<LPGAMEOBJECT>* coObjects)
 	vx += ax * dt;
 
 
-	if (_type == PHASECHECK_BY_MARIO && x != old_x)
-		DebugOut(L"x: %f, old_x: %f\n", x, old_x);
+	/*if (_type == PHASECHECK_BY_MARIO && x != old_x)
+		DebugOut(L"x: %f, old_x: %f\n", x, old_x);*/
 
 	if (attack_start != 0)
 	{
