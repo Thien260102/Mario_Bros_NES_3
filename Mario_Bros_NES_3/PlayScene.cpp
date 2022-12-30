@@ -9,6 +9,7 @@
 #include "Portal.h"
 #include "Coin.h"
 #include "Platform.h"
+#include "TeleportGate.h"
 
 #include "SampleKeyEventHandler.h"
 
@@ -166,6 +167,14 @@ void CPlayScene::_ParseSection_OBJECTS(string line)
 		break;
 	}
 
+	case OBJECT_TYPE_TELEPORT:
+	{
+		float des_x = (float)atof(tokens[3].c_str());
+		float des_y = (float)atof(tokens[4].c_str());
+		int direction = atoi(tokens[5].c_str());
+		obj = new CTeleportGate(x, y, des_x, des_y, direction);
+	}
+	break;
 
 	case OBJECT_TYPE_PORTAL:
 	{
@@ -319,8 +328,11 @@ void CPlayScene::Update(DWORD dt)
 	if (cy >= DEFAULT_CAMERA_POSITION_Y)
 		cy = DEFAULT_CAMERA_POSITION_Y;
 
-	CGame::GetInstance()->SetCamPos(cx, cy);
+	/*if (old_cx >= 2499 && cx > 2490)
+		cx = 2499;*/
 
+	CGame::GetInstance()->SetCamPos(cx, cy);
+	//DebugOutTitle(L"cx: %f\n", cx);
 	PurgeDeletedObjects();
 }
 
