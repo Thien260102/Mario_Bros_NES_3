@@ -9,7 +9,7 @@
 CKoopas::CKoopas(float x, float y, int type, int l) :CGameObject(x, y)
 {
 	phaseChecker = new CPhaseChecker(x - KOOPAS_BBOX_WIDTH - KOOPAS_PHASE_CHECK_WIDTH / 2, y,
-		KOOPAS_PHASE_CHECK_WIDTH, KOOPAS_PHASE_CHECK_HEIGHT, PHASECHECK_BY_KOOPAS);
+		KOOPAS_PHASE_CHECK_WIDTH, KOOPAS_PHASE_CHECK_HEIGHT);
 	phaseChecker->SetSpeed(0, KOOPAS_WALKING_SPEED);
 
 	_type = type;
