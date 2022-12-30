@@ -5,7 +5,7 @@
 #include "Animations.h"
 
 #include "debug.h"
-#include "PhaseChecker.h"
+#include "Tail.h"
 #include "Koopas.h"
 
 #define MARIO_WALKING_SPEED		0.1f
@@ -270,7 +270,7 @@ public:
 		holdable = 0;
 		_koopas = NULL;
 
-		_tail = new CPhaseChecker(x, y, MARIO_TAIL_WIDTH, MARIO_TAIL_HEIGHT, PHASECHECK_BY_MARIO);
+		_tail = new CTail(x, y);
 		fly_start = 0;
 		float_start = 0;
 		transform_start = 0;

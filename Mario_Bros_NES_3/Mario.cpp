@@ -68,7 +68,7 @@ void CMario::Update(DWORD dt, vector<LPGAMEOBJECT> *coObjects)
 
 	if (flag == MARIO_ATTACK_TIME)
 	{
-		CPhaseChecker* tail = dynamic_cast<CPhaseChecker*>(_tail);
+		CTail* tail = dynamic_cast<CTail*>(_tail);
 		if ((GetTickCount64() - time_start > flag))
 		{
 			flag = 0;
