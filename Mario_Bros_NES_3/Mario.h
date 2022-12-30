@@ -210,6 +210,9 @@
 #define MARIO_REFLOAT_TIME 200
 #define MARIO_TRANSFORMATION_TIME 600
 
+#define MARIO_GETINTO_PIPE_DOWN 1
+#define MARIO_GETINTO_PIPE_UP	2
+
 class CMario : public CGameObject
 {
 	CKoopas* _koopas;
@@ -219,6 +222,8 @@ class CMario : public CGameObject
 	float maxVx;
 	float ax;				// acceleration on x 
 	float ay;				// acceleration on y 
+
+	int canGetIntoPipe;
 
 	int level; 
 	int untouchable; 
@@ -269,6 +274,8 @@ public:
 		fly_start = 0;
 		float_start = 0;
 		transform_start = 0;
+
+		canGetIntoPipe = 0;
 	}
 	void Update(DWORD dt, vector<LPGAMEOBJECT>* coObjects);
 	void Render();
@@ -300,4 +307,7 @@ public:
 
 	void SetTransform_start() { transform_start = GetTickCount64(); }
 	bool IsTransforming() { return transform_start != 0; }
+
+	void SetcanGetIntoPipe(int var) { canGetIntoPipe = var; } // to determine DIK_UP(OnKeyDown or OnKeyUp) to get into pipe
+	int IsCanGetIntoPipe() { return canGetIntoPipe; }
 };
