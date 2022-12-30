@@ -14,6 +14,9 @@ void CSampleKeyHandler::OnKeyDown(int KeyCode)
 
 	switch (KeyCode)
 	{
+	case DIK_UP:
+		mario->SetcanGetIntoPipe(MARIO_GETINTO_PIPE_UP);
+		break;
 	case DIK_DOWN:
 		if(!mario->IsHolding() && !game->IsKeyDown(DIK_LEFT) && !game->IsKeyDown(DIK_RIGHT)) // Mario cannot sit if he is walking, running.
 			mario->SetState(MARIO_STATE_SIT);
@@ -61,6 +64,9 @@ void CSampleKeyHandler::OnKeyUp(int KeyCode)
 		break;
 	case DIK_DOWN:
 		mario->SetState(MARIO_STATE_SIT_RELEASE);
+		break;
+	case DIK_UP:
+		mario->SetcanGetIntoPipe(0);
 		break;
 	case DIK_A:
 		mario->SetState(MARIO_STATE_HOLD_RELEASE);
