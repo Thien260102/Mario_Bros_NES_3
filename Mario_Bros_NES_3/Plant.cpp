@@ -2,6 +2,7 @@
 #include "debug.h"
 #include "Mario.h"
 #include "Game.h"
+#include "Tail.h"
 #include "PlayScene.h"
 
 void CPlant::GetBoundingBox(float& left, float& top, float& right, float& bottom)
@@ -194,10 +195,8 @@ void CPlant::OnCollisionWith(LPCOLLISIONEVENT e)
 			koopas->SetState(KOOPAS_STATE_DIE);
 		}
 	}
-	else if (dynamic_cast<CPhaseChecker*>(e->obj))
+	else if (dynamic_cast<CTail*>(e->obj))
 	{
-		CPhaseChecker* phaseChecker = dynamic_cast<CPhaseChecker*>(e->obj);
-		if (phaseChecker->GetType() == PHASECHECK_BY_MARIO)
 			this->Delete();
 	}
 }
