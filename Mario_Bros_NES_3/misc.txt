@@ -22,12 +22,20 @@
 55003	324	324	339	339	21
 
 #PIPE
+##Green
 #Top LEFT & RIGHT (width = 15, height = 15)
 45001	69	35	84	50	21
 45002	86	35	101	50	21
 #Body LEFT & RIGHT (width = 14, height = 15)
 45101	69	52	84	67	21
 45102	86	52	101	67	21
+##Black
+#Top LEFT & RIGHT (width = 15, height = 15)
+45003	1	69	16	84	21
+45004	18	69	33	84	21
+#Body LEFT & RIGHT (width = 14, height = 15)
+45103	1	86	16	101	21
+45104	18	86	33	101	21
 
 #RECTANGLE
 
