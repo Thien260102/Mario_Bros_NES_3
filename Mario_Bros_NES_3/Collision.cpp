@@ -4,6 +4,7 @@
 
 #include "debug.h"
 #include "Platform.h"
+#include "TeleportGate.h"
 
 #define BLOCK_PUSH_FACTOR 0.2f
 
@@ -387,9 +388,10 @@ void CCollision::Scan(LPGAMEOBJECT objSrc,
 	{
 		if (objDests->at(i)->IsDeleted())
 			continue;
-		if(dynamic_cast<CPlatform*>(objDests->at(i)) || dynamic_cast<CPhaseChecker*>(objDests->at(i)))
-			continue;
-		if (objDests->at(i)->IsBlocking())
+		if(dynamic_cast<CPlatform*>(objDests->at(i)) 
+			|| dynamic_cast<CTeleportGate*>(objDests->at(i))
+			|| dynamic_cast<CBrick*>(objDests->at(i))
+			|| dynamic_cast<CPhaseChecker*>(objDests->at(i)))
 			continue;
 
 		float dl, dt, dr, db;
@@ -398,7 +400,7 @@ void CCollision::Scan(LPGAMEOBJECT objSrc,
 		if (AABB(sl, st, sr, sb, dl, dt, dr, db))
 		{
 			objCollided = objDests->at(i);
-			DebugOut(L"source: l:%f, t:%f, r:%f, b:%f, destination: l:%f, t:%f, r:%f, b:%f\n", sl, st, sr, sb, dl, dt, dr, db);
+			//DebugOut(L"source: l:%f, t:%f, r:%f, b:%f, destination: l:%f, t:%f, r:%f, b:%f\n", sl, st, sr, sb, dl, dt, dr, db);
 			return;
 		}
 	}
@@ -411,7 +413,7 @@ void CCollision::Process(LPGAMEOBJECT objSrc, vector<LPGAMEOBJECT>* coObjects)
 	{
 		Scan(objSrc, coObjects, objCollided);
 	}
-
+	
 	if (objCollided != NULL)
 		objSrc->OnCollisionWith(objCollided);
 }
