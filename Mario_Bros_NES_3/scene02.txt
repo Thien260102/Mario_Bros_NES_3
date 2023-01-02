@@ -9,6 +9,8 @@ goomba.txt
 koopas.txt
 plant.txt
 bullet.txt
+pswitch.txt
+hud.txt
 #
 [OBJECTS]
 # type	x	y	extra_settings per object type
