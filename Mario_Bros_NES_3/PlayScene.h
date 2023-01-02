@@ -11,16 +11,16 @@
 #include "Plant.h"
 
 #define CAMERA_POSITION_MIN_Y 0
-#define DEFAULT_CAMERA_POSITION_Y 223
+#define DEFAULT_CAMERA_POSITION_Y 252//223
 
 class CPlayScene: public CScene
 {
 protected: 
 	// A play scene has to have player, right? 
 	LPGAMEOBJECT player;					
-
+	
 	vector<LPGAMEOBJECT> objects;
-
+	
 	void _ParseSection_SPRITES(string line);
 	void _ParseSection_ANIMATIONS(string line);
 
