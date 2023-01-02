@@ -21,3 +21,4 @@ height	240
 20	textures\misc.png
 21	textures\misc2_nobg.png
 22	textures\effects.png
+23	textures\hud_font.png
