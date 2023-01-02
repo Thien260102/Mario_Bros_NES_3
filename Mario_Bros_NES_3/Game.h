@@ -113,7 +113,6 @@ public:
 
 	void _ParseSection_TEXTURES(string line);
 
-
 	~CGame();
 };
 typedef CGame* LPGAME;
