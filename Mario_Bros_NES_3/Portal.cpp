@@ -1,7 +1,6 @@
 #include "Portal.h"
 #include "Game.h"
 #include "Textures.h"
-#include "AssetIDs.h"
 
 CPortal::CPortal(float l, float t, float r, float b, int scene_id )
 {
