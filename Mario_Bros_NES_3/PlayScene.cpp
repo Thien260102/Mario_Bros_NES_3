@@ -10,6 +10,8 @@
 #include "Coin.h"
 #include "Platform.h"
 #include "TeleportGate.h"
+#include "Hud.h"
+#include "Timer.h"
 
 #include "SampleKeyEventHandler.h"
 
@@ -287,6 +289,8 @@ void CPlayScene::Update(DWORD dt)
 		}
 	}
 	
+	//Update time
+	CTimer::GetInstance()->Update(dt);
 
 	// skip the rest if scene was already unloaded (Mario::Update might trigger PlayScene::Unload)
 	if (player == NULL) return; 
@@ -330,7 +334,6 @@ void CPlayScene::Update(DWORD dt)
 
 	/*if (old_cx >= 2499 && cx > 2490)
 		cx = 2499;*/
-
 	CGame::GetInstance()->SetCamPos(cx, cy);
 	//DebugOutTitle(L"cx: %f\n", cx);
 	PurgeDeletedObjects();
@@ -340,8 +343,8 @@ void CPlayScene::Render()
 {
 	for (int i = objects.size() - 1; i >= 0; i--)
 		objects[i]->Render();
-	/*for (int i = 0; i < objects.size(); i++)
-		objects[i]->Render();*/
+
+	CHud::GetInstance()->Render();
 }
 
 /*
