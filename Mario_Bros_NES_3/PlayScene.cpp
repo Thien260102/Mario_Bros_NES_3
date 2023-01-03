@@ -12,6 +12,7 @@
 #include "TeleportGate.h"
 #include "Hud.h"
 #include "Timer.h"
+#include "Effect.h"
 
 #include "SampleKeyEventHandler.h"
 
@@ -291,6 +292,8 @@ void CPlayScene::Update(DWORD dt)
 	
 	//Update time
 	CTimer::GetInstance()->Update(dt);
+	//update effect
+	CEffect::GetInstance()->Update(dt);
 
 	// skip the rest if scene was already unloaded (Mario::Update might trigger PlayScene::Unload)
 	if (player == NULL) return; 
@@ -343,8 +346,9 @@ void CPlayScene::Render()
 {
 	for (int i = objects.size() - 1; i >= 0; i--)
 		objects[i]->Render();
-
+	
 	CHud::GetInstance()->Render();
+	CEffect::GetInstance()->Render();
 }
 
 /*
