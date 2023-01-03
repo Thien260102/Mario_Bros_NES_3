@@ -5,6 +5,7 @@
 #include "AssetIDs.h"
 #include "Koopas.h"
 #include "TeleportGate.h"
+#include "Hud.h"
 
 void CTail::GetBoundingBox(float& left, float& top, float& right, float& bottom)
 {
@@ -125,6 +126,8 @@ void CTail::OnCollisionWithGoomba(LPCOLLISIONEVENT e)
 		goomba->Deflected(DEFLECT_DIRECTION_RIGHT);
 
 	isAttackedFront = TAIL_COLLIDED_GOOMBA;
+
+	CHud::GetInstance()->CollectScore(SCORE_TAIL_ATTACKED_ENEMIES);
 }
 
 void CTail::OnCollisionWithKoopas(LPCOLLISIONEVENT e)
@@ -145,6 +148,7 @@ void CTail::OnCollisionWithPlant(LPCOLLISIONEVENT e)
 {
 	e->obj->Delete();
 	isAttackedFront = TAIL_COLLIDED_PLANT;
+	CHud::GetInstance()->CollectScore(SCORE_TAIL_ATTACKED_ENEMIES);
 }
 
 void CTail::OnNoCollision(DWORD dt)
