@@ -1,6 +1,7 @@
 #pragma once
 
 #include "GameObject.h"
+#include "AssetIDs.h"
 
 #define GIFT_FLYING_SPEED 0.02f
 
@@ -42,4 +43,17 @@ public:
 
 	void SwitchScene();
 	int IsSwitchingScene() { return switchScene_start; }
+
+	int GetSpriteGift() 
+	{ 
+		switch (giftType)
+		{
+		case GIFT_TYPE_MUSHROOM:
+			return ID_SPRITE_GIFT_MUSHROOM;
+		case GIFT_TYPE_FLOWER:
+			return ID_SPRITE_GIFT_FLOWER;
+		default:
+			return ID_SPRITE_GIFT_STAR;
+		}
+	}
 };
