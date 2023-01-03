@@ -14,6 +14,7 @@
 #include "Platform.h"
 #include "PSwitch.h"
 #include "Hud.h"
+#include "Effect.h"
 
 #include "Collision.h"
 
@@ -269,6 +270,8 @@ void CMario::OnCollisionWithKoopas(LPCOLLISIONEVENT e)
 		vy = -MARIO_JUMP_DEFLECT_SPEED;
 
 		CHud::GetInstance()->CollectScore(SCORE_MARIO_JUMP_ON_ENEMIES);
+
+		CEffect::GetInstance()->pushEffectIntoQueue(x, y, ID_SPRITE_POINTS_100, true, true);
 	}
 	else // hit by Koopas
 	{
@@ -318,10 +321,13 @@ void CMario::OnCollisionWithMushroom(LPCOLLISIONEVENT e)
 	{
 		// + 1 up
 		CHud::GetInstance()->Collect_1upMushroom();
+
+		CEffect::GetInstance()->pushEffectIntoQueue(x, y, ID_SPRITE_POINTS_1UP, true, true);
 	}
 	else
 	{
 		CHud::GetInstance()->CollectScore(SCORE_SUPER_MUSHROOM_LEAF);
+		CEffect::GetInstance()->pushEffectIntoQueue(x, y, ID_SPRITE_POINTS_1000, true, true);
 
 		if (level != MARIO_LEVEL_RACCOON)
 			this->SetTransform_start();
@@ -361,6 +367,8 @@ void CMario::OnCollisionWithGoomba(LPCOLLISIONEVENT e)
 		vy = -MARIO_JUMP_DEFLECT_SPEED;
 
 		CHud::GetInstance()->CollectScore(SCORE_MARIO_JUMP_ON_ENEMIES);
+
+		CEffect::GetInstance()->pushEffectIntoQueue(x, y, ID_SPRITE_POINTS_100, true, true);
 	}
 	else // hit by Goomba
 	{
