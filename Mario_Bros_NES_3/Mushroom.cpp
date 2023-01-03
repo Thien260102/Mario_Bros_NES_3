@@ -2,6 +2,7 @@
 #include "Mario.h"
 #include "PlayScene.h"
 #include "Hud.h"
+#include "Effect.h"
 
 CMushroom::CMushroom(float x, float y, int type) : CGameObject(x, y)
 {
@@ -103,6 +104,7 @@ void CMushroom::OnCollisionWith(LPCOLLISIONEVENT e)
 		{
 			// + 1 up
 			CHud::GetInstance()->Collect_1upMushroom();
+			CEffect::GetInstance()->pushEffectIntoQueue(x, y, ID_SPRITE_POINTS_1UP, true, true);
 		}
 		else
 		{
@@ -120,6 +122,7 @@ void CMushroom::OnCollisionWith(LPCOLLISIONEVENT e)
 			}
 
 			CHud::GetInstance()->CollectScore(SCORE_SUPER_MUSHROOM_LEAF);
+			CEffect::GetInstance()->pushEffectIntoQueue(x, y, ID_SPRITE_POINTS_1000, true, true);
 		}
 		this->Delete();
 	}
