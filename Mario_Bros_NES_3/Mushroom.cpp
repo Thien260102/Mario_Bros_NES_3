@@ -1,6 +1,7 @@
 #include "Mushroom.h"
 #include "Mario.h"
 #include "PlayScene.h"
+#include "Hud.h"
 
 CMushroom::CMushroom(float x, float y, int type) : CGameObject(x, y)
 {
@@ -101,6 +102,7 @@ void CMushroom::OnCollisionWith(LPCOLLISIONEVENT e)
 		if (type == MUSHROOM_TYPE_1UP)
 		{
 			// + 1 up
+			CHud::GetInstance()->Collect_1upMushroom();
 		}
 		else
 		{
@@ -116,6 +118,8 @@ void CMushroom::OnCollisionWith(LPCOLLISIONEVENT e)
 				mario->SetLevel(MARIO_LEVEL_RACCOON);
 				break;
 			}
+
+			CHud::GetInstance()->CollectScore(SCORE_SUPER_MUSHROOM_LEAF);
 		}
 		this->Delete();
 	}
