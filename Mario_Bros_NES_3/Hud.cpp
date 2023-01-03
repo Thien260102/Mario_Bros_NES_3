@@ -1,10 +1,13 @@
 #include "Hud.h"
 #include "Game.h"
+#include "PlayScene.h"
 #include "Sprites.h"
 #include "Animations.h"
 #include "AssetIDs.h"
 #include "debug.h"
 #include "Timer.h"
+
+CHud* CHud::_instance = NULL;
 
 void CHud::GetBoundingBox(float& l, float& t, float& r, float& b)
 {
@@ -31,7 +34,6 @@ void CHud::Render()
 
 	//draw main hud
 	sprites->Get(ID_SPRITE_HUD)->Draw(x, y);
-	DebugOut(L"Hud\n");
 
 	//draw giftbox and gift
 	float giftBox_x, giftBox_y;
@@ -40,6 +42,10 @@ void CHud::Render()
 	for (int i = 0; i < 3; i++)
 	{
 		sprites->Get(ID_SPRITE_GIFT_BOX_BLU)->Draw(giftBox_x, giftBox_y);
+		
+		if(gifts.size() > i)
+			sprites->Get(gifts[i])->Draw(giftBox_x, giftBox_y);
+		
 		giftBox_x += GIFTBOX_BBOX_WIDTH;
 	}
 
@@ -79,42 +85,64 @@ void CHud::Render()
 	p_x = hx - NUMBER_WIDTH / 2 + COLUMN_SPEED_X;
 	p_y = hy + ROW_ABOVE_Y + NUMBER_HEIGHT / 2;
 
+	//Get speed of Mario
+	float Mvx = 0;
+	float Mvy = 0;
+	bool isFlying = false;
+	if (dynamic_cast<LPPLAYSCENE>(CGame::GetInstance()->GetCurrentScene()))
+	{
+		CMario* mario = dynamic_cast<CMario*>(((LPPLAYSCENE)CGame::GetInstance()->GetCurrentScene())->GetPlayer());
+		mario->GetSpeed(Mvx, Mvy);
+		isFlying = mario->IsFlying();
+	}
+
+	for (int i = 0; i < 6; i++)
+	{
+		if ((abs(Mvx) - MARIO_WALKING_SPEED) >= (SPEED_LEVEL * (i + 1)) || isFlying)
+			sprites->Get(ID_SPRITE_ARROW_WHITE)->Draw(p_x + ARROW_SYMBOL_WIDTH, p_y);
+		else
+			sprites->Get(ID_SPRITE_ARROW_BLACK)->Draw(p_x + ARROW_SYMBOL_WIDTH, p_y);
+		p_x += ARROW_SYMBOL_WIDTH + 1;
+	}
+	if (abs(Mvx) == MARIO_RUNNING_SPEED || isFlying)
+		CAnimations::GetInstance()->Get(ID_ANI_P_CHANGING_COLOR)->Render(p_x + POWER_SYMBOL_WIDTH, p_y);
+	else
+		sprites->Get(ID_SPRITE_P_BLACK)->Draw(p_x + POWER_SYMBOL_WIDTH, p_y);
 }
 
 void CHud::RenderNumber(float p_x, float p_y, int number, int length, int option)
 {
 	CSprites* sprites = CSprites::GetInstance();
 
-	if (number == 0)
-		sprites->Get(ID_SPRITE_NUMBER_0)->Draw(p_x, p_y);
-	else
+	switch (option)
 	{
-		switch (option)
+	case 1:
+		for (int i = 0; i < length; i++)
 		{
-		case 1:
-			for (int i = 0; i < length; i++)
-			{
-				int digit = number % 10;
-				sprites->Get(ID_SPRITE_NUMBER_0 + digit)->Draw(p_x, p_y);
-				p_x -= NUMBER_WIDTH;
+			int digit = number % 10;
+			sprites->Get(ID_SPRITE_NUMBER_0 + digit)->Draw(p_x, p_y);
+			p_x -= NUMBER_WIDTH;
 
-				number /= 10;
-			}
-			break;
-
-		case 0:
-			while ((number / 1) > 0)
-			{
-				int digit = number % 10;
-				sprites->Get(ID_SPRITE_NUMBER_0 + digit)->Draw(p_x, p_y);
-				p_x -= NUMBER_WIDTH;
-
-				number /= 10;
-			}
-			break;
+			number /= 10;
 		}
-		
+		break;
+
+	case 0:
+		if (number == 0)
+			sprites->Get(ID_SPRITE_NUMBER_0)->Draw(p_x, p_y);
+
+		while ((number / 1) > 0)
+		{
+			int digit = number % 10;
+			sprites->Get(ID_SPRITE_NUMBER_0 + digit)->Draw(p_x, p_y);
+			p_x -= NUMBER_WIDTH;
+
+			number /= 10;
+		}
+		break;
 	}
-	
+
+
+
 
 }
