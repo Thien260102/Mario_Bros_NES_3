@@ -281,12 +281,12 @@ void CMario::OnCollisionWithKoopas(LPCOLLISIONEVENT e)
 			{
 				if (level == MARIO_LEVEL_RACCOON)
 				{
-					level = MARIO_LEVEL_BIG;
+					SetLevel(MARIO_LEVEL_BIG);
 					StartUntouchable();
 				}
 				else if (level == MARIO_LEVEL_BIG)
 				{
-					level = MARIO_LEVEL_SMALL;
+					SetLevel(MARIO_LEVEL_SMALL);
 					StartUntouchable();
 				}
 				else
@@ -329,8 +329,8 @@ void CMario::OnCollisionWithMushroom(LPCOLLISIONEVENT e)
 		CHud::GetInstance()->CollectScore(SCORE_SUPER_MUSHROOM_LEAF);
 		CEffect::GetInstance()->pushEffectIntoQueue(x, y, ID_SPRITE_POINTS_1000, true, true);
 
-		if (level != MARIO_LEVEL_RACCOON)
-			this->SetTransform_start();
+		/*if (level != MARIO_LEVEL_RACCOON)
+			this->SetTransform_start();*/
 
 		switch (level)
 		{
@@ -378,12 +378,12 @@ void CMario::OnCollisionWithGoomba(LPCOLLISIONEVENT e)
 			{
 				if (level == MARIO_LEVEL_RACCOON)
 				{
-					level = MARIO_LEVEL_BIG;
+					SetLevel(MARIO_LEVEL_BIG);
 					StartUntouchable();
 				}
 				else if (level == MARIO_LEVEL_BIG)
 				{
-					level = MARIO_LEVEL_SMALL;
+					SetLevel(MARIO_LEVEL_SMALL);
 					StartUntouchable();
 				}
 				else
@@ -442,12 +442,12 @@ void CMario::OnCollisionWithPlant(LPCOLLISIONEVENT e)
 		break;
 
 		case MARIO_LEVEL_BIG:
-			this->level = MARIO_LEVEL_SMALL;
+			SetLevel(MARIO_LEVEL_SMALL);
 			StartUntouchable();
 			break;
 
 		case MARIO_LEVEL_RACCOON:
-			this->level = MARIO_LEVEL_BIG;
+			SetLevel(MARIO_LEVEL_BIG);
 			StartUntouchable();
 			break;
 		}
@@ -872,9 +872,9 @@ void CMario::Render()
 	CAnimations* animations = CAnimations::GetInstance();
 	if (transform_start != 0 && (GetTickCount64() - transform_start) < MARIO_TRANSFORMATION_TIME)
 	{
-		if (level == MARIO_LEVEL_RACCOON)
+		if (level == MARIO_LEVEL_RACCOON || old_level == MARIO_LEVEL_RACCOON)
 			animations->Get(ID_ANI_BIG_MARIO_EATING_SUPERLEAF)->Render(x, y);
-		else
+		else if (level == MARIO_LEVEL_BIG || old_level == MARIO_LEVEL_BIG)
 			if (nx >= 0)
 				animations->Get(ID_ANI_MARIO_SMALL_TRANSFORM_BIG_RIGHT)->Render(x, y);
 			else
@@ -895,7 +895,12 @@ void CMario::Render()
 		else
 			aniId = GetAniIdRaccoon();
 
-		animations->Get(aniId)->Render(x, y);
+		if(untouchable && GetTickCount64() % 2 == 0)
+			animations->Get(aniId)->Render(x, y);
+		else if(!untouchable)
+		{
+			animations->Get(aniId)->Render(x, y);
+		}
 		RenderBoundingBox();
 
 	}
@@ -1104,13 +1109,37 @@ void CMario::GetBoundingBox(float& left, float& top, float& right, float& bottom
 
 void CMario::SetLevel(int l)
 {
+	old_level = level;
 	// Adjust position to avoid falling off platform
-	if (this->level == MARIO_LEVEL_SMALL)
+	/*if (this->level == MARIO_LEVEL_SMALL)
 	{
 		y -= (MARIO_BIG_BBOX_HEIGHT - MARIO_SMALL_BBOX_HEIGHT) / 2;
 	}
 	else 
-		y -= (MARIO_RACCOON_BBOX_HEIGHT - MARIO_BIG_BBOX_HEIGHT);
+		y -= (MARIO_RACCOON_BBOX_HEIGHT - MARIO_BIG_BBOX_HEIGHT);*/
+
+	switch (this->level)
+	{
+	case MARIO_LEVEL_SMALL:
+		SetTransform_start();
+		y -= (MARIO_BIG_BBOX_HEIGHT - MARIO_SMALL_BBOX_HEIGHT) / 2;
+
+		break;
+
+	case MARIO_LEVEL_BIG:
+		if (l == MARIO_LEVEL_RACCOON)
+			y -= (MARIO_RACCOON_BBOX_HEIGHT - MARIO_BIG_BBOX_HEIGHT);
+		
+		SetTransform_start();
+		break;
+
+	case MARIO_LEVEL_RACCOON:
+		if (l == MARIO_LEVEL_BIG)
+		{
+			SetTransform_start();
+		}
+		break;
+	}
 
 	level = l;
 }
