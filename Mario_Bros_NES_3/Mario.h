@@ -229,6 +229,7 @@ class CMario : public CGameObject
 
 	int canGetIntoPipe;
 
+	int old_level;
 	int level; 
 	int untouchable; 
 	ULONGLONG untouchable_start;
