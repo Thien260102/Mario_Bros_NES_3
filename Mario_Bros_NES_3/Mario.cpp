@@ -13,6 +13,7 @@
 #include "Plant.h"
 #include "Platform.h"
 #include "PSwitch.h"
+#include "Hud.h"
 
 #include "Collision.h"
 
@@ -266,6 +267,8 @@ void CMario::OnCollisionWithKoopas(LPCOLLISIONEVENT e)
 			koopas->SetState(KOOPAS_STATE_WALKING);
 		}
 		vy = -MARIO_JUMP_DEFLECT_SPEED;
+
+		CHud::GetInstance()->CollectScore(SCORE_MARIO_JUMP_ON_ENEMIES);
 	}
 	else // hit by Koopas
 	{
@@ -297,12 +300,14 @@ void CMario::OnCollisionWithCoin(LPCOLLISIONEVENT e)
 {
 	e->obj->Delete();
 	coin++;
+	CHud::GetInstance()->CollectCoin();
 }
 
 void CMario::OnCollisionWithPortal(LPCOLLISIONEVENT e)
 {
 	CPortal* p = (CPortal*)e->obj;
 	p->SwitchScene();
+	CHud::GetInstance()->CollectGift(p->GetSpriteGift());
 }
 
 void CMario::OnCollisionWithMushroom(LPCOLLISIONEVENT e)
@@ -312,9 +317,12 @@ void CMario::OnCollisionWithMushroom(LPCOLLISIONEVENT e)
 	if (mushroom->getType() == MUSHROOM_TYPE_1UP)
 	{
 		// + 1 up
+		CHud::GetInstance()->Collect_1upMushroom();
 	}
 	else
 	{
+		CHud::GetInstance()->CollectScore(SCORE_SUPER_MUSHROOM_LEAF);
+
 		if (level != MARIO_LEVEL_RACCOON)
 			this->SetTransform_start();
 
@@ -351,6 +359,8 @@ void CMario::OnCollisionWithGoomba(LPCOLLISIONEVENT e)
 			goomba->SetState(GOOMBA_STATE_WALKING);
 		}
 		vy = -MARIO_JUMP_DEFLECT_SPEED;
+
+		CHud::GetInstance()->CollectScore(SCORE_MARIO_JUMP_ON_ENEMIES);
 	}
 	else // hit by Goomba
 	{

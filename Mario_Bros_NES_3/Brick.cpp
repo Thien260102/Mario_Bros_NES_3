@@ -8,6 +8,7 @@
 #include "Mushroom.h"
 #include "Coin.h"
 #include "PSwitch.h"
+#include "Hud.h"
 
 void CBrick::Update(DWORD dt, vector<LPGAMEOBJECT>* coObjects)
 {
@@ -55,6 +56,7 @@ void CBrick::Update(DWORD dt, vector<LPGAMEOBJECT>* coObjects)
 			case BRICK_CONTAIN_COIN:
 				_object = new CCoin(x, y);
 				_object->Deflected();
+				CHud::GetInstance()->CollectCoin();
 				break;
 
 			case BRICK_CONTAIN_1UP_MUSHROOM:
