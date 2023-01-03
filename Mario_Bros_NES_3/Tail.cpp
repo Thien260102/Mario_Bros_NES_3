@@ -6,6 +6,7 @@
 #include "Koopas.h"
 #include "TeleportGate.h"
 #include "Hud.h"
+#include "Effect.h"
 
 void CTail::GetBoundingBox(float& left, float& top, float& right, float& bottom)
 {
@@ -128,10 +129,18 @@ void CTail::OnCollisionWithGoomba(LPCOLLISIONEVENT e)
 	isAttackedFront = TAIL_COLLIDED_GOOMBA;
 
 	CHud::GetInstance()->CollectScore(SCORE_TAIL_ATTACKED_ENEMIES);
+
+	float ox, oy;
+	e->obj->GetPosition(ox, oy);
+	CEffect::GetInstance()->pushEffectIntoQueue(ox, oy, ID_ANI_TAIL_MARIO_ATTACKED_ENEMIES, 0);
+	CEffect::GetInstance()->pushEffectIntoQueue(x, y, ID_SPRITE_POINTS_100, true, true);
 }
 
 void CTail::OnCollisionWithKoopas(LPCOLLISIONEVENT e)
 {
+	if (e->obj->GetState() == KOOPAS_STATE_WALKING || e->obj->GetState() == KOOPAS_STATE_FLYING)
+		CEffect::GetInstance()->pushEffectIntoQueue(x, y, ID_SPRITE_POINTS_100, true, true);
+
 	e->obj->SetState(KOOPAS_STATE_SHELL); // KOOPAS_STATE_SHELL 200
 
 	float kx, ky;
@@ -142,6 +151,10 @@ void CTail::OnCollisionWithKoopas(LPCOLLISIONEVENT e)
 		e->obj->Deflected(DEFLECT_DIRECTION_RIGHT);
 
 	isAttackedFront = TAIL_COLLIDED_KOOPAS;
+
+	float ox, oy;
+	e->obj->GetPosition(ox, oy);
+	CEffect::GetInstance()->pushEffectIntoQueue(ox, oy, ID_ANI_TAIL_MARIO_ATTACKED_ENEMIES, 0);
 }
 
 void CTail::OnCollisionWithPlant(LPCOLLISIONEVENT e)
@@ -149,6 +162,11 @@ void CTail::OnCollisionWithPlant(LPCOLLISIONEVENT e)
 	e->obj->Delete();
 	isAttackedFront = TAIL_COLLIDED_PLANT;
 	CHud::GetInstance()->CollectScore(SCORE_TAIL_ATTACKED_ENEMIES);
+	
+	float ox, oy;
+	e->obj->GetPosition(ox, oy);
+	CEffect::GetInstance()->pushEffectIntoQueue(ox, oy, ID_ANI_TAIL_MARIO_ATTACKED_ENEMIES, 0);
+	CEffect::GetInstance()->pushEffectIntoQueue(x, y, ID_SPRITE_POINTS_100, true, true);
 }
 
 void CTail::OnNoCollision(DWORD dt)
@@ -162,35 +180,43 @@ void CTail::OnCollisionWith(LPGAMEOBJECT obj)
 {
 	isAttackedBehind = true;
 
+	float ox, oy;
+	obj->GetPosition(ox, oy);
 	if (dynamic_cast<CGoomba*>(obj))
 	{
 		CGoomba* goomba = dynamic_cast<CGoomba*>(obj);
 		if (goomba->GetState() == GOOMBA_STATE_DIE_1 || goomba->GetState() == GOOMBA_STATE_DIE_2)
 			return;
-		DebugOut(L"Hello goomba\n");
+		
 		goomba->SetState(GOOMBA_STATE_DIE_2);
-		float gx, gy;
-		obj->GetPosition(gx, gy);
-		if (gx < x)
+		
+		if (ox < x)
 			goomba->Deflected(DEFLECT_DIRECTION_LEFT);
 		else
 			goomba->Deflected(DEFLECT_DIRECTION_RIGHT);
+
+		CEffect::GetInstance()->pushEffectIntoQueue(ox, oy, ID_ANI_TAIL_MARIO_ATTACKED_ENEMIES, 0);
+		CEffect::GetInstance()->pushEffectIntoQueue(x, y, ID_SPRITE_POINTS_100, true, true);
 	}
 	else if (dynamic_cast<CPlant*>(obj))
 	{
-		DebugOut(L"Hello plant\n");
 		obj->Delete();
+		CEffect::GetInstance()->pushEffectIntoQueue(ox, oy, ID_ANI_TAIL_MARIO_ATTACKED_ENEMIES, 0);
+		CEffect::GetInstance()->pushEffectIntoQueue(x, y, ID_SPRITE_POINTS_100, true, true);
 	}
 	else if (dynamic_cast<CKoopas*>(obj))
 	{
-		obj->SetState(200); // KOOPAS_STATE_SHELL 200
-		DebugOut(L"Hello koopas\n");
-		float kx, ky;
-		obj->GetPosition(kx, ky);
-		if (kx <= x)
+		if(obj->GetState() == KOOPAS_STATE_WALKING || obj->GetState() == KOOPAS_STATE_FLYING)
+			CEffect::GetInstance()->pushEffectIntoQueue(x, y, ID_SPRITE_POINTS_100, true, true);
+
+		obj->SetState(KOOPAS_STATE_SHELL); 
+		
+		if (ox <= x)
 			obj->Deflected(DEFLECT_DIRECTION_LEFT);
 		else
 			obj->Deflected(DEFLECT_DIRECTION_RIGHT);
+
+		CEffect::GetInstance()->pushEffectIntoQueue(ox, oy, ID_ANI_TAIL_MARIO_ATTACKED_ENEMIES, 0);
 	}
 	else
 		isAttackedBehind = false;
@@ -201,16 +227,4 @@ void CTail::Render()
 	RenderBoundingBox();
 
 	CAnimations* animations = CAnimations::GetInstance();
-	if (attack_start != 0)
-	{
-		if (isAttackedBehind && (GetTickCount64() - attack_start) < PHASECHECK_ATTACK_TIME / 2)
-		{
-			animations->Get(ID_ANI_TAIL_MARIO_ATTACKED_ENEMIES)->Render(x, y);
-		}
-		else if (isAttackedFront && isAttackedFront != TAIL_COLLIDED_BRICK
-			&& (GetTickCount64() - attack_start) > PHASECHECK_ATTACK_TIME / 2)
-		{
-			animations->Get(ID_ANI_TAIL_MARIO_ATTACKED_ENEMIES)->Render(x + nx * TAIL_ATTACK_RANGE * TAIL_BBOX_WIDTH, y);
-		}
-	}
 }
