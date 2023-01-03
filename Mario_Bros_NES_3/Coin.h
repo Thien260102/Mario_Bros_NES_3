@@ -24,6 +24,7 @@ class CCoin : public CGameObject {
 private:
 	float ay;
 	int _type;
+	float old_y;
 	ULONGLONG remainTime_start;
 
 	void CoinTransformBrick();
