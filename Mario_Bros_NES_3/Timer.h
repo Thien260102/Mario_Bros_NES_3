@@ -10,7 +10,7 @@ private:
 	ULONGLONG current_time;
 
 public:
-	CTimer() {}
+	CTimer() { current_time = 0; }
 
 	static CTimer* GetInstance()
 	{
