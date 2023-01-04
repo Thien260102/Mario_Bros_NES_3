@@ -151,6 +151,9 @@
     <ClCompile Include="Bullet.cpp" />
     <ClCompile Include="Coin.cpp" />
     <ClCompile Include="Collision.cpp" />
+    <ClCompile Include="PlatformAnimate.cpp" />
+    <ClCompile Include="WorldMapKeyEventHandler.cpp" />
+    <ClCompile Include="WorldMapScene.cpp" />
     <ClCompile Include="Effect.cpp" />
     <ClCompile Include="Hud.cpp" />
     <ClCompile Include="PSwitch.cpp" />
@@ -186,6 +189,9 @@
     <ClInclude Include="Bullet.h" />
     <ClInclude Include="Coin.h" />
     <ClInclude Include="Collision.h" />
+    <ClInclude Include="PlatformAnimate.h" />
+    <ClInclude Include="WorldMapKeyEventHandler.h" />
+    <ClInclude Include="WorldMapScene.h" />
     <ClInclude Include="Effect.h" />
     <ClInclude Include="Hud.h" />
     <ClInclude Include="PSwitch.h" />
