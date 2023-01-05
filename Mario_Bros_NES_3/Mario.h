@@ -7,6 +7,7 @@
 #include "debug.h"
 #include "Tail.h"
 #include "Koopas.h"
+#include "Hud.h"
 
 #define MARIO_WALKING_SPEED		0.1f
 #define MARIO_RUNNING_SPEED		0.2f
@@ -263,7 +264,7 @@ public:
 		ax = 0.0f;
 		ay = MARIO_GRAVITY; 
 
-		level = MARIO_LEVEL_BIG;
+		level = CHud::GetInstance()->GetLevel();
 		untouchable = 0;
 		untouchable_start = -1;
 		isOnPlatform = false;
