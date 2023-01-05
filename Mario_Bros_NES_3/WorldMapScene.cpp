@@ -13,6 +13,7 @@
 #include "TeleportGate.h"
 #include "Hud.h"
 #include "PlatformAnimate.h"
+#include "Mario_WorldMap.h"
 
 #include "WorldMapKeyEventHandler.h"
 
@@ -115,16 +116,20 @@ void CWorldMapScene::_ParseSection_OBJECTS(string line)
 			DebugOut(L"[ERROR] MARIO object was created before!\n");
 			return;
 		}
-		obj = new CMario(x, y);
-		player = (CMario*)obj;
+		obj = new CMario_WorldMap(x, y);
+		player = (CMario_WorldMap*)obj;
 
 		DebugOut(L"[INFO] Player object has been created!\n");
 		break;
 
 	case OBJECT_TYPE_PLATFORM_ANIMATE:
 	{
-		int ani = atoi(tokens[3].c_str());
-		obj = new CPlatformAnimate(x, y, ani);
+		int aniOrsprite = atoi(tokens[3].c_str());
+		int type = atoi(tokens[4].c_str());
+		int isAni = atoi(tokens[5].c_str());
+
+		obj = new CPlatformAnimate(x, y, aniOrsprite, type, isAni);
+
 		break;
 	}
 	
@@ -147,6 +152,16 @@ void CWorldMapScene::_ParseSection_OBJECTS(string line)
 
 		break;
 	}
+
+	case OBJECT_TYPE_PORTAL:
+	{
+		float r = (float)atof(tokens[3].c_str());
+		float b = (float)atof(tokens[4].c_str());
+		int scene_id = atoi(tokens[5].c_str());
+		int type = atoi(tokens[6].c_str());
+		obj = new CPortal(x, y, r, b, scene_id, type);
+	}
+	break;
 
 	default:
 		DebugOut(L"[ERROR] Invalid object type: %d\n", object_type);
@@ -234,42 +249,20 @@ void CWorldMapScene::Update(DWORD dt)
 {
 	// We know that Mario is the first object in the list hence we won't add him into the colliable object list
 	// TO-DO: This is a "dirty" way, need a more organized way 
-	/*CMario* mario = dynamic_cast<CMario*>(player);
-	if (!mario->IsTransforming())
+	vector<LPGAMEOBJECT> coObjects;
+	for (size_t i = 1; i < objects.size(); i++)
 	{
-		vector<LPGAMEOBJECT> coObjects;
-		for (size_t i = 1; i < objects.size(); i++)
-		{
-			coObjects.push_back(objects[i]);
-		}
+		coObjects.push_back(objects[i]);
+	}
+	objects[0]->Update(dt, &coObjects);
 
-		for (size_t i = 0; i < objects.size(); i++)
-		{
-			objects[i]->Update(dt, &coObjects);
-		}
-	}*/
+	
 
-	//Update time
-	//CTimer::GetInstance()->Update(dt);
-	//update effect
-	//CEffect::GetInstance()->Update(dt);
-
-	// skip the rest if scene was already unloaded (Mario::Update might trigger PlayScene::Unload)
-	//if (player == NULL) return;
-
-	// Update camera to follow mario
-	/*player->GetPosition(cx, cy);
-
-	CGame* game = CGame::GetInstance();
-	cx -= game->GetBackBufferWidth() / 2;
-	cy -= game->GetBackBufferHeight() / 2;
-
-	if (cx < 0) cx = 0;*/
 
 	float cx, cy;
-	cx = 0;
-	cy = 0;
-	
+	cx = DEFAULT_CAMERA_WORLDMAP_POSITION;
+	cy = DEFAULT_CAMERA_WORLDMAP_POSITION;
+
 	CGame::GetInstance()->SetCamPos(cx, cy);
 	//DebugOutTitle(L"cx: %f\n", cx);
 	PurgeDeletedObjects();
