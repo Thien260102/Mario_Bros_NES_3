@@ -4,17 +4,26 @@
 #define PLATFORM_ANIMATE_BBOX_WIDTH 15
 #define PLATFORM_ANIMATE_BBOX_HEIGHT 15
 
+#define PLATFORM_ANIMATE_TYPE_BLOCK 1 //Blocking
+#define PLATFORM_ANIMATE_TYPE_GATE	2 //can crossed by Mario
+
 class CPlatformAnimate : public CGameObject
 {
 protected:
-	int animation;
+	int aniOrsprite;
+	int _type;
+	int isAni; // 1: animation, 0: sprite
 
-	virtual int IsBlocking() { return 0; }
+	virtual int IsBlocking() { return 1; }
 public:
-	CPlatformAnimate(float x, float y, int ani) : CGameObject(x, y)
+	CPlatformAnimate(float x, float y, int AniOrSprite, int type = 1, int IsAni = 1) : CGameObject(x, y)
 	{
-		animation = ani;
+		aniOrsprite = AniOrSprite;
+		_type = type;
+		isAni = IsAni;
 	}
+	
+	int GetType() { return _type; }
 
 	void Render();
 	void Update(DWORD dt) {}
