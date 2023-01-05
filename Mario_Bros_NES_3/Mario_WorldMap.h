@@ -2,7 +2,7 @@
 #include "GameObject.h"
 #include "Mario.h"
 #include "Hud.h"
-
+ 
 #define MARIO_WORLDMAP_WALKING_SPEED 0.1f
 
 #define MARIO_WM_STATE_WALKING_RIGHT	1

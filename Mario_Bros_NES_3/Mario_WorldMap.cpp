@@ -2,7 +2,7 @@
 #include "Collision.h"
 #include "PlatformAnimate.h"
 #include "Portal.h"
-
+ 
 void CMario_WorldMap::GetBoundingBox(float& l, float& t, float& r, float& b)
 {
 	l = x - MARIO_BBOX_WIDTH / 2;
