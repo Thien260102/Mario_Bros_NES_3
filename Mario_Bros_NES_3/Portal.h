@@ -15,12 +15,16 @@
 
 #define SWITCH_GIFT_TIME 100
 #define SWITCHING_SCENE_TIME 2000
+
+#define PORTAL_TYPE_PLAYSCENE_TO_ANOTHER 1
+#define PORTAL_TYPE_ANOTHER_TO_PLAYSCENE 2
 /*
 	Object that triggers scene switching
 */
 class CPortal : public CGameObject
 {
 	int scene_id;	// target scene to switch to 
+	int _type;
 
 	int giftType;
 
@@ -32,7 +36,7 @@ class CPortal : public CGameObject
 
 	virtual void Update(DWORD dt, vector<LPGAMEOBJECT>* coObjects);
 public:
-	CPortal(float l, float t, float r, float b, int scene_id);
+	CPortal(float l, float t, float r, float b, int scene_id , int type = 1);
 	virtual void Render();
 	virtual void GetBoundingBox(float &l, float &t, float &r, float &b);
 
