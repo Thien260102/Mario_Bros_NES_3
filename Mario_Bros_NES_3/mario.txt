@@ -56,6 +56,10 @@
 #GET INTO PIPE(SEWER)
 11900	375	283	390	310	1
 
+#Walking in Worldmap
+11911	55	5	70	26	1
+11912	55	45	70	66	1
+
 #DIE (width = 19, height = 17)
 13001	15	209	34	226	1
 
@@ -105,6 +109,10 @@
 
 #Get into PIPE
 12800	375	129	390	144	1
+
+#Walking in Worldmap
+12811	16	9	29	24	1
+12812	16	49	29	64	1
 
 ####RACCOON FORM #################
 #IDLE (Width = 21) (Height = 27)
@@ -184,6 +192,10 @@
 15301	172	603	195	630	1
 15302	132	603	155	630	1
 
+#Walking in Worldmap
+15311	95	5	110	28	1
+15312	95	45	110	68	1
+
 # ani_id	sprite1_id	time1	sprite2_id	time2	...
 [ANIMATIONS]
 400	11121	100
@@ -236,6 +248,9 @@
 #DIE
 999	13001	100
 
+#Walking in the worldmap
+444	11911	100	11912	100
+
 ################### SMALL #################
 1100	12121	100
 1102	12111	100
@@ -284,6 +299,9 @@
 
 #Get into Pipe
 1699	12800	100
+
+#Walking in the worldmap
+1222	12811	100	12812	100
 
 ##############	RACCOON	###########
 1700	14121	100
@@ -349,3 +367,6 @@
 #FLOAT RIGHT & LEFT
 2811	15201	50	15202	50
 2812	15301	50	15302	50
+
+#Walking in the Worldmap
+1777	15311	100	15312	100
