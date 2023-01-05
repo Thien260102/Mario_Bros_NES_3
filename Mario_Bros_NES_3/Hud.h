@@ -1,6 +1,5 @@
 #pragma once
 #include "GameObject.h"
-#include "Mario.h"
 
 #define SPEED_LEVEL	0.016f // (MARIO_RUNNING_SPEED - MARIO_WALKING_SPEED) / 6
 
@@ -55,6 +54,7 @@ protected:
 
 	int coin;
 	int life;
+	int level; // save level of Mario
 
 	int score;
 	vector<int> gifts;
@@ -69,6 +69,7 @@ public:
 		coin = 0;
 		life = 1;
 		score = 0;
+		level = 1;
 	}
 
 	static CHud* GetInstance()
@@ -77,6 +78,9 @@ public:
 			_instance = new CHud(0, 0);
 		return _instance;
 	}
+
+	void SaveLevel(int l) { level = l; }
+	int GetLevel() { return level; }
 
 	void GetBoundingBox(float& left, float& top, float& right, float& bottom);
 	virtual void Update(DWORD dt, vector<LPGAMEOBJECT>* coObjects)
