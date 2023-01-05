@@ -13,7 +13,6 @@
 #include "Plant.h"
 #include "Platform.h"
 #include "PSwitch.h"
-#include "Hud.h"
 #include "Effect.h"
 
 #include "Collision.h"
@@ -1141,5 +1140,6 @@ void CMario::SetLevel(int l)
 		break;
 	}
 
+	CHud::GetInstance()->SaveLevel(l);
 	level = l;
 }
