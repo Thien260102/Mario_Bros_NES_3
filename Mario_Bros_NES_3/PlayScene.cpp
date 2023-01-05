@@ -335,8 +335,12 @@ void CPlayScene::Update(DWORD dt)
 	if (cy >= DEFAULT_CAMERA_POSITION_Y)
 		cy = DEFAULT_CAMERA_POSITION_Y;
 
-	/*if (old_cx >= 2499 && cx > 2490)
-		cx = 2499;*/
+	if (cx >= CAMERA_POSITION_MAX_X && cx < POSITION_SECRET_ROOM)
+		cx = CAMERA_POSITION_MAX_X;
+
+	if (cx > CAMERA_POSITION_MAX_X)
+		cy = POSITION_SECRET_ROOM_Y;
+
 	CGame::GetInstance()->SetCamPos(cx, cy);
 	//DebugOutTitle(L"cx: %f\n", cx);
 	PurgeDeletedObjects();

@@ -10,8 +10,13 @@
 #include "Koopas.h"
 #include "Plant.h"
 
+////use only for map 1.1////
 #define CAMERA_POSITION_MIN_Y 0
 #define DEFAULT_CAMERA_POSITION_Y 252//223
+#define CAMERA_POSITION_MAX_X 2499
+#define POSITION_SECRET_ROOM 2700
+#define POSITION_SECRET_ROOM_Y 220
+////////////////////////////
 
 class CPlayScene: public CScene
 {
