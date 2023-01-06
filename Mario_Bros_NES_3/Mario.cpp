@@ -14,6 +14,7 @@
 #include "Platform.h"
 #include "PSwitch.h"
 #include "Effect.h"
+#include "PlayScene.h"
 
 #include "Collision.h"
 
@@ -1108,7 +1109,7 @@ void CMario::GetBoundingBox(float& left, float& top, float& right, float& bottom
 
 void CMario::SetLevel(int l)
 {
-	old_level = level;
+	old_level = level;// for IntroMap
 	// Adjust position to avoid falling off platform
 	/*if (this->level == MARIO_LEVEL_SMALL)
 	{
@@ -1140,6 +1141,7 @@ void CMario::SetLevel(int l)
 		break;
 	}
 
-	CHud::GetInstance()->SaveLevel(l);
+	if (dynamic_cast<LPPLAYSCENE>(CGame::GetInstance()->GetCurrentScene()))
+		CHud::GetInstance()->SaveLevel(level);
 	level = l;
 }
