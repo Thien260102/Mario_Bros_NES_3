@@ -25,6 +25,7 @@ CIntroScene::CIntroScene(int id, LPCWSTR filePath) :
 {
 	player[0] = NULL;
 	player[1] = NULL;
+	flag = 0;
 	key_handler = new CIntroKeyEventHandler(this);
 }
 
@@ -120,11 +121,19 @@ void CIntroScene::_ParseSection_OBJECTS(string line)
 		}
 		obj = new CMario(x, y);
 		if (player[0] == NULL)
-			player[0] = obj;
+		{
+			player[0] = (CMario*)obj;
+			((CMario*)player[0])->SetLevel(MARIO_LEVEL_BIG);
+		}
+
 		else
+		{
 			player[1] = (CMario*)obj;
+			((CMario*)player[1])->SetLevel(MARIO_LEVEL_BIG);
+		}
 
 		DebugOut(L"[INFO] Player object has been created!\n");
+		
 		break;
 
 	case OBJECT_TYPE_PLATFORM_ANIMATE:
@@ -134,7 +143,9 @@ void CIntroScene::_ParseSection_OBJECTS(string line)
 		int isAni = atoi(tokens[5].c_str());
 
 		obj = new CPlatformAnimate(x, y, aniOrsprite, type, isAni);
+		Number3 = (CPlatformAnimate*)(obj);
 
+		Number3original_y = y;
 		break;
 	}
 
@@ -154,6 +165,9 @@ void CIntroScene::_ParseSection_OBJECTS(string line)
 			sprite_begin, sprite_middle, sprite_end,
 			type
 		);
+
+		platform_objects.push_back((CPlatform*)obj);
+
 		break;
 	}
 
@@ -164,9 +178,13 @@ void CIntroScene::_ParseSection_OBJECTS(string line)
 		int scene_id = atoi(tokens[5].c_str());
 		int type = atoi(tokens[6].c_str());
 		obj = new CPortal(x, y, r, b, scene_id, type);
+
+		portal = (CPortal*)obj;
+
+		
+		break;
 	}
-	portal = (CPortal*)obj;
-	break;
+	
 
 	default:
 		DebugOut(L"[ERROR] Invalid object type: %d\n", object_type);
@@ -246,7 +264,8 @@ void CIntroScene::Load()
 	}
 
 	f.close();
-
+	flag = CURTAIN_FLYING;
+	curtainFlying_start = GetTickCount64();
 	DebugOut(L"[INFO] Done loading scene  %s\n", sceneFilePath);
 }
 
@@ -257,14 +276,78 @@ void CIntroScene::Update(DWORD dt)
 		return;
 	// We know that Mario is the first object in the list hence we won't add him into the colliable object list
 	// TO-DO: This is a "dirty" way, need a more organized way 
-	//vector<LPGAMEOBJECT> coObjects;
-	for (size_t i = 1; i < objects.size(); i++)
+	vector<LPGAMEOBJECT> coObjects;
+	for (size_t i = 0; i < platform_objects.size(); i++)
 	{
-		objects[i]->Update(dt, &objects);
+		coObjects.push_back(platform_objects[i]);
 	}
 	//objects[0]->Update(dt, &coObjects);
+	player[0]->Update(dt, &coObjects);
+	
+	//Curtain flying
+	if (flag == CURTAIN_FLYING)
+	{
+		float number3_x, number3_y;
+		Number3->GetPosition(number3_x, number3_y);
+		Number3->SetPosition(number3_x, number3_y - 0.1f * dt);
 
+		for (int i = 1; i < platform_objects.size(); i++)
+		{
+			int id = platform_objects[i]->GetSpriteIDBegin();
+			float x, y;
+			platform_objects[i]->GetPosition(x, y);
+			if (1)//(id == ID_SPRITE_CURTAIN_1 || id == ID_SPRITE_CURTAIN_2))
+			{
+				if (GetTickCount64() - curtainFlying_start > CURTAIN_FLYING_TIME)
+				{
+					flag = GAMENAME_DOWING;
+					curtainFlying_start = 0;
+				}
+				else
+				{
+					platform_objects[i]->SetPosition(x, y - 0.1f * dt);
+				}
+			}
+		}
+	}
+	else if (flag == GAMENAME_DOWING)
+	{
+		float number3_x, number3_y;
+		Number3->GetPosition(number3_x, number3_y);
+		Number3->SetPosition(number3_x, number3_y + 0.1f * dt);
 
+		for (int i = 1; i < platform_objects.size(); i++)
+		{
+			int id = platform_objects[i]->GetSpriteIDBegin();
+			float x, y;
+			platform_objects[i]->GetPosition(x, y);
+			if (!(id == ID_SPRITE_CURTAIN_1 || id == ID_SPRITE_CURTAIN_2))
+			{
+				if (Number3original_y <= number3_y)
+				{
+					flag = 0;
+					float adjust = (Number3original_y - number3_y);
+					platform_objects[i]->SetPosition(x, y - adjust);
+					Number3->SetPosition(number3_x, Number3original_y);
+
+					CControl::GetInstance()->ActiveControl(CONTROL_TYPE_MODE);
+				}
+				else
+				{
+					platform_objects[i]->SetPosition(x, y + 0.1f * dt);
+				}
+			}
+		}
+	}
+
+	// Lugi jump on Mario and touch sky
+	//float mx, my;
+	//player[0]->GetPosition(mx, my);
+	//if (my < 0)
+	//{
+		//flag = GAMENAME_DOWING;
+	//}
+	
 
 	float cx, cy;
 	cx = 0;
@@ -279,6 +362,19 @@ void CIntroScene::Render()
 {
 	for (int i = objects.size() - 1; i >= 0; i--)
 		objects[i]->Render();
+
+	player[0]->Render();
+	player[1]->Render();
+	//render stage
+	platform_objects[0]->Render();
+
+	
+	for (int i = platform_objects.size() - 1; i > 0; i--)
+	{
+		int id = platform_objects[i]->GetSpriteIDBegin();
+		if((id == ID_SPRITE_CURTAIN_1 || id == ID_SPRITE_CURTAIN_2))
+			platform_objects[i]->Render();
+	}
 
 	//CControl::GetInstance()->ActiveControl(CONTROL_TYPE_MODE);
 	CControl::GetInstance()->Render();
@@ -311,6 +407,7 @@ void CIntroScene::Unload()
 	objects.clear();
 	player[0] = NULL;
 	player[1] = NULL;
+	platform_objects.clear();
 
 	DebugOut(L"[INFO] Scene %d unloaded! \n", id);
 }
