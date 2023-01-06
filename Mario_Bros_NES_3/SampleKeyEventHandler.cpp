@@ -5,6 +5,7 @@
 
 #include "Mario.h"
 #include "PlayScene.h"
+#include "Control.h"
 
 void CSampleKeyHandler::OnKeyDown(int KeyCode)
 {
@@ -45,6 +46,14 @@ void CSampleKeyHandler::OnKeyDown(int KeyCode)
 		break;
 	case DIK_R: // reset
 		// Reload();
+		break;
+	case DIK_ESCAPE:
+		if (CControl::GetInstance()->IsPausing())
+			CControl::GetInstance()->InActiveControl(CONTROL_TYPE_PAUSE);
+		else
+			CControl::GetInstance()->ActiveControl(CONTROL_TYPE_PAUSE);
+		//DebugOut(L"ESC pressed\n");
+
 		break;
 	}
 }
