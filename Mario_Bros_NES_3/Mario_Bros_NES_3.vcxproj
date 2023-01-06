@@ -151,6 +151,9 @@
     <ClCompile Include="Bullet.cpp" />
     <ClCompile Include="Coin.cpp" />
     <ClCompile Include="Collision.cpp" />
+    <ClCompile Include="Control.cpp" />
+    <ClCompile Include="IntroKeyEventHandler.cpp" />
+    <ClCompile Include="IntroScene.cpp" />
     <ClCompile Include="Mario_WorldMap.cpp" />
     <ClCompile Include="PlatformAnimate.cpp" />
     <ClCompile Include="WorldMapKeyEventHandler.cpp" />
@@ -190,6 +193,9 @@
     <ClInclude Include="Bullet.h" />
     <ClInclude Include="Coin.h" />
     <ClInclude Include="Collision.h" />
+    <ClInclude Include="Control.h" />
+    <ClInclude Include="IntroKeyEventHandler.h" />
+    <ClInclude Include="IntroScene.h" />
     <ClInclude Include="Mario_WorldMap.h" />
     <ClInclude Include="PlatformAnimate.h" />
     <ClInclude Include="WorldMapKeyEventHandler.h" />
