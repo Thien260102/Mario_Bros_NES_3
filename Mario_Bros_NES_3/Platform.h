@@ -47,6 +47,8 @@ public:
 	void RenderBoundingBox();
 	
 	int GetType() { return _type; }
+
+	int GetSpriteIDBegin() { return spriteIdBegin; }
 };
 
 typedef CPlatform* LPPLATFORM;
