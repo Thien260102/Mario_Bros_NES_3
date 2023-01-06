@@ -13,6 +13,7 @@
 #include "Hud.h"
 #include "Timer.h"
 #include "Effect.h"
+#include "Control.h"
 
 #include "SampleKeyEventHandler.h"
 
@@ -273,6 +274,10 @@ void CPlayScene::Load()
 
 void CPlayScene::Update(DWORD dt)
 {
+	//Pausing
+	if (CControl::GetInstance()->IsPausing())
+		return;
+
 	// We know that Mario is the first object in the list hence we won't add him into the colliable object list
 	// TO-DO: This is a "dirty" way, need a more organized way 
 	CMario* mario = dynamic_cast<CMario*>(player);
@@ -353,6 +358,8 @@ void CPlayScene::Render()
 	
 	CHud::GetInstance()->Render();
 	CEffect::GetInstance()->Render();
+
+	CControl::GetInstance()->Render();
 }
 
 /*

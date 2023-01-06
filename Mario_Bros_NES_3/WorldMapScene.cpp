@@ -14,6 +14,7 @@
 #include "Hud.h"
 #include "PlatformAnimate.h"
 #include "Mario_WorldMap.h"
+#include "Control.h"
 
 #include "WorldMapKeyEventHandler.h"
 
@@ -247,6 +248,9 @@ void CWorldMapScene::Load()
 
 void CWorldMapScene::Update(DWORD dt)
 {
+	//PAUSING
+	if (CControl::GetInstance()->IsPausing())
+		return;
 	// We know that Mario is the first object in the list hence we won't add him into the colliable object list
 	// TO-DO: This is a "dirty" way, need a more organized way 
 	vector<LPGAMEOBJECT> coObjects;
@@ -274,6 +278,8 @@ void CWorldMapScene::Render()
 		objects[i]->Render();
 
 	CHud::GetInstance()->Render();
+
+	CControl::GetInstance()->Render();
 }
 
 /*
