@@ -83,7 +83,7 @@ void CMushroom::Render()
 			spriteId = ID_SPRITE_SUPERLEAF_LEFT;
 	}
 	CSprites::GetInstance()->Get(spriteId)->Draw(x, y);
-	RenderBoundingBox();
+	//RenderBoundingBox();
 }
 
 void CMushroom::OnNoCollision(DWORD dt)
