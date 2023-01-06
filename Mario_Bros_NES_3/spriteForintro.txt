@@ -1,0 +1,40 @@
+# id	left	top	right	bottom	texture_id
+[SPRITES]
+# start with 0
+#Stage (width: 255, height: 35)
+0	258	188	513	223	2
+#Black screen(width: 255, height: 186)
+1	258	0	513	186	2
+#Game Name (width: 178, height: 71)
+2	324	281	503	352	2
+#3 (width: 41, height: 41)
+3	194	362	235	403	2
+4	240	362	281	403	2
+5	287	362	328	403	2
+6	333	362	374	403	2
+#TM
+7	437	353	446	360	2
+
+#Curtain (width: 255, height: 15)
+10	258	226	513	241	2
+11	258	243	513	258	2
+12	258	260	513	273	2
+
+#Tree
+#Left (width: 63, height: 63)
+20	2	384	65	447	2
+#Right (width: 63, height: 95)
+21	68	352	131	447	2
+
+#Cloud
+#big (width: 31, height: 15)
+30	159	422	190	437	2
+#small (width: 15, height: 7)
+31	194	426	209	433	2
+
+#1 player game
+40	30	307	141	314	2
+
+# ani_id	sprite1_id	time1	sprite2_id	time2	...
+[ANIMATIONS]
+25000	3	200	4	200	5	200	6	200
