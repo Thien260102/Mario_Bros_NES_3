@@ -9,6 +9,7 @@
 #include "PlayScene.h"
 #include "Timer.h"
 #include "WorldMapScene.h"
+#include "IntroScene.h"
 
 CGame * CGame::__instance = NULL;
 
@@ -461,10 +462,17 @@ void CGame::_ParseSection_SCENES(string line)
 
 	LPSCENE scene;
 	
-	if (id == 2)
+	/*if (id == 2)
+		scene = new CWorldMapScene(id, path);
+	else
+		scene = new CPlayScene(id, path);*/
+	if(id == 1)
+		scene = new CIntroScene(id, path);
+	else if(id == 2)
 		scene = new CWorldMapScene(id, path);
 	else
 		scene = new CPlayScene(id, path);
+
 	scenes[id] = scene;
 }
 
@@ -520,7 +528,7 @@ void CGame::SwitchScene()
 	if (next_scene < 0 || next_scene == current_scene) return; 
 
 	DebugOut(L"[INFO] Switching to scene %d\n", next_scene);
-
+	
 	scenes[current_scene]->Unload();
 
 	CSprites::GetInstance()->Clear();
