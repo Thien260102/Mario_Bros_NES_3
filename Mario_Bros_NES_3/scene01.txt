@@ -19,22 +19,36 @@ spriteForintro.txt
 # type: 0 = Mario , 1 = Brick, 2 = Goomba, 3 = Koopas, 4 = coin, 5 = platform, 6 = platform animate, 8 = plant
 # See OBJECT_TYPE constants in AssetIDs.h 
 # MARIO
-0	60	49
+0	60	100
+0	100	100
 
 #Platform animate	aniOrsprite	type(1: blocking(default), 2: gate)	isAni(1: animation(default), 0: sprite)
-#Number 3
-#6	250	60	75300	1	0
-
+#Number3
 6	160	116	25000	1	1
-6	250	60	7	1	0
 
 #id	x	y	width	height	length	begin	middle	end	type(block: 10, normal: 20, nocollision: 30)
 #Platform
+#stage
 5	100	188	255	35	2	0	0	0	10
 
-5	127	17	255	15	2	12	12	12	10
-5	127	11	255	15	2	12	12	12	10
-5	127	5	255	15	2	12	12	12	10
+#Dynamic Curtain
+5	127	3	255	15	2	10	10	10	30
+5	127	19	255	15	2	10	10	10	30
+5	127	35	255	15	2	10	10	10	30
+5	127	51	255	15	2	10	10	10	30
+5	127	67	255	15	2	10	10	10	30
+5	127	83	255	15	2	10	10	10	30
+5	127	99	255	15	2	10	10	10	30
+5	127	115	255	15	2	10	10	10	30
+5	127	131	255	15	2	10	10	10	30
+5	127	147	255	15	2	10	10	10	30
+5	127	163	255	15	2	11	11	11	30
+
+
+# Static Curtain 
+5	127	17	255	15	2	12	12	12	30
+5	127	11	255	15	2	12	12	12	30
+5	127	5	255	15	2	12	12	12	30
 
 #Tree
 5	32	140	63	63	1	20	20	20	30
@@ -49,6 +63,8 @@ spriteForintro.txt
 #Game Name
 5	155	60	178	71	1	2	2	2	10
 
+#Symbol TM
+5	250	60	7	1	1	7	7	7	10
 
 #Portal	l	t	r	b	sceneid	type
-50	500	500	600	600	2	2
+50	0	-100	0	0	2	2
