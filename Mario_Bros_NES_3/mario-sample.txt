@@ -1,10 +1,10 @@
 [SETTINGS]
-start	2
+start	1
 width	320
 height	240
 
 #id	type	file
-# type: 0: intro, 1: play scene, 2: world map scene
+# type: 1: intro, 5: play scene, 2: world map scene
 [SCENES]
 0	intro.txt
 1	scene01.txt
@@ -16,6 +16,7 @@ height	240
 -100	textures\bbox.png
 0	textures\mario.png
 1	textures\mario2.png
+2	textures\intro.png
 #10	textures\enemies.png
 11	textures\enemies2_nobg.png
 20	textures\misc.png
