@@ -1109,14 +1109,7 @@ void CMario::GetBoundingBox(float& left, float& top, float& right, float& bottom
 
 void CMario::SetLevel(int l)
 {
-	old_level = level;// for IntroMap
-	// Adjust position to avoid falling off platform
-	/*if (this->level == MARIO_LEVEL_SMALL)
-	{
-		y -= (MARIO_BIG_BBOX_HEIGHT - MARIO_SMALL_BBOX_HEIGHT) / 2;
-	}
-	else 
-		y -= (MARIO_RACCOON_BBOX_HEIGHT - MARIO_BIG_BBOX_HEIGHT);*/
+	old_level = level;
 
 	switch (this->level)
 	{
@@ -1141,7 +1134,7 @@ void CMario::SetLevel(int l)
 		break;
 	}
 
-	if (dynamic_cast<LPPLAYSCENE>(CGame::GetInstance()->GetCurrentScene()))
-		CHud::GetInstance()->SaveLevel(level);
+
+	CHud::GetInstance()->SaveLevel(l);
 	level = l;
 }
