@@ -283,7 +283,8 @@ void CIntroScene::Update(DWORD dt)
 	}
 	//objects[0]->Update(dt, &coObjects);
 	player[0]->Update(dt, &coObjects);
-	
+	player[1]->Update(dt, &coObjects);
+
 	//Curtain flying
 	if (flag == CURTAIN_FLYING)
 	{
