@@ -44,13 +44,17 @@ void CMushroom::Update(DWORD dt, vector<LPGAMEOBJECT>* coObjects)
 
 			IsDiversion();
 			vy = ay * dt;
-			if ((LPPLAYSCENE)CGame::GetInstance()->GetCurrentScene())
+
+			vector<LPGAMEOBJECT> object;
+			if (dynamic_cast<LPPLAYSCENE>(CGame::GetInstance()->GetCurrentScene()))
 			{
 				CMario* mario = (CMario*)((LPPLAYSCENE)CGame::GetInstance()->GetCurrentScene())->GetPlayer();
-				vector<LPGAMEOBJECT> object;
 				object.push_back(mario);
 				CCollision::GetInstance()->Process(this, dt, &object);
+
 			}
+			else
+				CCollision::GetInstance()->Process(this, dt, &object);
 			return;
 		}
 
