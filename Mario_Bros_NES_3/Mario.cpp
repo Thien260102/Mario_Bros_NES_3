@@ -262,6 +262,13 @@ void CMario::OnCollisionWithKoopas(LPCOLLISIONEVENT e)
 		{
 			koopas->SetState(KOOPAS_STATE_SHELL);
 		}
+		else if (koopas->GetState() == KOOPAS_STATE_ATTACKING)
+		{
+			koopas->SetState(KOOPAS_STATE_SHELL);
+			float kx, ky;
+			koopas->GetPosition(kx, ky);
+			koopas->SetPosition(kx, ky - 5);
+		}
 		else if (koopas->GetLevel() == KOOPAS_LEVEL_WING)
 		{
 			koopas->SetLevel(KOOPAS_LEVEL_NORMAL);
@@ -1115,7 +1122,7 @@ void CMario::SetLevel(int l)
 	{
 	case MARIO_LEVEL_SMALL:
 		SetTransform_start();
-		y -= (MARIO_BIG_BBOX_HEIGHT - MARIO_SMALL_BBOX_HEIGHT) / 2;
+		y -= (MARIO_RACCOON_BBOX_HEIGHT - MARIO_SMALL_BBOX_HEIGHT) / 2;
 
 		break;
 
