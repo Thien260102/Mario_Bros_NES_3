@@ -138,12 +138,18 @@
 #mushroom
 65310	1	157	16	172	22
 65311	18	157	33	172	22
+#on HUD
+65312	278	394	293	409	25
 #flower
 65320	1	175	16	190	22
 65321	18	175	33	190	22
+#on HUD
+65322	260	394	275	409	25
 #star
 65330	1	193	16	208	22
 65331	18	193	33	208	22
+#on HUD
+65332	296	394	311	409	25
 
 #EFFECT
 #Mario's tail has attacked enemies
@@ -155,6 +161,9 @@
 65411	18	14	33	29	22
 65412	35	14	50	29	22
 65413	52	14	67	29	22
+
+#Goal (Course Clear ! You Got A Card )
+65500	4	348	251	421	25
 
 # ani_id 	sprite1_id	time1	sprite2_id	time2	...
 [ANIMATIONS]
