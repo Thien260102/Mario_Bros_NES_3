@@ -18,11 +18,17 @@
 
 #define PORTAL_TYPE_PLAYSCENE_TO_ANOTHER 1
 #define PORTAL_TYPE_ANOTHER_TO_PLAYSCENE 2
+
+#define GOAL_WIDTH	247
+#define GOAL_HEIGHT	73
 /*
 	Object that triggers scene switching
 */
 class CPortal : public CGameObject
 {
+	float goal_x;
+	float goal_y;
+
 	int scene_id;	// target scene to switch to 
 	int _type;
 
@@ -53,11 +59,11 @@ public:
 		switch (giftType)
 		{
 		case GIFT_TYPE_MUSHROOM:
-			return ID_SPRITE_GIFT_MUSHROOM;
+			return ID_SPRITE_GIFT_MUSHROOM_ONHUD;
 		case GIFT_TYPE_FLOWER:
-			return ID_SPRITE_GIFT_FLOWER;
+			return ID_SPRITE_GIFT_FLOWER_ONHUD;
 		default:
-			return ID_SPRITE_GIFT_STAR;
+			return ID_SPRITE_GIFT_STAR_ONHUD;
 		}
 	}
 };
