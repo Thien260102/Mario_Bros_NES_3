@@ -92,7 +92,7 @@ void CKoopas::OnCollisionWith(LPCOLLISIONEVENT e)
 			if (dynamic_cast<CPlatform*>(e->obj)->GetType() == PLATFORM_TYPE_BLOCK)
 			{
 				vx = -vx;
-
+				DebugOut(L"Koopas Collision with platform block \n");
 				float p_vx, p_vy;
 				phaseChecker->GetSpeed(p_vx, p_vy);
 
@@ -120,10 +120,12 @@ void CKoopas::OnCollisionWith(LPCOLLISIONEVENT e)
 	// phaseCheck is falling ?
 	float px, py;
 	phaseChecker->GetPosition(px, py);
-	if (py - this->y > 10 && level != KOOPAS_LEVEL_WING && state != KOOPAS_STATE_SHELL) // Wing Koopas don't need to solve phaseChecker.
+	if (py - this->y > 10 && level != KOOPAS_LEVEL_WING 
+		&& state != KOOPAS_STATE_SHELL
+		&& state != KOOPAS_STATE_ATTACKING) // Wing Koopas don't need to solve phaseChecker.
 	{
 		vx = -vx;
-
+		
 		if (px <= this->x)
 			phaseChecker->SetPosition(x + KOOPAS_BBOX_WIDTH, y);
 		else
