@@ -1,7 +1,7 @@
 # SE102 INTRODUCTION TO GAME DEVELOPMENT
 ## I almost done Super Mario Bros 3 (only include: Intro scene, WorldMap scene and Map 1.1 scene) 
-base on my lecturer's framework (https://github.com/dungdna2000/gamedev-intro-tutorials/). 
-I still fix some bug and will complete it.
+## base on my lecturer's framework (https://github.com/dungdna2000/gamedev-intro-tutorials/). 
+## I still fix some bug and will complete it.
 
 #### Keyboard
 ##### Intro scene
