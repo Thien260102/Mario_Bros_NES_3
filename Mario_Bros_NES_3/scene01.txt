@@ -20,7 +20,7 @@ spriteForintro.txt
 # See OBJECT_TYPE constants in AssetIDs.h 
 # MARIO
 0	60	100
-0	100	100
+0	260	100
 
 #Platform animate	aniOrsprite	type(1: blocking(default), 2: gate)	isAni(1: animation(default), 0: sprite)
 #Number3
