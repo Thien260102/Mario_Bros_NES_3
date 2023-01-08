@@ -15,6 +15,9 @@
 #include "PlatformAnimate.h"
 #include "Mario.h"
 #include "Control.h"
+#include "Mushroom.h"
+#include "Goomba.h"
+#include "Koopas.h"
 
 #include "IntroKeyEventHandler.h"
 
@@ -277,13 +280,17 @@ void CIntroScene::Update(DWORD dt)
 	// We know that Mario is the first object in the list hence we won't add him into the colliable object list
 	// TO-DO: This is a "dirty" way, need a more organized way 
 	vector<LPGAMEOBJECT> coObjects;
-	for (size_t i = 0; i < platform_objects.size(); i++)
+	for (size_t i = 2; i < objects.size(); i++)
 	{
-		coObjects.push_back(platform_objects[i]);
+		coObjects.push_back(objects[i]);
 	}
 	//objects[0]->Update(dt, &coObjects);
-	player[0]->Update(dt, &coObjects);
-	player[1]->Update(dt, &coObjects);
+	//player[0]->Update(dt, &coObjects);
+	//player[1]->Update(dt, &coObjects);
+	for (size_t i = 0; i < objects.size(); i++)
+	{
+		objects[i]->Update(dt, &coObjects);
+	}
 
 	//Curtain flying
 	if (flag == CURTAIN_FLYING)
@@ -332,6 +339,19 @@ void CIntroScene::Update(DWORD dt)
 					Number3->SetPosition(number3_x, Number3original_y);
 
 					CControl::GetInstance()->ActiveControl(CONTROL_TYPE_MODE);
+
+					CGameObject* obj = new CGoomba(number3_x - 10, number3_y, GOOMBA_TYPE_NORMAL);
+					objects.push_back(obj);
+
+					obj = new CKoopas(number3_x, number3_y, KOOPAS_TYPE_GREEN, 1);
+					obj->SetState(KOOPAS_STATE_SHELL);
+					objects.push_back(obj);
+
+					obj = new CMushroom(number3_x, number3_y, MUSHROOM_TYPE_SUPER);
+					objects.push_back(obj);
+
+					obj = new CMushroom(number3_x, number3_y, MUSHROOM_TYPE_SUPER_LEAF);
+					objects.push_back(obj);
 				}
 				else
 				{
