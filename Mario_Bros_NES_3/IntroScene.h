@@ -45,7 +45,7 @@ public:
 	virtual void Render();
 	virtual void Unload();
 
-	LPGAMEOBJECT GetPlayer(int i) { if (i < 2 && i >= 0) return player[i];  return NULL; }
+	LPGAMEOBJECT GetPlayer(int i = 0) { if (i < 2 && i >= 0) return player[i];  return NULL; }
 
 	CPortal* GetPortal() { return portal; }
 
