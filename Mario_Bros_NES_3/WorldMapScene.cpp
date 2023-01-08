@@ -258,7 +258,7 @@ void CWorldMapScene::Update(DWORD dt)
 	{
 		coObjects.push_back(objects[i]);
 	}
-	objects[0]->Update(dt, &coObjects);
+	player->Update(dt, &coObjects);
 
 	
 
