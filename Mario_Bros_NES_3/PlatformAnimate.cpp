@@ -6,6 +6,7 @@ void CPlatformAnimate::Render()
 		CAnimations::GetInstance()->Get(aniOrsprite)->Render(x, y);
 	else
 		CSprites::GetInstance()->Get(aniOrsprite)->Draw(x, y);
+	//RenderBoundingBox();
 }
 
 void CPlatformAnimate::GetBoundingBox(float& l, float& t, float& r, float& b)

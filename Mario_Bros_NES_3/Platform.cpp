@@ -43,8 +43,8 @@ void CPlatform::Render()
 	}
 	if (length>1)
 		s->Get(this->spriteIdEnd)->Draw(xx, y);
-
-	//RenderBoundingBox();
+	/*if(_type == PLATFORM_TYPE_BLOCK)
+		RenderBoundingBox();*/
 }
 
 void CPlatform::GetBoundingBox(float& l, float& t, float& r, float& b)
