@@ -24,3 +24,4 @@ height	240
 22	textures\effects.png
 23	textures\hud_font.png
 24	textures\worldmap.png
+25	textures\goal.png
