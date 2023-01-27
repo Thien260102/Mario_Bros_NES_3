@@ -59,5 +59,13 @@ public:
 	void Render();
 	int IsBlocking() { return 1; }
 	int IsCollidable() { return 1; }
+
+	int IsMoving()
+	{
+		if (vx != 0 || vy != 0 || crossing_start != 0)
+			return 1;
+		
+		return 0;
+	}
 };
 
