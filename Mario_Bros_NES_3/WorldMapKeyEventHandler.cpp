@@ -48,22 +48,22 @@ void CWorldMapKeyEventHandler::KeyState(BYTE* states)
 	CMario_WorldMap* mario = (CMario_WorldMap*)((LPWORLDMAPSCENE)CGame::GetInstance()->GetCurrentScene())->GetPlayer();
 	LPGAME game = CGame::GetInstance();
 
-	float vx, vy;
-	mario->GetSpeed(vx, vy);
+	if (mario->IsMoving())
+		return;
 
-	if (game->IsKeyDown(DIK_RIGHT) && vy == 0 && vx == 0)
+	if (game->IsKeyDown(DIK_RIGHT))
 	{
 		mario->SetState(MARIO_WM_STATE_WALKING_RIGHT);
 	}
-	else if (game->IsKeyDown(DIK_LEFT) && vy == 0 && vx == 0)
+	else if (game->IsKeyDown(DIK_LEFT))
 	{
 		mario->SetState(MARIO_WM_STATE_WALKING_LEFT);
 	}
-	else if (game->IsKeyDown(DIK_UP) && vy == 0 && vx == 0)
+	else if (game->IsKeyDown(DIK_UP))
 	{
 		mario->SetState(MARIO_WM_STATE_WALKING_UP);
 	}
-	else if (game->IsKeyDown(DIK_DOWN) && vy == 0 && vx == 0)
+	else if (game->IsKeyDown(DIK_DOWN))
 	{
 		mario->SetState(MARIO_WM_STATE_WALKING_DOWN);
 	}
