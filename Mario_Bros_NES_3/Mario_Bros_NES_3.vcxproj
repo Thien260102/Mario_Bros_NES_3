@@ -154,6 +154,7 @@
     <ClCompile Include="Control.cpp" />
     <ClCompile Include="IntroKeyEventHandler.cpp" />
     <ClCompile Include="IntroScene.cpp" />
+    <ClCompile Include="InvisibleObject.cpp" />
     <ClCompile Include="Mario_WorldMap.cpp" />
     <ClCompile Include="PlatformAnimate.cpp" />
     <ClCompile Include="WorldMapKeyEventHandler.cpp" />
@@ -196,6 +197,7 @@
     <ClInclude Include="Control.h" />
     <ClInclude Include="IntroKeyEventHandler.h" />
     <ClInclude Include="IntroScene.h" />
+    <ClInclude Include="InvisibleObject.h" />
     <ClInclude Include="Mario_WorldMap.h" />
     <ClInclude Include="PlatformAnimate.h" />
     <ClInclude Include="WorldMapKeyEventHandler.h" />
