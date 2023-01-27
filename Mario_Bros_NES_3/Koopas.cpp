@@ -5,6 +5,7 @@
 #include "Brick.h"
 #include "Plant.h"
 #include "Platform.h"
+#include "PlayScene.h"
 
 CKoopas::CKoopas(float x, float y, int type, int l) :CGameObject(x, y)
 {
@@ -288,6 +289,17 @@ void CKoopas::OnCollisionWithPlant(LPCOLLISIONEVENT e)
 
 void CKoopas::Update(DWORD dt, vector<LPGAMEOBJECT>* coObjects)
 {
+	if (level == KOOPAS_LEVEL_WING)
+	{
+		if (((LPPLAYSCENE)(CGame::GetInstance()->GetCurrentScene())))
+		{
+			CInvisibleObject* invisibleObject = ((LPPLAYSCENE)(CGame::GetInstance()->GetCurrentScene()))->GetInvisibleObject();
+			if (invisibleObject != NULL
+				&& invisibleObject->IsActived() == false)
+				return;
+		}
+	}
+
 	if (deflection_start != 0 && vy == 0)
 	{
 		deflection_start = 0;
