@@ -109,6 +109,9 @@ spriteForintro.txt
 10	2265	90	2951	240	0
 10	3175	240	2330	347	1
 
+#Invisible object
+40	1170	400
+
 #Portal l	t	r	b	sceneid	type
 50	2683	330	2706	354	2	1
 
