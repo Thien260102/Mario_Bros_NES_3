@@ -15,6 +15,7 @@
 #include "PSwitch.h"
 #include "Effect.h"
 #include "PlayScene.h"
+#include "InvisibleObject.h"
 
 #include "Collision.h"
 
@@ -209,9 +210,9 @@ void CMario::OnCollisionWith(LPCOLLISIONEVENT e)
 		}
 	}
 	else if (dynamic_cast<CPSwitch*>(e->obj))
-	{
 		dynamic_cast<CPSwitch*>(e->obj)->IsActive();
-	}
+	else if (dynamic_cast<CInvisibleObject*>(e->obj))
+		dynamic_cast<CInvisibleObject*>(e->obj)->Activating();
 	
 }
 
