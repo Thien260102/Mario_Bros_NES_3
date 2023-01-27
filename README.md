@@ -49,3 +49,5 @@
 ### - Tool, photosop:
 ####    + https://ezgif.com/sprite-cutter
 ####    + https://photoshoponline.1doi1.com/
+
+## DEMO: https://www.youtube.com/watch?v=Vv8wRd4QbTg
