@@ -9,6 +9,7 @@
 #include "Mushroom.h"
 #include "Koopas.h"
 #include "Plant.h"
+#include "InvisibleObject.h"
 
 ////use only for map 1.1////
 #define CAMERA_POSITION_MIN_Y 0
@@ -24,6 +25,9 @@ protected:
 	// A play scene has to have player, right? 
 	LPGAMEOBJECT player;					
 	
+	// InvisibleObject
+	CInvisibleObject* invisible;
+
 	vector<LPGAMEOBJECT> objects;
 	
 	void _ParseSection_SPRITES(string line);
@@ -43,6 +47,8 @@ public:
 	virtual void Unload();
 
 	LPGAMEOBJECT GetPlayer() { return player; }
+
+	CInvisibleObject* GetInvisibleObject() { return invisible; }
 
 	vector<LPGAMEOBJECT>& GetObjects() { return objects; }
 
