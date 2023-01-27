@@ -20,6 +20,7 @@
 #define OBJECT_TYPE_PLANT 8
 #define OBJECT_TYPE_TELEPORT 10
 
+#define OBJECT_TYPE_INVISIBLE 40
 #define OBJECT_TYPE_PORTAL	50
 
 #pragma region Intro
