@@ -145,6 +145,7 @@ void CMario_WorldMap::Render()
 
 void CMario_WorldMap::SetState(int State)
 {
+	DebugOut(L"Mario_World map SetState");
 	state = State;
 	switch (state)
 	{

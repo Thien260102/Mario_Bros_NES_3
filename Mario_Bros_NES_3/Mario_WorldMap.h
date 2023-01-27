@@ -62,7 +62,7 @@ public:
 
 	int IsMoving()
 	{
-		if (vx != 0 || vy != 0 || crossing_start != 0)
+		if (vx != 0 || vy != 0)
 			return 1;
 		
 		return 0;
