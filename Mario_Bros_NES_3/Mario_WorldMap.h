@@ -18,6 +18,7 @@
 #define MARIO_BBOX_HEIGHT 15
 
 #define MARIO_CROSSING_RANGE 15
+#define MARIO_CROSSING_TIME 200
 
 class CMario_WorldMap :public CGameObject
 {
@@ -62,7 +63,7 @@ public:
 
 	int IsMoving()
 	{
-		if (vx != 0 || vy != 0)
+		if (vx != 0 || vy != 0 || crossing_start != 0 || absolutely_touching == 1)
 			return 1;
 		
 		return 0;

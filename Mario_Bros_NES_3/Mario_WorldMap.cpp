@@ -78,6 +78,9 @@ void CMario_WorldMap::Update(DWORD dt, vector<LPGAMEOBJECT>* coObjects)
 		}
 	}
 
+	if (crossing_start && GetTickCount64() - crossing_start > MARIO_CROSSING_TIME)
+		crossing_start = 0;
+
 	CCollision::GetInstance()->Process(this, dt, coObjects);
 }
 
