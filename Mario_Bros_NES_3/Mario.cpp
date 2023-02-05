@@ -213,7 +213,15 @@ void CMario::OnCollisionWith(LPCOLLISIONEVENT e)
 		dynamic_cast<CPSwitch*>(e->obj)->IsActive();
 	else if (dynamic_cast<CInvisibleObject*>(e->obj))
 		dynamic_cast<CInvisibleObject*>(e->obj)->Activating();
-	
+	else if (dynamic_cast<CMario*>(e->obj) && e->ny < 0)
+	{
+		vy = -0.6f;
+
+		float ex, ey;
+		e->obj->GetPosition(ex, ey);
+		e->obj->SetPosition(ex, ey - 1);
+		e->obj->SetState(MARIO_STATE_SIT);
+	}
 }
 
 void CMario::OnCollisionWithKoopas(LPCOLLISIONEVENT e)
