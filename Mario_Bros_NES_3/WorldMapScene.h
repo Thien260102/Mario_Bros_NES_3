@@ -4,6 +4,7 @@
 #include "Textures.h"
 #include "GameObject.h"
 
+#define ADJUST_Y 14.0f
 #define DEFAULT_CAMERA_WORLDMAP_POSITION 0
 
 class CWorldMapScene :public CScene
