@@ -319,4 +319,6 @@ public:
 
 	void SetcanGetIntoPipe(int var) { canGetIntoPipe = var; } // to determine DIK_UP(OnKeyDown or OnKeyUp) to get into pipe
 	int IsCanGetIntoPipe() { return canGetIntoPipe; }
+
+	void SetMaxVx(float v) { maxVx = v; }
 };
