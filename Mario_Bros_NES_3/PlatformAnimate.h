@@ -6,6 +6,7 @@
 
 #define PLATFORM_ANIMATE_TYPE_BLOCK 1 //Blocking
 #define PLATFORM_ANIMATE_TYPE_GATE	2 //can crossed by Mario
+#define PLATFORM_ANIMATE_TYPE_NO_COLLISION	3
 
 class CPlatformAnimate : public CGameObject
 {
@@ -14,7 +15,7 @@ protected:
 	int _type;
 	int isAni; // 1: animation, 0: sprite
 
-	virtual int IsBlocking() { return 1; }
+	virtual int IsBlocking() { return _type != PLATFORM_ANIMATE_TYPE_NO_COLLISION; }
 public:
 	CPlatformAnimate(float x, float y, int AniOrSprite, int type = 1, int IsAni = 1) : CGameObject(x, y)
 	{
