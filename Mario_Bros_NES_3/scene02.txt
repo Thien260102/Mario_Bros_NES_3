@@ -15,6 +15,9 @@ spriteForintro.txt
 # MARIO
 0	60	49
 
+# Enemy
+11	171	113	30
+
 #Platform animate	aniOrsprite	type(1: blocking(default), 2: gate)	isAni(1: animation(default), 0: sprite)
 6	44	17	20000	1	1
 6	60	17	20000	1	1
@@ -140,6 +143,7 @@ spriteForintro.txt
 6	92	81	80032	2	0
 6	92	113	80032	2	0
 6	156	113	80032	2	0
+6	186	113	80032	2	0
 6	124	146	80032	2	0
 #5	92	49	16	15	1	80032	80032	80032	10
 #5	124	17	16	15	1	80032	80032	80032	10
