@@ -13,46 +13,52 @@ pswitch.txt
 hud.txt
 worldmap.txt
 spriteForintro.txt
-# horizontal: x3, vertical: x4
+
 [OBJECTS]
 # type	x	y	extra_settings per object type
 # type: 0 = Mario , 1 = Brick, 2 = Goomba, 3 = Koopas, 4 = coin, 5 = platform, 6 = platform animate, 8 = plant
 # See OBJECT_TYPE constants in AssetIDs.h 
 # MARIO
-0	60	100
-0	260	100
+0	7.5	100
+0	290	100
 
-#Platform animate	aniOrsprite	type(1: blocking(default), 2: gate)	isAni(1: animation(default), 0: sprite)
+#Platform animate	aniOrsprite	type(1: blocking(default), 2: gate, 3: no collision)	isAni(1: animation(default), 0: sprite)
 #Number3
-6	160	116	25000	1	1
+6	160	116	25000	3	1
 
 #id	x	y	width	height	length	begin	middle	end	type(block: 10, normal: 20, nocollision: 30)
 #Platform
 #stage
-5	100	188	255	35	2	0	0	0	10
+5	50	220	255	35	3	0	0	0	10
+
+#black screen
+5	127	90	255	186	2	1	1	1	30
+5	127	160	255	186	2	1	1	1	30
 
 #Dynamic Curtain
-5	127	3	255	15	2	10	10	10	30
-5	127	19	255	15	2	10	10	10	30
-5	127	35	255	15	2	10	10	10	30
-5	127	51	255	15	2	10	10	10	30
-5	127	67	255	15	2	10	10	10	30
-5	127	83	255	15	2	10	10	10	30
-5	127	99	255	15	2	10	10	10	30
-5	127	115	255	15	2	10	10	10	30
-5	127	131	255	15	2	10	10	10	30
-5	127	147	255	15	2	10	10	10	30
-5	127	163	255	15	2	11	11	11	30
+5	129	3	255	15	2	10	10	10	30
+5	129	19	255	15	2	10	10	10	30
+5	129	35	255	15	2	10	10	10	30
+5	129	51	255	15	2	10	10	10	30
+5	129	67	255	15	2	10	10	10	30
+5	129	83	255	15	2	10	10	10	30
+5	129	99	255	15	2	10	10	10	30
+5	129	115	255	15	2	10	10	10	30
+5	129	131	255	15	2	10	10	10	30
+5	129	147	255	15	2	10	10	10	30
+5	129	163	255	15	2	10	10	10	30
 
+5	129	179	255	15	2	10	10	10	30
+5	129	195	255	15	2	11	11	11	30
 
 # Static Curtain 
-5	127	17	255	15	2	12	12	12	30
-5	127	11	255	15	2	12	12	12	30
-5	127	5	255	15	2	12	12	12	30
+5	128	17	255	15	2	12	12	12	30
+5	128	11	255	15	2	12	12	12	30
+5	128	5	255	15	2	12	12	12	30
 
 #Tree
-5	32	140	63	63	1	20	20	20	30
-5	274	122	63	95	1	21	21	21	30
+5	32	171	63	63	1	20	20	20	30
+5	274	155	63	95	1	21	21	21	30
 
 #Cloud
 5	250	30	31	15	1	30	30	30	30
