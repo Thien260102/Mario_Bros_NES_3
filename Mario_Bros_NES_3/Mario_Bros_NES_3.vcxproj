@@ -152,6 +152,7 @@
     <ClCompile Include="Coin.cpp" />
     <ClCompile Include="Collision.cpp" />
     <ClCompile Include="Control.cpp" />
+    <ClCompile Include="Enemy_WorldMap.cpp" />
     <ClCompile Include="IntroKeyEventHandler.cpp" />
     <ClCompile Include="IntroScene.cpp" />
     <ClCompile Include="InvisibleObject.cpp" />
@@ -195,6 +196,7 @@
     <ClInclude Include="Coin.h" />
     <ClInclude Include="Collision.h" />
     <ClInclude Include="Control.h" />
+    <ClInclude Include="Enemy_WorldMap.h" />
     <ClInclude Include="IntroKeyEventHandler.h" />
     <ClInclude Include="IntroScene.h" />
     <ClInclude Include="InvisibleObject.h" />
