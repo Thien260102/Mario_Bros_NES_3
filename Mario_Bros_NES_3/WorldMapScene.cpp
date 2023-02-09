@@ -15,6 +15,7 @@
 #include "PlatformAnimate.h"
 #include "Mario_WorldMap.h"
 #include "Control.h"
+#include "Enemy_WorldMap.h"
 
 #include "WorldMapKeyEventHandler.h"
 
@@ -123,6 +124,13 @@ void CWorldMapScene::_ParseSection_OBJECTS(string line)
 
 		DebugOut(L"[INFO] Player object has been created!\n");
 		break;
+
+	case OBJECT_TYPE_ENEMY_WORLDMAP:
+	{
+		float range = atof(tokens[3].c_str());
+		obj = new CEnemy_WorldMap(x, y, range);
+		break;
+	}
 
 	case OBJECT_TYPE_PLATFORM_ANIMATE:
 	{
@@ -260,6 +268,7 @@ void CWorldMapScene::Update(DWORD dt)
 		coObjects.push_back(objects[i]);
 	}
 	player->Update(dt, &coObjects);
+	objects[1]->Update(dt, &coObjects);
 
 	
 
