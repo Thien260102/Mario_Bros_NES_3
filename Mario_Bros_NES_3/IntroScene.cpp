@@ -13,11 +13,7 @@
 #include "TeleportGate.h"
 #include "Hud.h"
 #include "PlatformAnimate.h"
-#include "Mario.h"
 #include "Control.h"
-#include "Mushroom.h"
-#include "Goomba.h"
-#include "Koopas.h"
 
 #include "IntroKeyEventHandler.h"
 
@@ -123,6 +119,7 @@ void CIntroScene::_ParseSection_OBJECTS(string line)
 			return;
 		}
 		obj = new CMario(x, y);
+		obj->SetState(MARIO_STATE_IDLE);
 		if (player[0] == NULL)
 		{
 			player[0] = (CMario*)obj;
@@ -268,134 +265,114 @@ void CIntroScene::Load()
 
 	f.close();
 	flag = CURTAIN_FLYING;
-	curtainFlying_start = GetTickCount64();
+	time_start = GetTickCount64();
 	DebugOut(L"[INFO] Done loading scene  %s\n", sceneFilePath);
 }
 
 void CIntroScene::Update(DWORD dt)
 {
+	//this make intro exactly
+	if (MarioWalking_start != 0)
+		MarioWalking_start += (dt - 15);
+	if (time_start != 0)
+		time_start += (dt - 15);
+	dt = 15;
+
 	//PAUSING
 	if (CControl::GetInstance()->IsPausing())
+	{
+		time_start += dt;
 		return;
+	}
 	// We know that Mario is the first object in the list hence we won't add him into the colliable object list
 	// TO-DO: This is a "dirty" way, need a more organized way 
-	vector<LPGAMEOBJECT> coObjects;
-	for (size_t i = 2; i < objects.size(); i++)
+	if (!((CMario*)player[1])->IsTransforming())
 	{
-		coObjects.push_back(objects[i]);
-	}
-	//objects[0]->Update(dt, &coObjects);
-	//player[0]->Update(dt, &coObjects);
-	//player[1]->Update(dt, &coObjects);
-	for (size_t i = 0; i < objects.size(); i++)
-	{
-		objects[i]->Update(dt, &coObjects);
-	}
 
-	//Curtain flying
-	if (flag == CURTAIN_FLYING)
-	{
-		float number3_x, number3_y;
-		Number3->GetPosition(number3_x, number3_y);
-		Number3->SetPosition(number3_x, number3_y - 0.1f * dt);
-
-		for (int i = 1; i < platform_objects.size(); i++)
+		vector<LPGAMEOBJECT> coObjects;
+		for (size_t i = 0; i < platform_objects.size(); i++)
 		{
-			int id = platform_objects[i]->GetSpriteIDBegin();
-			float x, y;
-			platform_objects[i]->GetPosition(x, y);
-			if (1)//(id == ID_SPRITE_CURTAIN_1 || id == ID_SPRITE_CURTAIN_2))
-			{
-				if (GetTickCount64() - curtainFlying_start > CURTAIN_FLYING_TIME)
-				{
-					flag = GAMENAME_DOWING;
-					curtainFlying_start = 0;
-				}
-				else
-				{
-					platform_objects[i]->SetPosition(x, y - 0.1f * dt);
-				}
-			}
+			coObjects.push_back(objects[i]);
 		}
-	}
-	else if (flag == GAMENAME_DOWING)
-	{
-		float number3_x, number3_y;
-		Number3->GetPosition(number3_x, number3_y);
-		Number3->SetPosition(number3_x, number3_y + 0.1f * dt);
 
-		for (int i = 1; i < platform_objects.size(); i++)
+		for (int i = 0; i < ItemsAndEnemies.size(); i++)
+			coObjects.push_back(ItemsAndEnemies[i]);
+
+		//objects[0]->Update(dt, &coObjects);
+		player[0]->Update(dt, &coObjects);
+		player[1]->Update(dt, &coObjects);
+		/*for (size_t i = 2; i < objects.size(); i++)
 		{
-			int id = platform_objects[i]->GetSpriteIDBegin();
-			float x, y;
-			platform_objects[i]->GetPosition(x, y);
-			if (!(id == ID_SPRITE_CURTAIN_1 || id == ID_SPRITE_CURTAIN_2))
-			{
-				if (Number3original_y <= number3_y)
-				{
-					flag = 0;
-					float adjust = (Number3original_y - number3_y);
-					platform_objects[i]->SetPosition(x, y - adjust);
-					Number3->SetPosition(number3_x, Number3original_y);
+			objects[i]->Update(dt, &coObjects);
+		}*/
+		for (int i = 0; i < ItemsAndEnemies.size(); i++)
+			ItemsAndEnemies[i]->Update(dt, &coObjects);
 
-					CControl::GetInstance()->ActiveControl(CONTROL_TYPE_MODE);
+		//Introduction of Super Mario Bros 3
+		Action(dt);
 
-					CGameObject* obj = new CGoomba(number3_x - 10, number3_y, GOOMBA_TYPE_NORMAL);
-					objects.push_back(obj);
-
-					obj = new CKoopas(number3_x, number3_y, KOOPAS_TYPE_GREEN, 1);
-					obj->SetState(KOOPAS_STATE_SHELL);
-					objects.push_back(obj);
-
-					obj = new CMushroom(number3_x, number3_y, MUSHROOM_TYPE_SUPER);
-					objects.push_back(obj);
-
-					obj = new CMushroom(number3_x, number3_y, MUSHROOM_TYPE_SUPER_LEAF);
-					objects.push_back(obj);
-				}
-				else
-				{
-					platform_objects[i]->SetPosition(x, y + 0.1f * dt);
-				}
-			}
-		}
 	}
 
-	// Lugi jump on Mario and touch sky
-	//float mx, my;
-	//player[0]->GetPosition(mx, my);
-	//if (my < 0)
-	//{
-		//flag = GAMENAME_DOWING;
-	//}
-	
 
-	float cx, cy;
-	cx = 0;
-	cy = 0;
+	//CGame::GetInstance()->SetCamPos(0, 0);
 
-	CGame::GetInstance()->SetCamPos(cx, cy);
-	//DebugOutTitle(L"cx: %f\n", cx);
+	//Deleting objects out of Screen
+	float x, y;
+	int Screen_Height = CGame::GetInstance()->GetBackBufferHeight();
+	int Screen_Width = CGame::GetInstance()->GetBackBufferWidth();
+	for (auto e : ItemsAndEnemies)
+	{
+		e->GetPosition(x, y);
+		if (y > Screen_Height + 20 || x < -100 || x > Screen_Width + 70)
+			e->Delete();
+	}
+
 	PurgeDeletedObjects();
 }
 
 void CIntroScene::Render()
 {
-	for (int i = objects.size() - 1; i >= 0; i--)
-		objects[i]->Render();
+	//for (int i = objects.size() - 1; i >= 0; i--)
+		//objects[i]->Render();
 
-	player[0]->Render();
-	player[1]->Render();
+
+	if (flag == CURTAIN_FLYING)
+	{
+		player[0]->Render();
+		player[1]->Render();
+		platform_objects[1]->Render();
+		platform_objects[2]->Render();
+	}
+	
+	for (int i = platform_objects.size() - 1; i > 2; i--)
+	{
+		//int id = platform_objects[i]->GetSpriteIDBegin();
+		//if((id == ID_SPRITE_CURTAIN_1 || id == ID_SPRITE_CURTAIN_2))
+		platform_objects[i]->Render();
+	}
+
+	if (MarioWalking_start != 0 && flag == 0)
+	{
+		platform_objects[1]->Render();
+		platform_objects[2]->Render();
+
+		player[0]->Render();
+		player[1]->Render();
+	}
+
+	if (flag != CURTAIN_FLYING)
+	{
+		Number3->Render();
+		platform_objects[2]->Render();
+		player[0]->Render();
+		player[1]->Render();
+		
+		for (int i = 0; i < ItemsAndEnemies.size(); i++)
+			ItemsAndEnemies[i]->Render();
+	}
+
 	//render stage
 	platform_objects[0]->Render();
-
-	
-	for (int i = platform_objects.size() - 1; i > 0; i--)
-	{
-		int id = platform_objects[i]->GetSpriteIDBegin();
-		if((id == ID_SPRITE_CURTAIN_1 || id == ID_SPRITE_CURTAIN_2))
-			platform_objects[i]->Render();
-	}
 
 	//CControl::GetInstance()->ActiveControl(CONTROL_TYPE_MODE);
 	CControl::GetInstance()->Render();
@@ -429,6 +406,8 @@ void CIntroScene::Unload()
 	player[0] = NULL;
 	player[1] = NULL;
 	platform_objects.clear();
+	ItemsAndEnemies.clear();
+	Number3 = NULL;
 
 	DebugOut(L"[INFO] Scene %d unloaded! \n", id);
 }
@@ -448,9 +427,24 @@ void CIntroScene::PurgeDeletedObjects()
 		}
 	}
 
+	for (it = ItemsAndEnemies.begin(); it != ItemsAndEnemies.end(); it++)
+	{
+		LPGAMEOBJECT o = *it;
+		if (o->IsDeleted())
+		{
+			delete o;
+			*it = NULL;
+		}
+	}
+	//remove ItemsAndEnemies
+	ItemsAndEnemies.erase(
+		std::remove_if(ItemsAndEnemies.begin(), ItemsAndEnemies.end(), CIntroScene::IsGameObjectDeleted),
+		ItemsAndEnemies.end());
+
 	// NOTE: remove_if will swap all deleted items to the end of the vector
 	// then simply trim the vector, this is much more efficient than deleting individual items
 	objects.erase(
 		std::remove_if(objects.begin(), objects.end(), CIntroScene::IsGameObjectDeleted),
 		objects.end());
+
 }
