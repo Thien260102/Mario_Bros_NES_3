@@ -50,4 +50,4 @@
 ####    + https://ezgif.com/sprite-cutter
 ####    + https://photoshoponline.1doi1.com/
 
-## DEMO: https://www.youtube.com/watch?v=Vv8wRd4QbTg
+## DEMO: https://youtu.be/i6K_Sm1rWtA
