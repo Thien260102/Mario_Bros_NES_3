@@ -10,6 +10,7 @@
 #include "Goomba.h"
 #include "Koopas.h"
 #include "Mario.h"
+#include "Control.h"
 
 #define WAITING_KOOPAS_ATTACK_TIME 2000
 #define CURTAIN_FLYING_TIME	3000
@@ -186,7 +187,8 @@ protected:
 				Mario->SetState(MARIO_STATE_IDLE);
 				stateOfMario = MARIO_STATE_JUMP;
 			}
-			else if (delta < MARIO_JUMPING_TIME && stateOfMario == MARIO_STATE_JUMP
+			else if (delta > MARIO_WALKING_TIME && delta < MARIO_JUMPING_TIME 
+				&& stateOfMario == MARIO_STATE_JUMP
 				&& player[0]->GetState() != MARIO_STATE_JUMP)
 			{
 				Luigi->SetState(MARIO_STATE_JUMP);
@@ -379,6 +381,8 @@ protected:
 
 					Mario->SetState(MARIO_STATE_IDLE);
 					flag = 0;
+
+					CControl::GetInstance()->ActiveControl(CONTROL_TYPE_MODE);;
 				}
 			}
 

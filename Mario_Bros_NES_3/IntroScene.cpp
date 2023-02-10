@@ -13,7 +13,6 @@
 #include "TeleportGate.h"
 #include "Hud.h"
 #include "PlatformAnimate.h"
-#include "Control.h"
 
 #include "IntroKeyEventHandler.h"
 
